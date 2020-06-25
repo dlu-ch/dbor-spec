@@ -73,9 +73,23 @@ class VersionQuery(dlb_contrib.git.GitDescribeWorkingDirectory):
         return True
 
 
+class ConvertSvgToPdfWithInkscape(dlb.ex.Tool):
+    EXECUTABLE = 'inkscape'
+
+    input_file = dlb.ex.input.RegularFile()
+    output_file = dlb.ex.output.RegularFile(replace_by_same_content=False)
+
+    async def redo(self, result, context):
+        with context.temporary() as output_file:
+            await context.execute_helper(self.EXECUTABLE, ['--export-pdf', output_file, self.input_file])
+            context.replace_output(result.output_file, output_file)
+
+
 with dlb.ex.Context():
     source_directory = dlb.fs.Path('doc/')
     output_directory = dlb.fs.Path('build/out/')
+
+    image_directory = source_directory / 'g/'
     generated_directory = output_directory / 'generated/'
 
     class VersionFileBuilder(dlb.ex.Tool):
@@ -88,7 +102,14 @@ with dlb.ex.Context():
                     f.write(self.VERSION + '\n')
                 context.replace_output(result.output_file, output_file)
 
-    VersionFileBuilder(output_file=generated_directory / 'repo_wd_version.tex').start().complete()
+    VersionFileBuilder(output_file=generated_directory / 'repo_wd_version.tex').start()
+
+    with dlb.di.Cluster('convert images'), dlb.ex.Context():
+        for p in image_directory.iterdir_r(name_filter=r'[^.]+\.svg', recurse_name_filter=''):
+            ConvertSvgToPdfWithInkscape(
+                input_file=image_directory / p,
+                output_file=generated_directory / 'g/' / p[:-1] / p.parts[-1].replace('.svg', '.pdf')
+            ).start()
 
     # repeat redo until all state files exist and their content remains unchanged but at most 10 times
     for i in range(10):
@@ -96,8 +117,8 @@ with dlb.ex.Context():
                      output_file=output_directory / 'dbor.pdf',
                      input_search_directories=[
                          source_directory,
-                         source_directory / 'g/',
-                         generated_directory
+                         generated_directory,
+                         generated_directory / 'g/'
                      ],
                      state_files=[
                          output_directory / 'dbor.aux',
