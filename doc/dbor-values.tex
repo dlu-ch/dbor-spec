@@ -1,0 +1,309 @@
+\section{Values}
+%%%%%%%%%%%%%%%%
+\label{sec:values}
+
+This section defines the encoding of values as sequences of bytes by reducing them to tokens
+(section \ref{sec:tokens}).
+
+
+\subsection{Elementary values}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{\DborSyntaxIdent{NoneValue}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:def:NoneValue}
+\hypertarget{sec:def:NoneValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{NoneValue} represents the absence of an actual value (like \texttt{null} or \texttt{None} is some
+programming languages or NaN in IEEE-754:2008).
+It is considered different from any object represented by a \DborSyntaxIdentRef{Value} other than
+\DborSyntaxIdent{NoneValue}.
+
+\paragraph{Representation}
+
+An \DborSyntaxIdent{NoneValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1F}$).
+
+\smallskip
+\noindent
+Example:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        \DborSyntaxIdent{NoneValue}
+            & $\langle \DborFirstByteNone{FF} \rangle$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There is only one representation of a \DborSyntaxIdent{NoneValue}.
+It is canonical.
+
+
+\subsubsection{\DborSyntaxIdent{MinusZeroValue}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:def:MinusZeroValue}
+\hypertarget{sec:def:MinusZeroValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{MinusZeroValue} represents the "number" $-0$ in the sense of IEEE-754:2008 artihmetics.
+
+\paragraph{Representation}
+
+An \DborSyntaxIdent{MinusZeroValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1C}$).
+
+\smallskip
+\noindent
+Example:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        \DborSyntaxIdent{MinusZeroValue}
+            & $\langle \DborFirstByteNumber{FC} \rangle$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There is only one representation of a \DborSyntaxIdent{MinusZeroValue}.
+It is canonical.
+
+
+\subsubsection{\DborSyntaxIdent{InfinityValue}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:def:InfinityValue}
+\hypertarget{sec:def:InfinityValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{InfinityValue} represents the "number" $\infty$ in the sense of IEEE-754:2008 artihmetics.
+It is considered larger than any object represented by a \DborSyntaxIdentRef{NumberValue}
+other than \DborSyntaxIdent{InfinityValue}.
+
+\paragraph{Representation}
+
+An \DborSyntaxIdent{InfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1E}$).
+
+\smallskip
+\noindent
+Example:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        \DborSyntaxIdent{InfinityValue}
+            & $\langle \DborFirstByteNumber{FE} \rangle$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There is only one representation of a \DborSyntaxIdent{InfinityValue}.
+It is canonical.
+
+
+\subsubsection{\DborSyntaxIdent{MinusInfinityValue}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:def:MinusInfinityValue}
+\hypertarget{sec:def:MinusInfinityValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{MinusInfinityValue} represents the "number" $-\infty$ in the sense of IEEE-754:2008 artihmetics.
+It is considered smaller than any object represented by a \DborSyntaxIdentRef{NumberValue}
+other than \DborSyntaxIdent{MinusInfinityValue}.
+
+\paragraph{Representation}
+
+An \DborSyntaxIdent{MinusInfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1D}$).
+
+\smallskip
+\noindent
+Example:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        \DborSyntaxIdent{MinusInfinityValue}
+            & $\langle \DborFirstByteNumber{FD} \rangle$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There is only one representation of a \DborSyntaxIdent{MinusInfinityValue}.
+It is canonical.
+
+
+\subsubsection{\DborSyntaxIdent{IntegerValue}($p$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:IntegerValue}{}
+
+\paragraph{Representable objects}
+
+An \DborSyntaxIdent{IntegerValue} can represent exactly any number $v \in \SetOfIntegers \cap [-M, M)$ with
+\begin{equation}
+    M := \sum_{k = 0}^8 2^{8k} + 23 \approx 1.003921 \cdot 2^{64}.
+\end{equation}%
+
+\smallskip
+The minimum representable number is $-18\,519\,084\,246\,547\,628\,312$.
+The maximum representable number is $18\,519\,084\,246\,547\,628\,311$.
+
+\paragraph{Representation}
+
+A number $v \in \SetOfIntegers \cap [0, M)$ is represented as \DborSyntaxIdentRef{IntegerToken}(0, $v$).
+A number $v \in \SetOfIntegers \cap [-M, 0)$ is represented as \DborSyntaxIdentRef{IntegerToken}(1, $-v - 1$).
+
+A sequence of bytes $\langle b_1, \ldots, b_n\rangle$ is a \DborSyntaxIdent{IntegerValue} if and only if
+it is \DborSyntaxIdentRef{IntegerToken}(0, $v$) or a \DborSyntaxIdentRef{IntegerToken}(1, $v$) for an
+appropriate $v$.
+
+\smallskip
+\noindent
+Examples:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        %
+        \DborSyntaxIdent{IntegerValue}($0$)
+            &  $\langle \DborFirstByteNumber{00} \rangle$ \\
+        \DborSyntaxIdent{IntegerValue}($23$)
+            &  $\langle \DborFirstByteNumber{17} \rangle$ \\
+        \DborSyntaxIdent{IntegerValue}($24$)
+            &  $\langle \DborFirstByteNumber{18}, \DborNextByte{00} \rangle$ \\
+        \DborSyntaxIdent{IntegerValue}($-100$)
+            &  $\langle \DborFirstByteNumber{38}, \DborNextByte{4B} \rangle$ \\
+        \DborSyntaxIdent{IntegerValue}($\HexNumber{FF\,FF\,FF\,FF}$)
+            &  $\langle \DborFirstByteNumber{1B}, \DborNextByte{E7}, \DborNextByte{FE},
+               \DborNextByte{FE}, \DborNextByte{FE} \rangle$ \\
+        %
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There is at most one representation of a \DborSyntaxIdent{IntegerValue}($v$) for any $v$.
+It is canonical.
+
+
+\subsubsection{\DborSyntaxIdent{BinaryRationalValue}($p$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:BinaryRationalValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{BinaryRationalValue} can represent exactly any number
+\begin{equation}
+    v = (-1)^s \cdot \sum_{k = -52}^0 m_k s^k \cdot 2^e
+\end{equation}
+with $s, m_k \in \{0, 1\}$, $e \in \SetOfIntegers \cap [2 - 2^{10}, 2^{10}]$ and $v \ne 0$.
+
+The set of representable numbers comprises all normal and subnormal values of the IEEE-754:2008 type
+\texttt{binary64} except $\pm 0$.
+
+\smallskip
+The maximum representable number is $(2 - 2^{-52}) \cdot 2^{2^{10}} \approx 3.595\,386 \cdot 10^{308}$.
+The smallest positive representable number is $2^{-52} \cdot 2^{2-2^{10}} = 2^{-1074}
+\approx 4.940\,656 \cdot 10^{-324}$.
+
+\paragraph{Representation}
+
+A number $(-1)^s \cdot (1 + M/2^p) \cdot 2^e$ with
+\begin{align*}
+    s & \in \{0, 1\} \\
+    p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
+    M & \in \SetOfIntegers \cap [0, 2^p) \\
+    e & \in \SetOfIntegers \cap [\max(0, p - 51) - 2^{r - 1} + 1, 2^{r - 1}) \\
+    r & := 8 \lfloor p / 7 \rfloor + 7 - p
+\end{align*}%
+is represented as
+\DborSyntaxIdentRef{BinaryRationalToken}($p$, $0$, $s$, $M$, $e + 2^{r - 1} - 1$).
+
+A number $(-1)^s \cdot M/2^p \cdot 2^{-1022}$ with $p := 52$, $s \in \{0, 1\}$ and
+$M \in \SetOfIntegers \cap (0, 2^p)$ is represented as
+\DborSyntaxIdentRef{BinaryRationalToken}($p$, $1$, $s$, $M$, $0$).
+
+\smallskip
+\noindent
+Fore reference, here are the resulting combinations for all possible $p$:
+\nolinebreak
+\begin{quote}
+    \newcolumntype{R}{>{$}r<{$}}  % package 'array'
+    \begin{tabular}{R R R R >{\hspace{-.8em}$}c<{$\hspace{-.8em}} R}
+        \toprule
+        k & p & r & & e \\
+        \midrule
+        0 &  3 &  4 & -3 & \ldots & 4 \\
+        1 &  5 & 10 & -15 & \ldots & 16 \\
+        2 &  7 & 16 & -63 & \ldots & 64 \\
+        3 &  8 & 23 & -127 & \ldots & 128 \\
+        4 &  9 & 30 & -255 & \ldots & 256 \\
+        5 & 10 & 37 & -511 & \ldots & 512 \\
+        6 & 11 & 44 & -1023 & \ldots & 1024 \\
+        7 & 11 & 52 & -1022 & \ldots & 1024 \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+A sequence of bytes $\langle b_1, \ldots, b_n\rangle$ is a \DborSyntaxIdent{BinaryRationalValue} if and only if
+it is a \DborSyntaxIdentRef{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for some
+appropriate $p$, $o$, $s$, $M$ and $E$.
+
+\smallskip
+\noindent
+Examples:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{ll}
+        \toprule
+        Value & Representation \\
+        \midrule
+        \DborSyntaxIdent{BinaryRationalValue}($3$, $\frac{1}{8}$)
+            &  $\langle \DborFirstByteNumber{D0}, \DborNextByte{00} \rangle$ \\
+        \DborSyntaxIdent{BinaryRationalValue}($5$, $-(2^{17} - 2^6)$)%
+            \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
+            &  $\langle \DborFirstByteNumber{D1}, \DborNextByte{FF}, \DborNextByte{FF} \rangle$ \\
+        \DborSyntaxIdent{BinaryRationalValue}($52$, $2^{-1074}$)
+            &  $\langle \DborFirstByteNumber{D7}, \DborNextByte{01}, \DborNextByte{00},
+                                                  \DborNextByte{00}, \DborNextByte{00},$ \\
+            &  $                                  \DborNextByte{00}, \DborNextByte{00},
+                                                  \DborNextByte{00}, \DborNextByte{00} \rangle$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+\paragraph{Ambiguity, canonical value}
+
+There may be more than one representation of \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any $v$.
+Of these, the one with the smallest $p$ is the canonical value.%
+\footnote{
+    A \DborSyntaxIdent{BinaryRationalValue}($p$, $v$) is therefore canonical if and only if there is
+    no \DborSyntaxIdent{BinaryRationalValue}($q$, $v$) with $q < p$.
+    See \ref{sec:implementation:BinaryRationalValue:canonical} for an efficient way to check this.
+}
+
+For every \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) with $p < 52$, there is also
+a \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any
+$q \in \{4, 10, 16, 23, 30, 37, 44, 52\}$ with $q > p$.

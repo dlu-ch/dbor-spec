@@ -1,0 +1,72 @@
+\section{Tokens}
+%%%%%%%%%%%%%%%%
+\label{sec:tokens}
+
+\subsection{\DborSyntaxIdent{MinimalToken}($v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:MinimalToken}{}
+
+A \DborSyntaxIdent{MinimalToken}($v$) for $v \in \SetOfIntegers \cap [0, 2^5)$
+is the following byte:
+
+\IncludeImageInPlace{MinimalToken}
+
+
+\subsection{\DborSyntaxIdent{IntegerToken}($h$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:IntegerToken}{}
+
+An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
+$v \in \SetOfIntegers \cap [0, 24)$ is the following byte:
+
+\IncludeImageInPlace{IntegerTokenA}
+
+An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
+$v \in \SetOfIntegers \cap [24, \sum_{k = 0}^8 2^{8k} + 23)$
+is the following sequence of bytes:
+
+\IncludeImageInPlace{IntegerTokenB}
+
+Its $d_i \in \SetOfIntegers \cap [0, 2^8)$ are uniquely%
+\footnote{%
+    Since $(v - 23) \bmod 2^{8 j} = \sum_{i = 0}^{j - 1} (d_i + 1) 2^{8 i}$ for every $j$ with $0 < j \le k$,
+    the $d_i$ can be calculated with increasing $i$.
+}
+defined by
+\begin{equation}
+    v = 23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}.
+\end{equation}
+
+
+\subsection{\DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:BinaryRationalToken}{}
+
+A \DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for
+\begin{align*}
+    p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
+    o & \in \{0, 1\} \\
+    s & \in \{0, 1\} \\
+    M & \in \SetOfIntegers \cap [0, 2^p) \\
+    E & \in \SetOfIntegers \cap [0, 2^r)
+        \quad\text{with}\quad r := 8 k + 7 - p
+        \quad\text{and}\quad k := \lfloor p / 7 \rfloor
+\end{align*}%
+and
+\begin{align*}
+    M = E = 0 \quad & \Rightarrow \quad p < 52 \\
+    p < 52 \quad & \Rightarrow \quad o = 0
+\end{align*}%
+is the following sequence of bytes:
+
+\IncludeImageInPlace{BinaryRationalToken}
+
+It represents the value
+\begin{equation}
+    v = (-1)^s \cdot m \cdot 2^e
+\end{equation}
+with
+\begin{align*}
+    m & := 1 - o + M / 2^p \\
+    e & := \max(E, o) - 2^{r-1} + 1.
+\end{align*}

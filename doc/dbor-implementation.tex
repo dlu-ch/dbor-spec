@@ -1,0 +1,49 @@
+\section{Implementation hints}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:implementation}
+
+\subsection{Check if canonical \DborSyntaxIdent{BinaryRationalValue}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:implementation:BinaryRationalValue:canonical}
+
+A sequence of bytes $\langle \HexNumber{D0} + k, d_0, \ldots, d_k\rangle$ with
+$k \in \{0, \ldots, 7\}$ and $i := \lfloor \frac{k + 1}{4} \rfloor$
+is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
+\begin{itemize}
+    \item
+    $k = 0$ or then
+
+    \item
+    $2^{2 - i} d_0 \bmod 2^8 \ne 0$ or then
+
+    \item
+    If $k < 7$:
+    $(d_{ke} < 2 - i) \vee (d_{ke} > 4 + i)$
+    with $d_{ke} := \lfloor d_k / 2^4 \rfloor \bmod 8$.
+
+    If $k = 7$:
+    $(d_k \BitAnd \HexNumber{7F} = 0) \wedge (d_{k - 1} \BitAnd \HexNumber{F0} = 0)
+    \wedge (d_0 \BitOr \cdots \BitOr d_{k - 1} \ne 0)$
+\end{itemize}
+
+\subsection{Check if \DborSyntaxIdent{IntegerValue} represents multiple of 10}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:implementation:IntegerValue:10}
+
+An integer $v$ is an integer multiple of $10$ if and only if it is an integer multiple
+of $2$ and of $5$.
+Since $2^{8i} \bmod 2 = 0$ for $i \in \{0, 1, \ldots\}$
+and $2^{8i} \bmod 5 = 1$ for $i \in \{1, 2, \ldots\}$,
+a division of $v$ can be replaced by divisions of fewer bytes.
+
+Example:
+Let $\langle b, d_0, \ldots, d_k\rangle$ be \DborSyntaxIdent{IntegerValue}($v$) for $v \ge 24$.
+Then
+\begin{align*}
+    v \bmod 2
+        & = \big(23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}\big) \bmod 2
+        = d_0 \bmod 2 \\
+    v \bmod 5
+        & = \big(23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}\big) \bmod 5
+        = \big(\sum_{i = 0}^k (d_i \bmod 5) + k + 4\big) \bmod 5
+\end{align*}

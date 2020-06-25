@@ -1,0 +1,32 @@
+\section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Notation}
+%%%%%%%%%%%%%%%%%%%%%
+
+\noindent
+{%
+    \setlength\extrarowheight{0.8ex}%
+    \begin{tabular}{@{} p{.25\textwidth} p{.5\textwidth}}
+        $\SetOfReals$: &
+            the set of all real numbers \\
+        $\SetOfIntegers$: &
+            the set of all real integers \\
+        $[a, b]$: &
+            $\{x \in \SetOfReals{:}\; a \le x \le b\}$ \\
+        $[a, b)$: &
+            $\{x \in \SetOfReals{:}\; a \le x < b\}$ \\
+        $\langle a, b, \ldots\rangle$: &
+            sequence of bytes, starting with byte $a$ \\
+        $a \mid b$: &
+            concatenation of bytes sequences $a$, $b$: $a$ followed by $b$ \\
+        ill-formed \DborSyntaxIdent{\dots Value}: &
+            byte sequence that looks likes a \DborSyntaxIdent{\dots Value} but actually
+            is not one%
+            \footnote{
+                Differentiation between well-formed and ill-formed \DborSyntaxIdent{Value}s
+                can be useful in implementations.
+                This specification describes only well-formed \DborSyntaxIdent{Value}s, however.
+            } \\
+    \end{tabular}%
+}
