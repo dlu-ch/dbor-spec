@@ -1,164 +1,39 @@
-\documentclass[headings=normal, headsepline, numbers=noenddot, fleqn, a4paper]{scrartcl}
-\usepackage[top=30mm, bottom=25mm, left=40mm, right=25mm]{geometry}
-\usepackage{scrextend, scrtime}
+\documentclass{dbor-article}
 
-\usepackage{amsmath}
-\usepackage[T1]{fontenc}
-\usepackage[osf]{mathpazo}  % use Palatino (similar: TeX Gyre Pagella)
-\linespread{1.05}\selectfont  % Palatino needs more interline-spacing (here: 5%)
-\usepackage[scaled=0.85]{beramono}  % use bremono as typewriter font (has bold variant)
-\usepackage{dsfont}  % Type 1 font for \mathds{}
+    % mathematical symbols and operators
+    \newcommand{\e}{\mathrm{e}}
+    \DeclareMathOperator{\BitAnd}{AND}
+    \DeclareMathOperator{\BitOr}{OR}
+    \newcommand{\SetOfReals}{\mathbbm{R}}
+    \newcommand{\SetOfIntegers}{\mathbbm{Z}}
+    \newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
 
-\usepackage{hyperref}  
-\usepackage{xcolor}
-\usepackage{array}
-\usepackage{booktabs}
-\usepackage{graphicx}
-\usepackage{footnote}
+    \newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
+    \newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
+        % usage: \DborSyntaxIdentRef{IntegerToken}
 
-\newcommand{\DborVersion}{\input{repo_wd_version.tex}}
-\title{DBOR specification \DborVersion}
-\author{Daniel Lutz}
+    % colour coding of bytes sequences
+    \newcommand{\DborFirstByte}[2]{\mathbf{\textcolor{#1}{\HexNumber{#2}}}}
+    \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red}{#1}}
+    \newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
+        % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
+    \newcommand{\DborFirstByteString}[1]{\DborFirstByte{green}{#1}}
+        % ByteStringValue, UnicodeStringValue
+    \newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue}{#1}}
+    \newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet}{#1}}
+    \newcommand{\DborNextByte}[1]{\HexNumber{#1}}
 
-\makeatletter
+    \newenvironment{Note}{\bgroup\small\ignorespaces}{\par\egroup\smallskip}
 
-\makesavenoteenv{tabular}  % package 'footnote'
+    \newcommand{\IncludeImageInPlace}[1]{%
+        \begin{quotation}%
+            \includegraphics[scale=0.8]{#1}%
+        \end{quotation}%
+    }
 
-% footnotes (package 'scrartcl')
-\deffootnotemark{\textsuperscript{\thefootnotemark)}}
-\deffootnote{1.5em}{1em}{\textsuperscript{\thefootnotemark)\ }}
-
-% colours (package 'xcolor')
-\definecolor{gray-std}{gray}{0.45}
-\definecolor{red-std}{rgb}{0.75,0.00,0.00}
-\definecolor{green-std}{rgb}{0.18,0.58,0.08}
-\definecolor{blue-std}{rgb}{0.16,0.24,0.64}
-\definecolor{blue-dark}{rgb}{0,0,0.42}
-
-\hypersetup{% package 'hyperref'
-    bookmarksopen=true,
-    linktocpage=true,
-    colorlinks=true,
-    urlcolor=blue-dark,
-    citecolor=blue-dark,
-    linkcolor=blue-dark,
-    filecolor=blue-dark
-}
-
-\let\mathbbm\mathds
-\newcommand{\e}{\mathrm{e}}
-\DeclareMathOperator{\BitAnd}{AND}
-\DeclareMathOperator{\BitOr}{OR}
-\newcommand{\SetOfReals}{\mathbbm{R}}
-\newcommand{\SetOfIntegers}{\mathbbm{Z}}
-
-\newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
-
-\newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
-
-% usage: \DborSyntaxIdentRef{IntegerToken}
-\newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
-
-% colour coding of bytes sequences
-\newcommand{\DborFirstByte}[2]{\mathbf{\textcolor{#1}{\HexNumber{#2}}}}
-\newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red}{#1}}
-
-% IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
-\newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
-
-% ByteStringValue, UnicodeStringValue
-\newcommand{\DborFirstByteString}[1]{\DborFirstByte{green}{#1}}
-\newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue}{#1}}
-\newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet}{#1}}
-\newcommand{\DborNextByte}[1]{\HexNumber{#1}}
-
-\newenvironment{Note}{\bgroup\small\ignorespaces}{\par\egroup\smallskip}
-
-\newcommand{\IncludeImageInPlace}[1]{%
-    \begin{quotation}%
-        \includegraphics[scale=0.8]{#1}%
-    \end{quotation}%
-}
-
-% layout
-\setlength\parindent{1em}
-\setlength{\mathindent}{2em}
-\setlength{\columnsep}{2em}
-
-\raggedbottom
-\raggedfootnote
-
-\addtokomafont{pagehead}{\small\itshape}
-\addtokomafont{sectioning}{\rmfamily}
-
-\newcommand{\PageSideStyle}{\normalfont\rmfamily\tiny}
-\newcommand{\PageSideText}{\texttt{\jobname.tex}: \quad\TeX ed \today, \thistime}  % package 'scrtime'
-\newlength{\PageSideSep}\PageSideSep15mm% horiz. space to text body
-
-\newcommand{\@PageSideB@x}{%
-    \rotatebox{90}{%
-        \hb@xt@\z@{%
-            \kern0.1\textheight\hb@xt@0.5\textheight{\PageSideStyle\selectfont\PageSideText\hfil}%
-            \hss}%
-        }}
-
-\def\ps@lastsec{%
-  \let\@mkboth\markboth
-  \def\@oddhead{\vbox{\hsize=\textwidth
-    \hb@xt@\textwidth{%
-      {%
-        \headfont\@title
-      }%
-      {%
-        \headfont\hss\strut\rightmark
-      }\hskip3em%
-      \hbox to0pt{\hss\pnumfont\thepage}%
-    }%
-    \if@hsl \vskip 1.5\p@ \hrule \fi}}%
-  \def\@evenhead{}%
-  \def\@oddfoot{%
-    \vbox{%
-      \setbox\z@\hbox{\@PageSideB@x}%
-      \dimen@\wd\z@ \advance\dimen@\PageSideSep%
-      \hb@xt@\z@{\hskip-\dimen@ \box\z@ \hss}}%
-    \hss}%
-  \if@twoside
-    \def\@evenfoot{%
-      \vbox{%
-        \hb@xt@\z@{\hskip\PageSideSep\hskip\textwidth\@PageSideB@x\hss}}%
-      \hss}%
-  \else
-    \let\@evenfoot\@empty
-  \fi
-  %
-  \def\chaptermark##1{%
-    \markright{%
-      \ifnum \c@secnumdepth>\m@ne \chaptermarkformat \fi
-      ##1}}%
-  \def\sectionmark##1{%
-    \markright{%
-      \ifnum \c@secnumdepth>\z@ \sectionmarkformat \fi
-      ##1}}%
-  \def\subsectionmark##1{%
-    \markright{%
-      \ifnum \c@secnumdepth>\@ne \subsectionmarkformat \fi
-      ##1}}%
-  }
-\def\chaptermarkformat{\thechapter.\;}
-\def\sectionmarkformat{\thesection.\;}
-\def\subsectionmarkformat{\thesubsection.\;}
-
-\if@twoside\else
-    \let\ps@plain\ps@lastsec
-    \let\ps@headings\ps@lastsec
-    \let\ps@myheadings\ps@lastsec
-    \pagestyle{lastsec}
-\fi
-
-
-% section numbers in the left margin (needs 'scrartcl')
-\renewcommand\sectionlinesformat[4]{\makebox[0pt][r]{#3}#4} 
-
+    \newcommand{\DborVersion}{\input{repo_wd_version.tex}}
+    \title{DBOR specification \DborVersion}
+    \author{Daniel Lutz}
 
 \begin{document}
 

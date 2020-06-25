@@ -94,7 +94,11 @@ with dlb.ex.Context():
     for i in range(10):
         r = PdfLatex(toplevel_file=source_directory / 'dbor.tex',
                      output_file=output_directory / 'dbor.pdf',
-                     input_search_directories=[source_directory / 'g/', generated_directory],
+                     input_search_directories=[
+                         source_directory,
+                         source_directory / 'g/',
+                         generated_directory
+                     ],
                      state_files=[
                          output_directory / 'dbor.aux',
                          output_directory / 'dbor.toc',
