@@ -1,3 +1,7 @@
+% SPDX-License-Identifier: CC-BY-4.0
+% DBOR specification - Dense Binary Object Representation
+% Copyright (C) 2020 Daniel Lutz <dlu-ch@users.noreply.github.com>
+
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{dbor-article}[2020/06/25 dbor-article]
 
