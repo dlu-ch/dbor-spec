@@ -1,0 +1,632 @@
+\documentclass[headings=normal, headsepline, numbers=noenddot, fleqn, a4paper]{scrartcl}
+\usepackage[top=30mm, bottom=25mm, left=40mm, right=25mm]{geometry}
+\usepackage{scrextend, scrtime}
+
+\usepackage{amsmath}
+\usepackage[T1]{fontenc}
+\usepackage[osf]{mathpazo}  % use Palatino (similar: TeX Gyre Pagella)
+\linespread{1.05}\selectfont  % Palatino needs more interline-spacing (here: 5%)
+\usepackage[scaled=0.85]{beramono}  % use bremono as typewriter font (has bold variant)
+
+\usepackage{bbm}
+\usepackage{hyperref}  
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{footnote}
+
+\newcommand{\DborVersion}{0.0.0 (draft)}
+\title{DBOR specification \DborVersion}
+\author{Daniel Lutz}
+
+\makeatletter
+
+\makesavenoteenv{tabular}  % package 'footnote'
+
+% footnotes (package 'scrartcl')
+\deffootnotemark{\textsuperscript{\thefootnotemark)}}
+\deffootnote{1.5em}{1em}{\textsuperscript{\thefootnotemark)\ }}
+
+% colours (package 'xcolor')
+\definecolor{gray-std}{gray}{0.45}
+\definecolor{red-std}{rgb}{0.75,0.00,0.00}
+\definecolor{green-std}{rgb}{0.18,0.58,0.08}
+\definecolor{blue-std}{rgb}{0.16,0.24,0.64}
+\definecolor{blue-dark}{rgb}{0,0,0.42}
+
+\hypersetup{% package 'hyperref'
+    bookmarksopen=true,
+    linktocpage=true,
+    colorlinks=true,
+    urlcolor=blue-dark,
+    citecolor=blue-dark,
+    linkcolor=blue-dark,
+    filecolor=blue-dark
+}
+
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
+\DeclareMathOperator{\BitAnd}{AND}
+\DeclareMathOperator{\BitOr}{OR}
+
+\newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
+
+% usage: \DborSyntaxIdentRef{IntegerToken}
+\newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
+
+% colour coding of bytes sequences
+\newcommand{\DborFirstByte}[2]{\mathbf{\textcolor{#1}{\HexNumber{#2}}}}
+\newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red}{#1}}
+
+% IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
+\newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
+
+% ByteStringValue, UnicodeStringValue
+\newcommand{\DborFirstByteString}[1]{\DborFirstByte{green}{#1}}
+\newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue}{#1}}
+\newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet}{#1}}
+\newcommand{\DborNextByte}[1]{\HexNumber{#1}}
+
+\newenvironment{Note}{\bgroup\small\ignorespaces}{\par\egroup\smallskip}
+
+\newcommand{\IncludeImageInPlace}[1]{%
+    \begin{quotation}%
+        \includegraphics[scale=0.8]{#1}%
+    \end{quotation}%
+}
+
+% layout
+\setlength\parindent{1em}
+\setlength{\mathindent}{2em}
+\setlength{\columnsep}{2em}
+
+\raggedbottom
+\raggedfootnote
+
+\addtokomafont{pagehead}{\small\itshape}
+\addtokomafont{sectioning}{\rmfamily}
+
+\newcommand{\PageSideStyle}{\normalfont\rmfamily\tiny}
+\newcommand{\PageSideText}{\texttt{\jobname.tex}: \quad\TeX ed \today, \thistime}  % package 'scrtime'
+\newlength{\PageSideSep}\PageSideSep15mm% horiz. space to text body
+
+\newcommand{\@PageSideB@x}{%
+    \rotatebox{90}{%
+        \hb@xt@\z@{%
+            \kern0.1\textheight\hb@xt@0.5\textheight{\PageSideStyle\selectfont\PageSideText\hfil}%
+            \hss}%
+        }}
+
+\def\ps@lastsec{%
+  \let\@mkboth\markboth
+  \def\@oddhead{\vbox{\hsize=\textwidth
+    \hb@xt@\textwidth{%
+      {%
+        \headfont\@title
+      }%
+      {%
+        \headfont\hss\strut\rightmark
+      }\hskip3em%
+      \hbox to0pt{\hss\pnumfont\thepage}%
+    }%
+    \if@hsl \vskip 1.5\p@ \hrule \fi}}%
+  \def\@evenhead{}%
+  \def\@oddfoot{%
+    \vbox{%
+      \setbox\z@\hbox{\@PageSideB@x}%
+      \dimen@\wd\z@ \advance\dimen@\PageSideSep%
+      \hb@xt@\z@{\hskip-\dimen@ \box\z@ \hss}}%
+    \hss}%
+  \if@twoside
+    \def\@evenfoot{%
+      \vbox{%
+        \hb@xt@\z@{\hskip\PageSideSep\hskip\textwidth\@PageSideB@x\hss}}%
+      \hss}%
+  \else
+    \let\@evenfoot\@empty
+  \fi
+  %
+  \def\chaptermark##1{%
+    \markright{%
+      \ifnum \c@secnumdepth>\m@ne \chaptermarkformat \fi
+      ##1}}%
+  \def\sectionmark##1{%
+    \markright{%
+      \ifnum \c@secnumdepth>\z@ \sectionmarkformat \fi
+      ##1}}%
+  \def\subsectionmark##1{%
+    \markright{%
+      \ifnum \c@secnumdepth>\@ne \subsectionmarkformat \fi
+      ##1}}%
+  }
+\def\chaptermarkformat{\thechapter.\;}
+\def\sectionmarkformat{\thesection.\;}
+\def\subsectionmarkformat{\thesubsection.\;}
+
+\if@twoside\else
+    \let\ps@plain\ps@lastsec
+    \let\ps@headings\ps@lastsec
+    \let\ps@myheadings\ps@lastsec
+    \pagestyle{lastsec}
+\fi
+
+
+% section numbers in the left margin (needs 'scrartcl')
+\renewcommand\sectionlinesformat[4]{\makebox[0pt][r]{#3}#4} 
+
+
+\begin{document}
+
+    \maketitle
+    \tableofcontents
+
+    \section{Introduction}
+    %%%%%%%%%%%%%%%%%%%%%%
+
+    \subsection{Notation}
+    %%%%%%%%%%%%%%%%%%%%%
+
+    \noindent
+    {%
+        \setlength\extrarowheight{0.8ex}%
+        \begin{tabular}{@{} p{.25\textwidth} p{.5\textwidth}}
+            $\mathbbm{R}$: & 
+                the set of all real numbers \\
+            $\mathbbm{Z}$: & 
+                the set of all real integers \\
+            $[a, b]$: & 
+                $\{x \in \mathbbm{R}{:}\; a \le x \le b\}$ \\
+            $[a, b)$: &
+                $\{x \in \mathbbm{R}{:}\; a \le x < b\}$ \\
+            $\langle a, b, \ldots\rangle$: & 
+                sequence of bytes, starting with byte $a$ \\
+            $a \mid b$: & 
+                concatenation of bytes sequences $a$, $b$: $a$ followed by $b$ \\
+            ill-formed \DborSyntaxIdent{\dots Value}: & 
+                byte sequence that looks likes a \DborSyntaxIdent{\dots Value} but actually
+                is not one%
+                \footnote{
+                    Differentiation between well-formed and ill-formed \DborSyntaxIdent{Value}s 
+                    can be useful in implementations.
+                    This specification describes only well-formed \DborSyntaxIdent{Value}s, however.
+                } \\             
+        \end{tabular}%
+    }
+
+
+    \section{Values}
+    %%%%%%%%%%%%%%%%
+    \label{sec:values}
+
+    This section defines the encoding of values as sequences of bytes by reducing them to tokens
+    (section \ref{sec:tokens}).
+
+
+    \subsection{Elementary values}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    \subsubsection{\DborSyntaxIdent{NoneValue}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:def:NoneValue}
+    \hypertarget{sec:def:NoneValue}{}
+
+    \paragraph{Representable objects}
+
+    A \DborSyntaxIdent{NoneValue} represents the absence of an actual value (like \texttt{null} or \texttt{None} is some
+    programming languages or NaN in IEEE-754:2008).
+    It is considered different from any object represented by a \DborSyntaxIdentRef{Value} other than
+    \DborSyntaxIdent{NoneValue}.
+
+    \paragraph{Representation}
+
+    An \DborSyntaxIdent{NoneValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1F}$).
+
+    \smallskip
+    \noindent
+    Example:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            \DborSyntaxIdent{NoneValue} 
+                & $\langle \DborFirstByteNone{FF} \rangle$ \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There is only one representation of a \DborSyntaxIdent{NoneValue}.
+    It is canonical.
+
+
+    \subsubsection{\DborSyntaxIdent{MinusZeroValue}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:def:MinusZeroValue}
+    \hypertarget{sec:def:MinusZeroValue}{}
+
+    \paragraph{Representable objects}
+
+    A \DborSyntaxIdent{MinusZeroValue} represents the "number" $-0$ in the sense of IEEE-754:2008 artihmetics.
+
+    \paragraph{Representation}
+
+    An \DborSyntaxIdent{MinusZeroValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1C}$).
+
+    \smallskip
+    \noindent
+    Example:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            \DborSyntaxIdent{MinusZeroValue} 
+                & $\langle \DborFirstByteNumber{FC} \rangle$ \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There is only one representation of a \DborSyntaxIdent{MinusZeroValue}.
+    It is canonical.
+
+
+    \subsubsection{\DborSyntaxIdent{InfinityValue}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:def:InfinityValue}
+    \hypertarget{sec:def:InfinityValue}{}
+
+    \paragraph{Representable objects}
+
+    A \DborSyntaxIdent{InfinityValue} represents the "number" $\infty$ in the sense of IEEE-754:2008 artihmetics.
+    It is considered larger than any object represented by a \DborSyntaxIdentRef{NumberValue} 
+    other than \DborSyntaxIdent{InfinityValue}.
+
+    \paragraph{Representation}
+
+    An \DborSyntaxIdent{InfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1E}$).
+
+    \smallskip
+    \noindent
+    Example:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            \DborSyntaxIdent{InfinityValue} 
+                & $\langle \DborFirstByteNumber{FE} \rangle$ \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There is only one representation of a \DborSyntaxIdent{InfinityValue}.
+    It is canonical.
+
+
+    \subsubsection{\DborSyntaxIdent{MinusInfinityValue}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:def:MinusInfinityValue}
+    \hypertarget{sec:def:MinusInfinityValue}{}
+
+    \paragraph{Representable objects}
+
+    A \DborSyntaxIdent{MinusInfinityValue} represents the "number" $-\infty$ in the sense of IEEE-754:2008 artihmetics.
+    It is considered smaller than any object represented by a \DborSyntaxIdentRef{NumberValue} 
+    other than \DborSyntaxIdent{MinusInfinityValue}.
+
+    \paragraph{Representation}
+
+    An \DborSyntaxIdent{MinusInfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($\HexNumber{1D}$).
+
+    \smallskip
+    \noindent
+    Example:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            \DborSyntaxIdent{MinusInfinityValue} 
+                & $\langle \DborFirstByteNumber{FD} \rangle$ \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There is only one representation of a \DborSyntaxIdent{MinusInfinityValue}.
+    It is canonical.
+
+
+    \subsubsection{\DborSyntaxIdent{IntegerValue}($p$)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hypertarget{sec:def:IntegerValue}{}
+
+    \paragraph{Representable objects}
+
+    An \DborSyntaxIdent{IntegerValue} can represent exactly any number $v \in \mathbbm{Z} \cap [-M, M)$ with
+    \begin{equation}
+        M := \sum_{k = 0}^8 2^{8k} + 23 \approx 1.003921 \cdot 2^{64}.
+    \end{equation}%
+
+    \smallskip
+    The minimum representable number is $-18\,519\,084\,246\,547\,628\,312$.
+    The maximum representable number is $18\,519\,084\,246\,547\,628\,311$.
+
+    \paragraph{Representation}
+
+    A number $v \in \mathbbm{Z} \cap [0, M)$ is represented as \DborSyntaxIdentRef{IntegerToken}(0, $v$).
+    A number $v \in \mathbbm{Z} \cap [-M, 0)$ is represented as \DborSyntaxIdentRef{IntegerToken}(1, $-v - 1$).
+
+    A sequence of bytes $\langle b_1, \ldots, b_n\rangle$ is a \DborSyntaxIdent{IntegerValue} if and only if
+    it is \DborSyntaxIdentRef{IntegerToken}(0, $v$) or a \DborSyntaxIdentRef{IntegerToken}(1, $v$) for an
+    appropriate $v$.
+
+    \smallskip
+    \noindent
+    Examples:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            %
+            \DborSyntaxIdent{IntegerValue}($0$)    
+                &  $\langle \DborFirstByteNumber{00} \rangle$ \\
+            \DborSyntaxIdent{IntegerValue}($23$)
+                &  $\langle \DborFirstByteNumber{17} \rangle$ \\
+            \DborSyntaxIdent{IntegerValue}($24$)
+                &  $\langle \DborFirstByteNumber{18}, \DborNextByte{00} \rangle$ \\
+            \DborSyntaxIdent{IntegerValue}($-100$) 
+                &  $\langle \DborFirstByteNumber{38}, \DborNextByte{4B} \rangle$ \\
+            \DborSyntaxIdent{IntegerValue}($\HexNumber{FF\,FF\,FF\,FF}$) 
+                &  $\langle \DborFirstByteNumber{1B}, \DborNextByte{E7}, \DborNextByte{FE},
+                   \DborNextByte{FE}, \DborNextByte{FE} \rangle$ \\
+            %
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There is at most one representation of a \DborSyntaxIdent{IntegerValue}($v$) for any $v$.
+    It is canonical.
+
+
+    \subsubsection{\DborSyntaxIdent{BinaryRationalValue}($p$, $v$)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hypertarget{sec:def:BinaryRationalValue}{}
+
+    \paragraph{Representable objects}
+
+    A \DborSyntaxIdent{BinaryRationalValue} can represent exactly any number
+    \begin{equation}
+        v = (-1)^s \cdot \sum_{k = -52}^0 m_k s^k \cdot 2^e
+    \end{equation}
+    with $s, m_k \in \{0, 1\}$, $e \in \mathbbm{Z} \cap [2 - 2^{10}, 2^{10}]$ and $v \ne 0$.
+
+    The set of representable numbers comprises all normal and subnormal values of the IEEE-754:2008 type
+    \texttt{binary64} except $\pm 0$.
+
+    \smallskip
+    The maximum representable number is $(2 - 2^{-52}) \cdot 2^{2^{10}} \approx 3.595\,386 \cdot 10^{308}$.
+    The smallest positive representable number is $2^{-52} \cdot 2^{2-2^{10}} = 2^{-1074}
+    \approx 4.940\,656 \cdot 10^{-324}$.
+
+    \paragraph{Representation}
+
+    A number $(-1)^s \cdot (1 + M/2^p) \cdot 2^e$ with
+    \begin{align*}
+        s & \in \{0, 1\} \\
+        p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
+        M & \in \mathbbm{Z} \cap [0, 2^p) \\
+        e & \in \mathbbm{Z} \cap [\max(0, p - 51) - 2^{r - 1} + 1, 2^{r - 1}) \\
+        r & := 8 \lfloor p / 7 \rfloor + 7 - p
+    \end{align*}%
+    is represented as
+    \DborSyntaxIdentRef{BinaryRationalToken}($p$, $0$, $s$, $M$, $e + 2^{r - 1} - 1$).
+
+    A number $(-1)^s \cdot M/2^p \cdot 2^{-1022}$ with $p := 52$, $s \in \{0, 1\}$ and
+    $M \in \mathbbm{Z} \cap (0, 2^p)$ is represented as
+    \DborSyntaxIdentRef{BinaryRationalToken}($p$, $1$, $s$, $M$, $0$).
+
+    \smallskip
+    \noindent
+    Fore reference, here are the resulting combinations for all possible $p$:
+    \nolinebreak
+    \begin{quote}
+        \newcolumntype{R}{>{$}r<{$}}  % package 'array'
+        \begin{tabular}{R R R R >{\hspace{-.8em}$}c<{$\hspace{-.8em}} R}
+            \toprule
+            k & p & r & & e \\
+            \midrule
+            0 &  3 &  4 & -3 & \ldots & 4 \\
+            1 &  5 & 10 & -15 & \ldots & 16 \\
+            2 &  7 & 16 & -63 & \ldots & 64 \\
+            3 &  8 & 23 & -127 & \ldots & 128 \\
+            4 &  9 & 30 & -255 & \ldots & 256 \\
+            5 & 10 & 37 & -511 & \ldots & 512 \\
+            6 & 11 & 44 & -1023 & \ldots & 1024 \\
+            7 & 11 & 52 & -1022 & \ldots & 1024 \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    A sequence of bytes $\langle b_1, \ldots, b_n\rangle$ is a \DborSyntaxIdent{BinaryRationalValue} if and only if
+    it is a \DborSyntaxIdentRef{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for some
+    appropriate $p$, $o$, $s$, $M$ and $E$.
+
+    \smallskip
+    \noindent
+    Examples:
+    \nolinebreak
+    \begin{quote}    
+        \begin{tabular}{ll}
+            \toprule
+            Value & Representation \\
+            \midrule
+            \DborSyntaxIdent{BinaryRationalValue}($3$, $\frac{1}{8}$) 
+                &  $\langle \DborFirstByteNumber{D0}, \DborNextByte{00} \rangle$ \\
+            \DborSyntaxIdent{BinaryRationalValue}($5$, $-(2^{17} - 2^6)$)%
+                \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
+                &  $\langle \DborFirstByteNumber{D1}, \DborNextByte{FF}, \DborNextByte{FF} \rangle$ \\
+            \DborSyntaxIdent{BinaryRationalValue}($52$, $2^{-1074}$) 
+                &  $\langle \DborFirstByteNumber{D7}, \DborNextByte{01}, \DborNextByte{00},
+                                                      \DborNextByte{00}, \DborNextByte{00},$ \\
+                &  $                                  \DborNextByte{00}, \DborNextByte{00},
+                                                      \DborNextByte{00}, \DborNextByte{00} \rangle$ \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+
+    \paragraph{Ambiguity, canonical value}
+
+    There may be more than one representation of \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any $v$.
+    Of these, the one with the smallest $p$ is the canonical value.%
+    \footnote{
+        A \DborSyntaxIdent{BinaryRationalValue}($p$, $v$) is therefore canonical if and only if there is
+        no \DborSyntaxIdent{BinaryRationalValue}($q$, $v$) with $q < p$.
+        See \ref{sec:implementation:BinaryRationalValue:canonical} for an efficient way to check this.
+    }
+    
+    For every \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) with $p < 52$, there is also
+    a \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any
+    $q \in \{4, 10, 16, 23, 30, 37, 44, 52\}$ with $q > p$.
+
+    
+    \section{Tokens}
+    %%%%%%%%%%%%%%%%    
+    \label{sec:tokens}
+
+    \subsection{\DborSyntaxIdent{MinimalToken}($v$)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hypertarget{sec:def:MinimalToken}{}
+
+    A \DborSyntaxIdent{MinimalToken}($v$) for $v \in \mathbbm{Z} \cap [0, 2^5)$ 
+    is the following byte:
+
+    \IncludeImageInPlace{MinimalToken.pdf}
+
+
+    \subsection{\DborSyntaxIdent{IntegerToken}($h$, $v$)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hypertarget{sec:def:IntegerToken}{}
+
+    An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
+    $v \in \mathbbm{Z} \cap [0, 24)$ is the following byte:
+
+    \IncludeImageInPlace{IntegerTokenA.pdf}
+    
+    An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
+    $v \in \mathbbm{Z} \cap [24, \sum_{k = 0}^8 2^{8k} + 23)$
+    is the following sequence of bytes:
+
+    \IncludeImageInPlace{IntegerTokenB.pdf}
+
+    Its $d_i \in \mathbbm{Z} \cap [0, 2^8)$ are uniquely%
+    \footnote{%
+        Since $(v - 23) \bmod 2^{8 j} = \sum_{i = 0}^{j - 1} (d_i + 1) 2^{8 i}$ for every $j$ with $0 < j \le k$,
+        the $d_i$ can be calculated with increasing $i$.
+    }
+    defined by 
+    \begin{equation}
+        v = 23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}.
+    \end{equation}
+
+    
+    \subsection{\DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$)}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \hypertarget{sec:def:BinaryRationalToken}{}
+
+    A \DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for
+    \begin{align*}
+        p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
+        o & \in \{0, 1\} \\
+        s & \in \{0, 1\} \\
+        M & \in \mathbbm{Z} \cap [0, 2^p) \\
+        E & \in \mathbbm{Z} \cap [0, 2^r) 
+            \quad\text{with}\quad r := 8 k + 7 - p
+            \quad\text{and}\quad k := \lfloor p / 7 \rfloor
+    \end{align*}%
+    and
+    \begin{align*}
+        M = E = 0 \quad & \Rightarrow \quad p < 52 \\
+        p < 52 \quad & \Rightarrow \quad o = 0
+    \end{align*}%
+    is the following sequence of bytes:
+
+    \IncludeImageInPlace{BinaryRationalToken.pdf}
+
+    It represents the value
+    \begin{equation}
+        v = (-1)^s \cdot m \cdot 2^e
+    \end{equation}
+    with
+    \begin{align*}
+        m & := 1 - o + M / 2^p \\
+        e & := \max(E, o) - 2^{r-1} + 1.
+    \end{align*}
+
+    \section{Implementation hints}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:implementation}
+
+    \subsection{Check if canonical \DborSyntaxIdent{BinaryRationalValue}}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:implementation:BinaryRationalValue:canonical}
+
+    A sequence of bytes $\langle \HexNumber{D0} + k, d_0, \ldots, d_k\rangle$ with
+    $k \in \{0, \ldots, 7\}$ and $i := \lfloor \frac{k + 1}{4} \rfloor$ 
+    is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
+    \begin{itemize}
+        \item
+        $k = 0$ or then
+
+        \item
+        $2^{2 - i} d_0 \bmod 2^8 \ne 0$ or then
+
+        \item
+        If $k < 7$:
+        $(d_{ke} < 2 - i) \vee (d_{ke} > 4 + i)$
+        with $d_{ke} := \lfloor d_k / 2^4 \rfloor \bmod 8$.
+
+        If $k = 7$:
+        $(d_k \BitAnd \HexNumber{7F} = 0) \wedge (d_{k - 1} \BitAnd \HexNumber{F0} = 0)
+        \wedge (d_0 \BitOr \cdots \BitOr d_{k - 1} \ne 0)$
+    \end{itemize}
+
+    \subsection{Check if \DborSyntaxIdent{IntegerValue} represents multiple of 10}
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \label{sec:implementation:IntegerValue:10}
+
+    An integer $v$ is an integer multiple of $10$ if and only if it is an integer multiple
+    of $2$ and of $5$.
+    Since $2^{8i} \bmod 2 = 0$ for $i \in \{0, 1, \ldots\}$ 
+    and $2^{8i} \bmod 5 = 1$ for $i \in \{1, 2, \ldots\}$, 
+    a division of $v$ can be replaced by divisions of fewer bytes.
+
+    Example:
+    Let $\langle b, d_0, \ldots, d_k\rangle$ be \DborSyntaxIdent{IntegerValue}($v$) for $v \ge 24$.
+    Then
+    \begin{align*}
+        v \bmod 2
+            & = \big(23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}\big) \bmod 2
+            = d_0 \bmod 2 \\
+        v \bmod 5
+            & = \big(23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}\big) \bmod 5
+            = \big(\sum_{i = 0}^k (d_i \bmod 5) + k + 4\big) \bmod 5
+    \end{align*}
+
+\end{document}
