@@ -17,6 +17,7 @@
 \usepackage[scaled=0.85]{beramono}  % use bremono as typewriter font (has bold variant)
 \usepackage{dsfont}  % Type 1 font for \mathds{}
 \usepackage{bm}  % bold fonts in math mode
+\usepackage{pxfonts}
 
 \usepackage{hyperref}
 \usepackage{xcolor}

@@ -10,20 +10,21 @@
     \newcommand{\e}{\mathrm{e}}
     \DeclareMathOperator{\BitAnd}{AND}
     \DeclareMathOperator{\BitOr}{OR}
-    \DeclareMathOperator{\sign}{sign}
     \newcommand{\SetOfIntegers}{\mathbbm{Z}}
-    \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
-
     \newcommand{\BinNumber}[1]{\mathrm{#1}_{2}}
     \newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
-    \newcommand{\ByteSequence}[1]{\langle #1 \rangle}
+    \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
+
+    \newcommand{\Concat}{\ensuremath{\lrtimes}}
+
+    \newcommand{\ByteSequence}[1]{\ensuremath{\langle #1 \rangle}}
 
     \newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
     \newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
         % usage: \DborSyntaxIdentRef{IntegerToken}
 
     % colour coding of bytes sequences
-    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\bm{\HexNumber{#2}}}}
+    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\ensuremath{\bm{\HexNumber{#2}}}}}
     \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red-std}{#1}}
     \newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
         % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
@@ -31,9 +32,11 @@
         % ByteStringValue, Utf8StringValue
     \newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue-std}{#1}}
     \newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet-std}{#1}}
-    \newcommand{\DborNextByte}[1]{\HexNumber{#1}}
+    \newcommand{\DborFirstByteAllocated}[1]{\DborFirstByte{gray-std}{#1}}
+    \newcommand{\DborNextByte}[1]{\ensuremath{\HexNumber{#1}}}
+    \newcommand{\DborNextByteFill}[1]{\textcolor{gray-std}{\ensuremath{\HexNumber{#1}}}}
 
-    \newenvironment{Note}{\smallskip\bgroup\small\ignorespaces}{\par\egroup\smallskip}
+    \newenvironment{Note}{\medskip\bgroup\small\ignorespaces}{\par\egroup\smallskip}
 
     \newcommand{\IncludeImageInPlace}[1]{%
         \begin{quotation}%
