@@ -155,7 +155,7 @@ Examples:
     \end{tabular}
 \end{quote}
 
-A non-empty sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed} \DborSyntaxIdent{IntegerValue}
+A non-empty byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed} \DborSyntaxIdent{IntegerValue}
 if and only if it is an \DborSyntaxIdentRef{IntegerToken}(0, $w$) or an \DborSyntaxIdentRef{IntegerToken}(1, $w$) for
 an appropriate $w$.
 The sequence is an \emph{ill-formed} \DborSyntaxIdent{IntegerValue} if and only if it is not a well-formed
@@ -250,7 +250,7 @@ Examples:
     \end{tabular}
 \end{quote}
 
-A non-empty sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
+A non-empty byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
 \DborSyntaxIdent{BinaryRationalValue} if and only if
 it is a \DborSyntaxIdentRef{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for some
 appropriate $p$, $o$, $s$, $M$ and $E$.
@@ -317,7 +317,7 @@ Examples:
     \end{tabular}
 \end{quote}
 
-A non-empty sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
+A non-empty byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
 \DborSyntaxIdent{DecimalRationalValue} if and only if
 it is \DborSyntaxIdentRef{PowerOfTenToken}($e$) | \DborSyntaxIdentRef{IntegerToken}($m$) for
 appropriate $m \ne 0$ and $e$.
@@ -340,12 +340,12 @@ Of these, the one with the smallest $|m|$ is the canonical value.%
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{ByteStringValue} can represent exactly any sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$
+A \DborSyntaxIdent{ByteStringValue} can represent exactly any byte sequence $\ByteSequence{b_1, \ldots, b_n}$
 with $n \in \IntegerInterval{0}{N + 23}$.
 
 \paragraph{Representation}
 
-A sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$ with $n \in \IntegerInterval{0}{N + 23}$
+A byte sequence $\ByteSequence{b_1, \ldots, b_n}$ with $n \in \IntegerInterval{0}{N + 23}$
 is represented as \DborSyntaxIdentRef{IntegerToken}($2$, $n$) | $\ByteSequence{b_1, \ldots, b_n}$.
 
 \smallskip
@@ -365,8 +365,122 @@ Examples:
     \end{tabular}
 \end{quote}
 
-A non-empty sequence of bytes $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
+A non-empty byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
 \DborSyntaxIdent{ByteStringValue} if and only if
 it is \DborSyntaxIdentRef{IntegerToken}($2$, $k$) | $\ByteSequence{b_{n - k + 1}, \ldots, b_n}$ for an appropriate $k$.
 The sequence is an \emph{ill-formed} \DborSyntaxIdent{ByteStringValue} if and only if it is not a well-formed
 \DborSyntaxIdent{ByteStringValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($2$, $k$).
+
+
+\subsubsection{\DborSyntaxIdent{Utf8StringValue}($\ByteSequence{b_1, \ldots, b_n}$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:Utf8StringValue}{}
+
+\paragraph{Representable objects}
+
+A \DborSyntaxIdent{Utf8StringValue} can represent exactly any byte sequence $\ByteSequence{b_1, \ldots, b_n}$
+with $n \in \IntegerInterval{0}{N + 23}$ that is empty or starts and ends with a well-formed "UTF-8" encoded integer.
+
+A byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a well-formed "UTF-8" encoded integer if and only if
+it has the form
+$\ByteSequence{\BinNumber{0xxxxxxx}}$ or
+$\ByteSequence{\BinNumber{110xxxxx}, \BinNumber{10xxxxxx}}$ or
+$\ByteSequence{\BinNumber{1110xxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}}$ or
+$\ByteSequence{\BinNumber{11110xxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}}$,
+where each $x$ stands for a bit.%
+\footnote{
+    "UTF-8" differs from UTF-8; the former is faster the check.
+
+    UTF-8 is defined in the
+    \href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{Unicode Standard 13.0}
+    as a a mapping of Unicode scalar values to 1 to 4 bytes.
+    It explicitly declares the representation of a value $\in \IntegerInterval{\HexNumber{D800}}{\HexNumber{DFFF}}$
+    and byte sequences that are not in the shortest form as ill-formed.
+
+    A byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a well-formed UTF-8 encoded Unicode scalar value if and
+    only if
+    \begin{itemize}
+        \item
+        it has the form
+        $\ByteSequence{\BinNumber{0xxxxxxx}}$ or
+        $\ByteSequence{\BinNumber{110yyyyx}, \BinNumber{10xxxxxx}}$ or
+        $\ByteSequence{\BinNumber{1110yyyy}, \BinNumber{10yxxxxx}, \BinNumber{10xxxxxx}}$ or
+        $\ByteSequence{\BinNumber{11110yyy}, \BinNumber{10yyxxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}}$,
+        where each $x, y$ stands for a bit, and at least one $y$ is $1$, and
+
+        \item
+        the integer represented by the concatenated bits $\BinNumber{y \ldots y x \ldots x}$ of all bytes
+        (the most significant bit in the first, the least significant bit in the last byte) is
+        $\in \IntegerInterval{0}{\HexNumber{D7FF}} \cup \IntegerInterval{\HexNumber{E000}}{\HexNumber{10\,FFFF}}$.
+    \end{itemize}
+}
+
+\paragraph{Representation}
+
+A representable byte sequence $\ByteSequence{b_1, \ldots, b_n}$ with $n \in \IntegerInterval{0}{N + 23}$
+is represented as \DborSyntaxIdentRef{IntegerToken}($3$, $n$) | $\ByteSequence{b_1, \ldots, b_n}$.
+
+$\ByteSequence{b_1, \ldots, b_n}$ should be a well-formed UTF-8 encoded string of Unicode code points,
+preferably in Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
+\footnote{
+    Python 3: \texttt{unicodedata.normalize('NFC', \dots)}.
+}
+
+\smallskip
+\noindent
+Examples:
+\nolinebreak
+\begin{quote}
+    \begin{tabular}{lll}
+        \toprule
+        Value & Meaning & Representation \\
+        \midrule
+        \DborSyntaxIdent{Utf8StringValue}($\ByteSequence{}$)
+            & ""
+            &  $\ByteSequence{\DborFirstByteString{60}}$ \\
+        \DborSyntaxIdent{Utf8StringValue}($\ByteSequence{\DborNextByte{52}, \DborNextByte{65},
+                                                         \DborNextByte{C3}, \DborNextByte{A9}}$)
+            & "René"
+            &  $\ByteSequence{\DborFirstByteString{65}, \DborNextByte{52}, \DborNextByte{65},
+                                                        \DborNextByte{C3}, \DborNextByte{A9}}$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+A non-empty byte sequence $\ByteSequence{b_1, \ldots, b_n}$ is a \emph{well-formed}
+\DborSyntaxIdent{Utf8StringValue} if and only if
+it is \DborSyntaxIdentRef{IntegerToken}($3$, $k$) | $\ByteSequence{b_{n - k + 1}, \ldots, b_n}$ for an appropriate $k$
+and $\ByteSequence{b_{n - k + 1}, \ldots, b_n}$ is empty or starts and ends with a well-formed "UTF-8" encoded integer.
+The sequence is an \emph{ill-formed} \DborSyntaxIdent{ByteStringValue} if and only if it is not a well-formed
+\DborSyntaxIdent{ByteStringValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($2$, $k$).
+
+\begin{Note}
+    The byte sequence $\ByteSequence{b_1, \ldots, b_n}$ of a well-formed \DborSyntaxIdent{Utf8StringValue}
+    is guaranteed to start and end with a "UTF-8" encoded integer $\in \IntegerInterval{0}{\HexNumber{10\,FFFF}}$.
+    This means that is can be traversed code point by code point in forward and backward direction without
+    the risk of crossing buffer's boundaries "inside" an "UTF-8" encoded integer.
+
+    Apart from this, any byte sequence has to be expected in a well-formed \DborSyntaxIdent{Utf8StringValue}.
+    The check if it is in fact an UTF-8 encoded Unicode string is performed when it is (optionally) accessed code point
+    by code point.
+\end{Note}
+
+\paragraph{Ambiguity, canonical value}
+
+There may be more than one \DborSyntaxIdent{Utf8StringValue} representing the same Unicode string.
+The canonical value for a \DborSyntaxIdent{Utf8StringValue}($\ByteSequence{b_1, \ldots, b_n}$) is determined
+as follows:%
+\footnote{
+    The check whether a well-formed \DborSyntaxIdent{Utf8StringValue}($\ByteSequence{b_1, \ldots, b_n}$) is canonical
+    is a very complex operation and not available at all on many platform.
+    However, the check whether it is a \emph{canonical ASCII-only} \DborSyntaxIdent{Utf8StringValue} is simple and fast;
+    it is if and only if $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$ for all $i \in \IntegerInterval{1}{n}$.
+}
+\begin{itemize}
+    \item
+    The longest prefix of $\ByteSequence{b_1, \ldots, b_n}$ that is a well-formed UTF-8 encoded Unicode string
+    is brought to Normalization Form C.
+
+    \item
+    The rest of it is replaced by the "UTF-8" encoded integer $\HexNumber{D800}$.
+\end{itemize}
