@@ -38,6 +38,7 @@
 \definecolor{green-std}{rgb}{0.18,0.58,0.08}
 \definecolor{blue-std}{rgb}{0.16,0.24,0.64}
 \definecolor{blue-dark}{rgb}{0,0,0.42}
+\definecolor{violet-std}{rgb}{0.48,0.24,0.64}
 
 \hypersetup{% package 'hyperref'
     bookmarksopen=true,

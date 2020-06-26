@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="109.25001mm"
+   width="107.45001mm"
    height="27.970646mm"
-   viewBox="0 0 387.10633 99.108587"
+   viewBox="0 0 380.72839 99.108587"
    id="svg2"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="PositiveIntegerToken.svg">
+   sodipodi:docname="NaturalToken.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.341924"
-     inkscape:cx="177.14579"
-     inkscape:cy="46.173859"
+     inkscape:zoom="7.5546214"
+     inkscape:cx="347.44991"
+     inkscape:cy="23.606549"
      inkscape:document-units="mm"
      inkscape:current-layer="g4265"
      showgrid="true"
@@ -54,8 +54,8 @@
      inkscape:snap-midpoints="true"
      inkscape:snap-intersection-paths="true"
      fit-margin-top="1"
-     fit-margin-left="1"
-     fit-margin-right="1"
+     fit-margin-left="0.1"
+     fit-margin-right="0.1"
      fit-margin-bottom="1"
      inkscape:snap-global="true">
     <inkscape:grid
@@ -64,7 +64,7 @@
        units="mm"
        spacingx="3.5433071"
        spacingy="3.5433072"
-       originx="-226.32874"
+       originx="-229.51772"
        originy="-765.36009" />
   </sodipodi:namedview>
   <metadata
@@ -75,7 +75,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by/4.0/" />
       </cc:Work>
@@ -98,7 +98,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-226.32874,-187.89358)">
+     transform="translate(-229.51772,-187.89358)">
     <g
        id="g4265"
        transform="translate(3.56584e-6,10.629915)">

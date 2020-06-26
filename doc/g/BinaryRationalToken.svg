@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="109.25002mm"
+   width="107.45002mm"
    height="78.945908mm"
-   viewBox="0 0 387.10635 279.7296"
+   viewBox="0 0 380.72839 279.7296"
    id="svg2"
    version="1.1"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
@@ -25,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.3471753"
-     inkscape:cx="274.50808"
-     inkscape:cy="183.94301"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="306.73889"
+     inkscape:cy="128.10744"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -54,8 +54,8 @@
      inkscape:snap-midpoints="true"
      inkscape:snap-intersection-paths="true"
      fit-margin-top="1"
-     fit-margin-left="1"
-     fit-margin-right="1"
+     fit-margin-left="0.1"
+     fit-margin-right="0.1"
      fit-margin-bottom="1"
      inkscape:snap-global="true"
      inkscape:snap-center="false"
@@ -66,8 +66,8 @@
        units="mm"
        spacingx="3.5433071"
        spacingy="3.5433072"
-       originx="-226.32867"
-       originy="-591.8257" />
+       originx="-229.51763"
+       originy="-591.82573" />
   </sodipodi:namedview>
   <metadata
      id="metadata7">
@@ -100,7 +100,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(-226.32874,-180.80705)">
+     transform="translate(-229.51772,-180.80705)">
     <g
        id="g4265"
        transform="translate(3.4518848e-5,3.5433862)">

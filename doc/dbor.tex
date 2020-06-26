@@ -23,19 +23,20 @@
 
     % colour coding of bytes sequences
     \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\bm{\HexNumber{#2}}}}
-    \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red}{#1}}
+    \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red-std}{#1}}
     \newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
         % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
-    \newcommand{\DborFirstByteString}[1]{\DborFirstByte{green}{#1}}
+    \newcommand{\DborFirstByteString}[1]{\DborFirstByte{green-std}{#1}}
         % ByteStringValue, UnicodeStringValue
-    \newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue}{#1}}
-    \newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet}{#1}}
+    \newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue-std}{#1}}
+    \newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet-std}{#1}}
     \newcommand{\DborNextByte}[1]{\HexNumber{#1}}
 
     \newenvironment{Note}{\bgroup\small\ignorespaces}{\par\egroup\smallskip}
 
     \newcommand{\IncludeImageInPlace}[1]{%
-        \begin{quotation}% TODO same indentation as equations
+        \begin{quotation}%
+            \noindent
             \includegraphics[scale=0.8]{#1}%
         \end{quotation}%
     }
