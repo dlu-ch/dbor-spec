@@ -6,44 +6,46 @@
 %%%%%%%%%%%%%%%%
 \label{sec:tokens}
 
-\subsection{\DborSyntaxIdent{MinimalToken}($v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Elementary tokens}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{\DborSyntaxIdent{MinimalToken}($h$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:MinimalToken}{}
 
-A \DborSyntaxIdent{MinimalToken}($v$) for $v \in \SetOfIntegers \cap [0, 2^5)$
+A \DborSyntaxIdent{MinimalToken}($h$, $v$)
+for $h \in \IntegerInterval{0}{7}$
+and $v \in \IntegerInterval{0}{2^5 - 1}$
 is the following byte:
 
 \IncludeImageInPlace{MinimalToken}
 
 
-\subsection{\DborSyntaxIdent{IntegerToken}($h$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\hypertarget{sec:def:IntegerToken}{}
+\subsubsection{\DborSyntaxIdent{NaturalToken}($h$, $u$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:NaturalToken}{}
 
-An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
-$v \in \SetOfIntegers \cap [0, 24)$ is the following byte:
+An \DborSyntaxIdent{NaturalToken}($h$, $u$, $v$)
+for $h \in \IntegerInterval{0}{6}$,
+$u \in \IntegerInterval{0}{3}$,
+and $v \in \IntegerInterval{0}{\sum_{i = 1}^8 2^{8i}}$
+is the following sequence of 2 to 9 bytes:
 
-\IncludeImageInPlace{IntegerTokenA}
+\IncludeImageInPlace{NaturalToken}
 
-An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \{0, 1, \ldots, 7\}$ and
-$v \in \SetOfIntegers \cap [24, \sum_{k = 0}^8 2^{8k} + 23)$
-is the following sequence of bytes:
-
-\IncludeImageInPlace{IntegerTokenB}
-
-Its $d_i \in \SetOfIntegers \cap [0, 2^8)$ are uniquely%
+Its $d_i \in \IntegerInterval{0}{2^8 - 1}$ and $k \in \IntegerInterval{0}{7}$ are uniquely%
 \footnote{%
-    Since $(v - 23) \bmod 2^{8 j} = \sum_{i = 0}^{j - 1} (d_i + 1) 2^{8 i}$ for every $j$ with $0 < j \le k$,
+    Since $v \bmod 2^{8 j} = \sum_{i = 0}^{j - 1} (d_i + 1) 2^{8 i}$ for every $j$ with $0 < j \le k$,
     the $d_i$ can be calculated with increasing $i$.
 }
 defined by
 \begin{equation}
-    v = 23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}.
+    v =\sum_{i = 0}^k (d_i + 1) 2^{8 i}.
 \end{equation}
 
 
-\subsection{\DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:BinaryRationalToken}{}
 
 A \DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for
@@ -51,8 +53,8 @@ A \DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for
     p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
     o & \in \{0, 1\} \\
     s & \in \{0, 1\} \\
-    M & \in \SetOfIntegers \cap [0, 2^p) \\
-    E & \in \SetOfIntegers \cap [0, 2^r)
+    M & \in \IntegerInterval{0}{2^p - 1} \\
+    E & \in \IntegerInterval{0}{2^r - 1}
         \quad\text{with}\quad r := 8 k + 7 - p
         \quad\text{and}\quad k := \lfloor p / 7 \rfloor
 \end{align*}%
@@ -74,3 +76,31 @@ with
     m & := 1 - o + M / 2^p \\
     e & := \max(E, o) - 2^{r-1} + 1.
 \end{align*}
+
+
+\subsection{Compound tokens}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{\DborSyntaxIdent{IntegerToken}($h$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:IntegerToken}{}
+
+An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
+$v \in \IntegerInterval{0}{23}$ is \DborSyntaxIdentRef{MinimalToken}($h$, $v$).
+
+An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
+$v \in \IntegerInterval{24}{N + 23}$
+is \DborSyntaxIdentRef{NaturalToken}($h$, $3$, $v - 23$).
+
+
+\subsubsection{\DborSyntaxIdent{PowerOfTenToken}($v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:PowerOfTenToken}{}
+
+A \DborSyntaxIdent{PowerOfTenToken}($v$) for $|v| \in \IntegerInterval{1}{8}$ is
+\DborSyntaxIdentRef{MinimalToken}($7$, $2^3 s + |v| - 1$).
+
+A \DborSyntaxIdent{PowerOfTenToken}($v$) for $|v| \in \IntegerInterval{9}{N + 8}$ is
+\DborSyntaxIdentRef{NaturalToken}($6$, $s$, $|v| - 8$).
+
+Here, $s = 1$ for $v < 0$ and $s = 0$ otherwise.

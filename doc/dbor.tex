@@ -4,20 +4,25 @@
 
 \documentclass{dbor-article}
 
+    \pdfsuppresswarningpagegroup=1
+
     % mathematical symbols and operators
     \newcommand{\e}{\mathrm{e}}
     \DeclareMathOperator{\BitAnd}{AND}
     \DeclareMathOperator{\BitOr}{OR}
-    \newcommand{\SetOfReals}{\mathbbm{R}}
+    \DeclareMathOperator{\sign}{sign}
     \newcommand{\SetOfIntegers}{\mathbbm{Z}}
+    \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
+
     \newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
+    \newcommand{\ByteSequence}[1]{\langle #1 \rangle}
 
     \newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
     \newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
         % usage: \DborSyntaxIdentRef{IntegerToken}
 
     % colour coding of bytes sequences
-    \newcommand{\DborFirstByte}[2]{\mathbf{\textcolor{#1}{\HexNumber{#2}}}}
+    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\bm{\HexNumber{#2}}}}
     \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red}{#1}}
     \newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
         % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
@@ -30,7 +35,7 @@
     \newenvironment{Note}{\bgroup\small\ignorespaces}{\par\egroup\smallskip}
 
     \newcommand{\IncludeImageInPlace}[1]{%
-        \begin{quotation}%
+        \begin{quotation}% TODO same indentation as equations
             \includegraphics[scale=0.8]{#1}%
         \end{quotation}%
     }

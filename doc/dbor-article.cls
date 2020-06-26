@@ -5,17 +5,18 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{dbor-article}[2020/06/25 dbor-article]
 
-\LoadClass[a4paper, 10pt, fleqn, numbers=noenddot, headsepline, headings=normal]{scrartcl}
+\LoadClass[a4paper, 10pt, headings=small, headsepline]{scrartcl}
 
 \usepackage[top=30mm, bottom=25mm, left=40mm, right=25mm]{geometry}
-\usepackage{scrextend, scrtime}
+\usepackage{scrtime}
 
-\usepackage{amsmath}
+\usepackage[fleqn]{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage[osf]{mathpazo}  % use Palatino (similar: TeX Gyre Pagella)
 \linespread{1.05}\selectfont  % Palatino needs more interline-spacing (here: 5%)
 \usepackage[scaled=0.85]{beramono}  % use bremono as typewriter font (has bold variant)
 \usepackage{dsfont}  % Type 1 font for \mathds{}
+\usepackage{bm}  % bold fonts in math mode
 
 \usepackage{hyperref}
 \usepackage{xcolor}
@@ -29,6 +30,7 @@
 % footnotes (package 'scrartcl')
 \deffootnotemark{\textsuperscript{\thefootnotemark)}}
 \deffootnote{1.5em}{1em}{\textsuperscript{\thefootnotemark)\ }}
+\setlength{\skip\footins}{3.5ex}
 
 % colours (package 'xcolor')
 \definecolor{gray-std}{gray}{0.45}
@@ -50,7 +52,7 @@
 \let\mathbbm\mathds
 
 % layout
-\setlength\parindent{1em}
+\setlength\parindent{0em}
 \setlength{\mathindent}{2em}
 \setlength{\columnsep}{2em}
 

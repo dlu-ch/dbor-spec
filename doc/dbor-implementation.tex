@@ -10,8 +10,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:implementation:BinaryRationalValue:canonical}
 
-A sequence of bytes $\langle \HexNumber{D0} + k, d_0, \ldots, d_k\rangle$ with
-$k \in \{0, \ldots, 7\}$ and $i := \lfloor \frac{k + 1}{4} \rfloor$
+A sequence of bytes $\ByteSequence{\HexNumber{D0} + k, d_0, \ldots, d_k}$ with
+$k \in \IntegerInterval{0}{7}$ and $i := \lfloor \frac{k + 1}{4} \rfloor$
 is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
 \begin{itemize}
     \item
@@ -32,7 +32,7 @@ is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
 
 \subsection{Check if \DborSyntaxIdent{IntegerValue} represents multiple of 10}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\label{sec:implementation:IntegerValue:10}
+\label{sec:implementation:IntegerValue:mod10}
 
 An integer $v$ is an integer multiple of $10$ if and only if it is an integer multiple
 of $2$ and of $5$.
