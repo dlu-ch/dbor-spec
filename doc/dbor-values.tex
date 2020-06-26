@@ -16,21 +16,21 @@ This section defines the encoding of values as sequences of bytes by reducing th
 Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
 
 
-\subsubsection{\DborSyntaxIdent{NoneValue}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborNoneValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:NoneValue}
 \hypertarget{sec:def:NoneValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{NoneValue} represents the absence of an actual value (like \texttt{null} or \texttt{None} is some
+A \DborNoneValue{} represents the absence of an actual value (like \texttt{null} or \texttt{None} is some
 programming languages or NaN in IEEE-754:2008).
 It is considered different from any object represented by a \DborSyntaxIdentRef{Value} other than
-\DborSyntaxIdent{NoneValue}.
+\DborNoneValue.
 
 \paragraph{Representation}
 
-An \DborSyntaxIdent{NoneValue} is the \DborSyntaxIdentRef{MinimalToken}($3$, $\HexNumber{1F}$).
+An \DborNoneValue{} is the \DborMinimalToken*($3$, $\HexNumber{1F}$).
 
 \smallskip
 \noindent
@@ -41,25 +41,20 @@ Example:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{NoneValue}
-            & \ByteSequence{\DborFirstByteNone{FF}} \\
+        \DborNoneValue & \ByteSequence{\DborFirstByteNone{FF}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
 \paragraph{Ambiguity, canonical value}
 
-There is only one representation of a \DborSyntaxIdent{NoneValue}.
+There is only one representation of a \DborNoneValue.
 It is canonical.
-Every \DborSyntaxIdent{NoneValue} is well-formed.
+Every \DborNoneValue{} is well-formed.
 
 
-\subsubsection{%
-    \DborSyntaxIdent{MinusZeroValue},
-    \DborSyntaxIdent{InfinityValue},
-    \DborSyntaxIdent{MinusInfinityValue}%
-}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborMinusZeroValue, \DborInfinityValue, \DborMinusInfinityValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:MinusZeroValue}
 \label{sec:def:InfinityValue}
 \label{sec:def:MinusInfinityValue}
@@ -69,23 +64,23 @@ Every \DborSyntaxIdent{NoneValue} is well-formed.
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{MinusZeroValue} represents the "number" $-0$ in the sense of IEEE-754:2008 artihmetics.
+A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
 
-A \DborSyntaxIdent{InfinityValue} represents the "number" $\infty$ in the sense of IEEE-754:2008 artihmetics.
+A \DborInfinityValue{} represents the "number" $\infty$ in the sense of IEEE-754:2008 arithmetic.
 It is considered larger than any object represented by a \DborSyntaxIdentRef{NumberValue}
-other than \DborSyntaxIdent{InfinityValue}.
+other than \DborInfinityValue.
 
-A \DborSyntaxIdent{MinusInfinityValue} represents the "number" $-\infty$ in the sense of IEEE-754:2008 artihmetics.
+A \DborMinusInfinityValue{} represents the "number" $-\infty$ in the sense of IEEE-754:2008 arithmetic.
 It is considered smaller than any object represented by a \DborSyntaxIdentRef{NumberValue}
-other than \DborSyntaxIdent{MinusInfinityValue}.
+other than \DborMinusInfinityValue.
 
 \paragraph{Representation}
 
-A \DborSyntaxIdent{MinusZeroValue} is the \DborSyntaxIdentRef{MinimalToken}($3$, $\HexNumber{1C}$).
+A \DborMinusZeroValue{} is the \DborMinimalToken*($3$, $\HexNumber{1C}$).
 
-An \DborSyntaxIdent{InfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($3$, $\HexNumber{1E}$).
+An \DborInfinityValue{} is the \DborMinimalToken*($3$, $\HexNumber{1E}$).
 
-A \DborSyntaxIdent{MinusInfinityValue} is the \DborSyntaxIdentRef{MinimalToken}($3$, $\HexNumber{1D}$).
+A \DborMinusInfinityValue{} is the \DborMinimalToken*($3$, $\HexNumber{1D}$).
 
 \smallskip
 \noindent
@@ -96,32 +91,29 @@ Example:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{MinusZeroValue}
-            & \ByteSequence{\DborFirstByteNumber{FC}} \\
-        \DborSyntaxIdent{InfinityValue}
-            & \ByteSequence{\DborFirstByteNumber{FE}} \\
-        \DborSyntaxIdent{MinusInfinityValue}
-            & \ByteSequence{\DborFirstByteNumber{FD}} \\
+        \DborMinusZeroValue & \ByteSequence{\DborFirstByteNumber{FC}} \\
+        \DborInfinityValue & \ByteSequence{\DborFirstByteNumber{FE}} \\
+        \DborMinusInfinityValue & \ByteSequence{\DborFirstByteNumber{FD}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
 \paragraph{Ambiguity, canonical value}
 
-There is only one representation of a \DborSyntaxIdent{MinusZeroValue},
-\DborSyntaxIdent{InfinityValue}, and \DborSyntaxIdent{MinusInfinityValue}, respectively.
+There is only one representation of a \DborMinusZeroValue,
+\DborInfinityValue, and \DborMinusInfinityValue, respectively.
 They are canonical.
-Every \DborSyntaxIdent{MinusZeroValue}, \DborSyntaxIdent{InfinityValue},
-and \DborSyntaxIdent{MinusInfinityValue} is well-formed.
+Every \DborMinusZeroValue, \DborInfinityValue,
+and \DborMinusInfinityValue{} is well-formed.
 
 
-\subsubsection{\DborSyntaxIdent{IntegerValue}($v$)}
+\subsubsection{\DborIntegerValue($v$)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:IntegerValue}{}
 
 \paragraph{Representable objects}
 
-An \DborSyntaxIdent{IntegerValue} can represent any number $v \in \IntegerInterval{-(N + 24)}{N + 23}$.
+An \DborIntegerValue{} can represent any number $v \in \IntegerInterval{-(N + 24)}{N + 23}$.
 
 \smallskip
 The minimum representable number is $-18\,519\,084\,246\,547\,628\,312$.
@@ -129,8 +121,8 @@ The maximum representable number is $18\,519\,084\,246\,547\,628\,311$.
 
 \paragraph{Representation}
 
-A number $v \in \IntegerInterval{0}{N + 23}$ is represented as \DborSyntaxIdentRef{IntegerToken}(0, $v$).
-A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborSyntaxIdentRef{IntegerToken}(1, $-v - 1$).
+A number $v \in \IntegerInterval{0}{N + 23}$ is represented as \DborIntegerToken*(0, $v$).
+A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborIntegerToken*(1, $-v - 1$).
 
 \smallskip
 \noindent
@@ -142,15 +134,15 @@ Examples:
         Value & Representation \\
         \midrule
         %
-        \DborSyntaxIdent{IntegerValue}($0$)
+        \DborIntegerValue($0$)
             &  \ByteSequence{\DborFirstByteNumber{00}} \\
-        \DborSyntaxIdent{IntegerValue}($23$)
+        \DborIntegerValue($23$)
             &  \ByteSequence{\DborFirstByteNumber{17}} \\
-        \DborSyntaxIdent{IntegerValue}($24$)
+        \DborIntegerValue($24$)
             &  \ByteSequence{\DborFirstByteNumber{18}, \DborNextByte{00}} \\
-        \DborSyntaxIdent{IntegerValue}($-100$)
+        \DborIntegerValue($-100$)
             &  \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}} \\
-        \DborSyntaxIdent{IntegerValue}($\HexNumber{FF\,FF\,FF\,FF}$)
+        \DborIntegerValue($\HexNumber{FF\,FF\,FF\,FF}$)
             &  \ByteSequence{\DborFirstByteNumber{1B}, \DborNextByte{E7}, \DborNextByte{FE},
                \DborNextByte{FE}, \DborNextByte{FE}} \\
         %
@@ -158,26 +150,26 @@ Examples:
     \end{tabular}
 \end{quote}
 
-A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed} \DborSyntaxIdent{IntegerValue}
-if and only if it is an \DborSyntaxIdentRef{IntegerToken}(0, $w$) or an \DborSyntaxIdentRef{IntegerToken}(1, $w$) for
+A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed} \DborIntegerValue{}
+if and only if it is an \DborIntegerToken*(0, $w$) or an \DborIntegerToken*(1, $w$) for
 an appropriate $w$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{IntegerValue} if and only if it is not a well-formed
-\DborSyntaxIdent{IntegerValue} but $b_1$ is the first byte of a \DborSyntaxIdentRef{IntegerToken}(0, $w$) or
-an \DborSyntaxIdentRef{IntegerToken}(1, $w$).
+The sequence is an \emph{ill-formed} \DborIntegerValue{} if and only if it is not a well-formed
+\DborIntegerValue{} but $b_1$ is the first byte of a \DborIntegerToken*(0, $w$) or
+an \DborIntegerToken*(1, $w$).
 
 \paragraph{Ambiguity, canonical value}
 
-There is at most one representation of a \DborSyntaxIdent{IntegerValue}($v$) for any $v$.
+There is at most one representation of a \DborIntegerValue($v$) for any $v$.
 It is canonical.
 
 
-\subsubsection{\DborSyntaxIdent{BinaryRationalValue}($p$, $v$)}
+\subsubsection{\DborBinaryRationalValue($p$, $v$)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:BinaryRationalValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{BinaryRationalValue} can represent any number
+A \DborBinaryRationalValue can represent any number
 \begin{equation}
     v = (-1)^s \cdot \sum_{i = -52}^0 m_i s^i \cdot 2^e
 \end{equation}
@@ -202,11 +194,11 @@ A number $(-1)^s \cdot (1 + M/2^p) \cdot 2^e$ with
     r & := 8 \lfloor p / 7 \rfloor + 7 - p
 \end{align*}%
 is represented as
-\DborSyntaxIdentRef{BinaryRationalToken}($p$, $0$, $s$, $M$, $e + 2^{r - 1} - 1$).
+\DborBinaryRationalToken*($p$, $0$, $s$, $M$, $e + 2^{r - 1} - 1$).
 
 A number $(-1)^s \cdot M/2^p \cdot 2^{-1022}$ with $p := 52$, $s \in \{0, 1\}$ and
 $M \in \SetOfIntegers \cap (0, 2^p)$ is represented as
-\DborSyntaxIdentRef{BinaryRationalToken}($p$, $1$, $s$, $M$, $0$).
+\DborBinaryRationalToken*($p$, $1$, $s$, $M$, $0$).
 
 \smallskip
 \noindent
@@ -239,12 +231,12 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{BinaryRationalValue}($3$, $\frac{1}{8}$)
+        \DborBinaryRationalValue($3$, $\frac{1}{8}$)
             &  \ByteSequence{\DborFirstByteNumber{D0}, \DborNextByte{00}} \\
-        \DborSyntaxIdent{BinaryRationalValue}($5$, $-(2^{17} - 2^6)$)%
+        \DborBinaryRationalValue($5$, $-(2^{17} - 2^6)$)%
             \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
             &  \ByteSequence{\DborFirstByteNumber{D1}, \DborNextByte{FF}, \DborNextByte{FF}} \\
-        \DborSyntaxIdent{BinaryRationalValue}($52$, $2^{-1074}$)
+        \DborBinaryRationalValue($52$, $2^{-1074}$)
             &  $\ByteSequence{\DborFirstByteNumber{D7}, \DborNextByte{01}, \DborNextByte{00},
                                                         \DborNextByte{00}, \DborNextByte{00},$ \\
             &  $                                        \DborNextByte{00}, \DborNextByte{00},
@@ -254,35 +246,34 @@ Examples:
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{BinaryRationalValue} if and only if
-it is a \DborSyntaxIdentRef{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for some
-appropriate $p$, $o$, $s$, $M$ and $E$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{BinaryRationalValue} if and only if it is not a well-formed
-\DborSyntaxIdent{BinaryRationalValue} but $b_1$ is the first byte of a
-\DborSyntaxIdentRef{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$).
+\DborBinaryRationalValue{} if and only if
+it is a \DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$) for some appropriate $p$, $o$, $s$, $M$ and $E$.
+The sequence is an \emph{ill-formed} \DborBinaryRationalValue{} if and only if it is not a well-formed
+\DborBinaryRationalValue{} but $b_1$ is the first byte of a
+\DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$).
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one representation of \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any $v$.
+There may be more than one representation of \DborBinaryRationalValue($p$, $v$) for any $v$.
 Of these, the one with the smallest $p$ is the canonical value.%
 \footnote{
-    A \DborSyntaxIdent{BinaryRationalValue}($p$, $v$) is therefore canonical if and only if there is
-    no \DborSyntaxIdent{BinaryRationalValue}($q$, $v$) with $q < p$.
+    A \DborBinaryRationalValue($p$, $v$) is therefore canonical if and only if there is
+    no \DborBinaryRationalValue($q$, $v$) with $q < p$.
     See \ref{sec:implementation:BinaryRationalValue:canonical} for an efficient way to check this.
 }
 
-For every \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) with $p < 52$, there is also
-a \DborSyntaxIdent{Binary\-Rational\-Value}($p$, $v$) for any
+For every \DborBinaryRationalValue($p$, $v$) with $p < 52$, there is also
+a \DborBinaryRationalValue($p$, $v$) for any
 $q \in \{4, 10, 16, 23, 30, 37, 44, 52\}$ with $q > p$.
 
 
-\subsubsection{\DborSyntaxIdent{DecimalRationalValue}($m$, $e$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborDecimalRationalValue($m$, $e$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:DecimalRationalValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{DecimalRationalValue} can represent any number
+A \DborDecimalRationalValue{} can represent any number
 \begin{equation}
     v = m \cdot 10^e
 \end{equation}
@@ -301,7 +292,7 @@ The smallest positive representable number is $10^{-18\,519\,084\,246\,547\,628\
 
 A number $m \cdot 10^e$ with with $m \in \IntegerInterval{-(N + 24)}{-1} \cup \IntegerInterval{1}{N + 23}$
 and $e \in \IntegerInterval{-(N + 8)}{-1} \cup \IntegerInterval{1}{N + 8}$
-is represented as \DborSyntaxIdentRef{PowerOfTenToken}($e$) {\Concat} \DborSyntaxIdentRef{IntegerValue}($m$).
+is represented as \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*($m$).
 
 \smallskip
 \noindent
@@ -312,44 +303,44 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{DecimalRationalValue}($1$, $-2$)
+        \DborDecimalRationalValue($1$, $-2$)
             &  \ByteSequence{\DborFirstByteNumber{E9}, \DborNextByte{01}} \\
-        \DborSyntaxIdent{DecimalRationalValue}($-123$, $100$)
+        \DborDecimalRationalValue($-123$, $100$)
             &  \ByteSequence{\DborFirstByteNumber{C0}, \DborNextByte{5B}, \DborNextByte{38}, \DborNextByte{62}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{DecimalRationalValue} if and only if
-it is \DborSyntaxIdentRef{PowerOfTenToken}($e$) {\Concat} \DborSyntaxIdentRef{IntegerToken}($m$) for
+\DborDecimalRationalValue{} if and only if
+it is \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerToken*($m$) for
 appropriate $m \ne 0$ and $e$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{DecimalRationalValue} if and only if it is not a well-formed
-\DborSyntaxIdent{DecimalRationalValue} but $b_1$ is the first byte of a \DborSyntaxIdentRef{PowerOfTenToken}($e$).
+The sequence is an \emph{ill-formed} \DborDecimalRationalValue{} if and only if it is not a well-formed
+\DborDecimalRationalValue{} but $b_1$ is the first byte of a \DborPowerOfTenToken*($e$).
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one \DborSyntaxIdent{DecimalRationalValue}($m$, $e$) representing the same number $m \cdot 10^e$.
+There may be more than one \DborDecimalRationalValue($m$, $e$) representing the same number $m \cdot 10^e$.
 Of these, the one with the smallest $|m|$ is the canonical value.%
 \footnote{
-    A \DborSyntaxIdent{DecimalRationalValue}($m$, $e$) is therefore canonical if and only if $m \bmod 10 = 0$.
+    A \DborDecimalRationalValue($m$, $e$) is therefore canonical if and only if $m \bmod 10 = 0$.
     See \ref{sec:implementation:IntegerValue:mod10} for an efficient way to check this.
 }
 
 
-\subsubsection{\DborSyntaxIdent{ByteStringValue}(\ByteSequence{b_1, \ldots, b_m})}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborByteStringValue(\ByteSequence{b_1, \ldots, b_m})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:ByteStringValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{ByteStringValue} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
+A \DborByteStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
 with $m \in \IntegerInterval{0}{N + 23}$.
 
 \paragraph{Representation}
 
 A byte sequence \ByteSequence{b_1, \ldots, b_m} with $m \in \IntegerInterval{0}{N + 23}$
-is represented as \DborSyntaxIdentRef{IntegerToken}($2$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m}.
+is represented as \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m}.
 
 \smallskip
 \noindent
@@ -360,39 +351,41 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{ByteStringValue}(\ByteSequence{})
+        \DborByteStringValue(\ByteSequence{})
             &  \ByteSequence{\DborFirstByteString{40}} \\
-        \DborSyntaxIdent{ByteStringValue}(\ByteSequence{\HexNumber{12}, \HexNumber{34}})
+        \DborByteStringValue(\ByteSequence{\HexNumber{12}, \HexNumber{34}})
             &  \ByteSequence{\DborFirstByteString{42}, \DborNextByte{12}, \DborNextByte{34}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{ByteStringValue} if and only if begins with
-\DborSyntaxIdentRef{IntegerToken}($2$, $m$) for an appropriate $m$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{ByteStringValue} if and only if it is not a well-formed
-\DborSyntaxIdent{ByteStringValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($2$, $m$).
+\DborByteStringValue{} if and only if begins with \DborIntegerToken*($2$, $m$) for an appropriate $m$.
+The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is not a well-formed
+\DborByteStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($2$, $m$).
 
 
-\subsubsection{\DborSyntaxIdent{Utf8StringValue}(\ByteSequence{b_1, \ldots, b_m})}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:Utf8StringValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{Utf8StringValue} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
+A \DborUtfEightStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
 with $m \in \IntegerInterval{0}{N + 23}$ that is empty or starts and ends with a well-formed "UTF-8" encoded integer.
 
 A byte sequence \ByteSequence{b_1, \ldots, b_k} is a well-formed "UTF-8" encoded integer if and only if
 it has the form
-\ByteSequence{\BinNumber{0xxxxxxx}} or
-\ByteSequence{\BinNumber{110xxxxx}, \BinNumber{10xxxxxx}} or
-\ByteSequence{\BinNumber{1110xxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}} or
-\ByteSequence{\BinNumber{11110xxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}},
+\begin{gather*}
+    \ByteSequence{\BinNumber{0xxxxxxx}} \quad\text{or} \\
+    \ByteSequence{\BinNumber{0xxxxxxx}} \quad\text{or} \\
+    \ByteSequence{\BinNumber{110xxxxx}, \BinNumber{10xxxxxx}} \quad\text{or} \\
+    \ByteSequence{\BinNumber{1110xxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}} \quad\text{or} \\
+    \ByteSequence{\BinNumber{11110xxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}},
+\end{gather*}
 where each $x$ stands for a bit.%
 \footnote{
-    "UTF-8" differs from UTF-8; the former is faster the check.
+    "UTF-8" differs from UTF-8; the former is simpler and faster to check.
 
     UTF-8 is defined in the
     \href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{Unicode Standard 13.0}
@@ -401,27 +394,23 @@ where each $x$ stands for a bit.%
     and byte sequences that are not in the shortest form as ill-formed.
 
     A byte sequence \ByteSequence{b_1, \ldots, b_k} is a well-formed UTF-8 encoded Unicode scalar value if and
-    only if
-    \begin{itemize}
-        \item
-        it has the form
-        \ByteSequence{\BinNumber{0xxxxxxx}} or
-        \ByteSequence{\BinNumber{110yyyyx}, \BinNumber{10xxxxxx}} or
-        \ByteSequence{\BinNumber{1110yyyy}, \BinNumber{10yxxxxx}, \BinNumber{10xxxxxx}} or
+    only if it has the form
+    \begin{gather*}
+        \ByteSequence{\BinNumber{0xxxxxxx}} \quad\text{or} \\
+        \ByteSequence{\BinNumber{110yyyyx}, \BinNumber{10xxxxxx}} \quad\text{or} \\
+        \ByteSequence{\BinNumber{1110yyyy}, \BinNumber{10yxxxxx}, \BinNumber{10xxxxxx}} \quad\text{or} \\
         \ByteSequence{\BinNumber{11110yyy}, \BinNumber{10yyxxxx}, \BinNumber{10xxxxxx}, \BinNumber{10xxxxxx}},
-        where each $x, y$ stands for a bit, and at least one $y$ is $1$, and
-
-        \item
-        the integer represented by the concatenated bits $\BinNumber{y \ldots y x \ldots x}$ of all bytes
-        (the most significant bit in the first, the least significant bit in the last byte) is
-        $\in \IntegerInterval{0}{\HexNumber{D7FF}} \cup \IntegerInterval{\HexNumber{E000}}{\HexNumber{10\,FFFF}}$.
-    \end{itemize}
+    \end{gather*}
+    where each $x, y$ stands for a bit, at least one $y$ is $1$, and the integer represented by
+    the concatenated bits $\BinNumber{y \ldots y x \ldots x}$ of all bytes
+    (the most significant bit in the first, the least significant bit in the last byte) is
+    $\in \IntegerInterval{0}{\HexNumber{D7FF}} \cup \IntegerInterval{\HexNumber{E000}}{\HexNumber{10\,FFFF}}$.
 }
 
 \paragraph{Representation}
 
 A representable byte sequence \ByteSequence{b_1, \ldots, b_m} with $m \in \IntegerInterval{0}{N + 23}$
-is represented as \DborSyntaxIdentRef{IntegerToken}($3$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m}.
+is represented as \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m}.
 
 \ByteSequence{b_1, \ldots, b_m} should be a well-formed UTF-8 encoded string of Unicode code points,
 preferably in Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
@@ -438,11 +427,11 @@ Examples:
         \toprule
         Value & Meaning & Representation \\
         \midrule
-        \DborSyntaxIdent{Utf8StringValue}(\ByteSequence{})
+        \DborUtfEightStringValue(\ByteSequence{})
             & ""
             &  \ByteSequence{\DborFirstByteString{60}} \\
-        \DborSyntaxIdent{Utf8StringValue}(\ByteSequence{\DborNextByte{52}, \DborNextByte{65},
-                                                        \DborNextByte{C3}, \DborNextByte{A9}})
+        \DborUtfEightStringValue(\ByteSequence{\DborNextByte{52}, \DborNextByte{65},
+                                               \DborNextByte{C3}, \DborNextByte{A9}})
             & "René"
             &  \ByteSequence{\DborFirstByteString{65}, \DborNextByte{52}, \DborNextByte{65},
                                                        \DborNextByte{C3}, \DborNextByte{A9}} \\
@@ -451,33 +440,33 @@ Examples:
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{Utf8StringValue} if and only if
-it is \DborSyntaxIdentRef{IntegerToken}($3$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for an
+\DborUtfEightStringValue{} if and only if
+it is \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for an
 appropriate $m$ and \ByteSequence{b_{n - m + 1}, \ldots, b_n} is empty or starts and ends with
 a well-formed "UTF-8" encoded integer.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{ByteStringValue} if and only if it is not a well-formed
-\DborSyntaxIdent{ByteStringValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($2$, $m$).
+The sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if it is not a well-formed
+\DborUtfEightStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($2$, $m$).
 
 \begin{Note}
-    The byte sequence \ByteSequence{b_1, \ldots, b_m} of a well-formed \DborSyntaxIdent{Utf8StringValue}
+    The byte sequence \ByteSequence{b_1, \ldots, b_m} of a well-formed \DborUtfEightStringValue{}
     is guaranteed to start and end with a "UTF-8" encoded integer $\in \IntegerInterval{0}{\HexNumber{10\,FFFF}}$.
     This means that is can be traversed code point by code point in forward and backward direction without
     the risk of crossing buffer's boundaries "inside" an "UTF-8" encoded integer.
 
-    Apart from this, any byte sequence has to be expected in a well-formed \DborSyntaxIdent{Utf8StringValue}.
+    Apart from this, any byte sequence has to be expected in a well-formed \DborUtfEightStringValue.
     The check if it is in fact an UTF-8 encoded Unicode string is performed when it is (optionally) accessed code point
     by code point.
 \end{Note}
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one \DborSyntaxIdent{Utf8StringValue} representing the same Unicode string.
-The canonical value of \DborSyntaxIdent{Utf8StringValue}(\ByteSequence{b_1, \ldots, b_m}) is determined
+There may be more than one \DborUtfEightStringValue{} representing the same Unicode string.
+The canonical value of \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) is determined
 as follows:%
 \footnote{
-    The check whether a well-formed \DborSyntaxIdent{Utf8StringValue}(\ByteSequence{b_1, \ldots, b_m}) is canonical
+    The check whether a well-formed \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) is canonical
     is a very complex operation and not available at all on many platform.
-    However, the check whether it is a \emph{canonical ASCII-only} \DborSyntaxIdent{Utf8StringValue} is simple and fast;
+    However, the check whether it is a \emph{canonical ASCII-only} \DborUtfEightStringValue{} is simple and fast;
     it is if and only if $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$ for all $i \in \IntegerInterval{1}{m}$.
 }
 \begin{itemize}
@@ -499,19 +488,19 @@ meaning from their elements.
 All container values can be nested.
 
 
-\subsubsection{\DborSyntaxIdent{SequenceValue}($v_1, \ldots, v_r$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborSequenceValue($v_1, \ldots, v_r$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:SequenceValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{SequenceValue} can represent any sequence $v_1, \ldots, v_r$
+A \DborSequenceValue{} can represent any sequence $v_1, \ldots, v_r$
 of well-formed values (its elements) with the total size $\sum_{i = 1}^r \|v_i\| \in \IntegerInterval{0}{N + 23}$.
 
 \paragraph{Representation}
 
 A representable sequence $v_1, \ldots, v_r$ is represented as
-\DborSyntaxIdentRef{IntegerToken}($4$, $m$) {\Concat} $v_1 \Concat \cdots \Concat v_r$
+\DborIntegerToken*($4$, $m$) {\Concat} $v_1 \Concat \cdots \Concat v_r$
 with $m := \sum_{i = 1}^r \|v_i\|$.
 
 \smallskip
@@ -523,9 +512,9 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{SequenceValue}()
+        \DborSequenceValue()
             & \ByteSequence{\DborFirstByteSequence{80}} \\
-        \DborSyntaxIdent{SequenceValue}(\DborSyntaxIdent{NoneValue}, \DborSyntaxIdent{IntegerValue}($24$))
+        \DborSequenceValue(\DborNoneValue, \DborIntegerValue($24$))
             & \ByteSequence{\DborFirstByteSequence{83},
                     \DborFirstByteNone{FF},
                     \DborFirstByteNumber{18}, \DborNextByte{00}} \\
@@ -534,34 +523,34 @@ Examples:
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{SequenceValue} if and only if
-it is \DborSyntaxIdentRef{IntegerToken}($4$, $m$), followed by well-formed values with a total size $m$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{SequenceValue} if and only if it is not a well-formed
-\DborSyntaxIdent{SequenceValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($4$, $m$).
+\DborSequenceValue{} if and only if it is \DborIntegerToken*($4$, $m$),
+followed by well-formed values with a total size $m$.
+The sequence is an \emph{ill-formed} \DborSequenceValue{} if and only if it is not a well-formed
+\DborSequenceValue{} but $b_1$ is the first byte of an \DborIntegerToken*($4$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborSyntaxIdent{SequenceValue} representing the same object depends on its
+Whether there is more than one \DborSequenceValue{} representing the same object depends on its
 elements.
-The canonical value of \DborSyntaxIdent{SequenceValue}($v_1, \ldots, v_r$) is
-\DborSyntaxIdent{SequenceValue}($v_1', \ldots, v_r'$)
+The canonical value of \DborSequenceValue{}($v_1, \ldots, v_r$) is
+\DborSequenceValue($v_1', \ldots, v_r'$)
 where $v_i'$ is the canonical value of $v_i$ for all $i \in \IntegerInterval{1}{r}$.
 
 
-\subsubsection{\DborSyntaxIdent{DictionaryValue}($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:DictionaryValue}{}
 
 \paragraph{Representable objects}
 
-A \DborSyntaxIdent{DictionaryValue} can represent any dictionary $k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$ with
+A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$ with
 \begin{itemize}
     \item
     pairwise distinct, well-formed \emph{elementary values}%
     \footnote{
         Comparision of keys is an important operation and must be fast.
-        When the keys must be compared efficiently and the fill bytes in \DborSyntaxIdentRef{AllocatedValue} must be
-        ignored; a container value that can contain an \DborSyntaxIdentRef{AllocatedValue} must be processed in depth
+        When the keys must be compared efficiently and the fill bytes in \DborAllocatedValue*{} must be
+        ignored; a container value that can contain an \DborAllocatedValue*{} must be processed in depth
         which makes such a comparison operation complex and slow.
         Disallowing container values makes the comparison operation simple and fast.
     }
@@ -584,7 +573,7 @@ in $v_j$.
 \paragraph{Representation}
 
 A representable dictionary $k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$ is represented as
-\DborSyntaxIdentRef{IntegerToken}($5$, $m$) {\Concat} $k_1 \Concat v_1 \Concat \cdots \Concat k_r \Concat v_r$
+\DborIntegerToken*($5$, $m$) {\Concat} $k_1 \Concat v_1 \Concat \cdots \Concat k_r \Concat v_r$
 with $m := \sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big)$.
 
 \smallskip
@@ -596,9 +585,9 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{DictionaryValue}()
+        \DborDictionaryValue()
             & \ByteSequence{\DborFirstByteDictionary{90}} \\
-        \DborSyntaxIdent{DictionaryValue}(\DborSyntaxIdent{NoneValue}, \DborSyntaxIdent{IntegerValue}($24$))
+        \DborDictionaryValue(\DborNoneValue, \DborIntegerValue($24$))
             & \ByteSequence{\DborFirstByteSequence{83},
                     \DborFirstByteNone{FF},
                     \DborFirstByteNumber{18}, \DborNextByte{00}} \\
@@ -607,10 +596,10 @@ Examples:
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{DictionaryValue} if and only if
+\DborDictionaryValue{} if and only if
 \begin{itemize}
     \item
-    it is \DborSyntaxIdentRef{IntegerToken}($5$, $m$),
+    it is \DborIntegerToken*($5$, $m$),
     followed by an even number $2 r$ of well-formed values $k_1, v_1, \ldots, k_r, v_r$
     with total size $m$, and
 
@@ -620,32 +609,32 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed
     \item
     $v_{i - 1} \prec v_{i}$ for all $i \in \IntegerInterval{2}{r}$.
 \end{itemize}
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{DictionaryValue} if and only if it is not a well-formed
-\DborSyntaxIdent{DictionaryValue} but $b_1$ is the first byte of an \DborSyntaxIdentRef{IntegerToken}($5$, $m$).
+The sequence is an \emph{ill-formed} \DborDictionaryValue{} if and only if it is not a well-formed
+\DborDictionaryValue{} but $b_1$ is the first byte of an \DborIntegerToken*($5$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborSyntaxIdent{DictionaryValue} representing the same object depends on its
+Whether there is more than one \DborDictionaryValue{} representing the same object depends on its
 elements.
-The canonical value of \DborSyntaxIdent{DictionaryValue}($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) is
-\DborSyntaxIdent{DictionaryValue}($k_1' \mapsto v_1', \ldots, k_r' \mapsto v_r'$)
+The canonical value of \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) is
+\DborDictionaryValue($k_1' \mapsto v_1', \ldots, k_r' \mapsto v_r'$)
 where $k_i', v_i'$ are the canonical values of $k_i, v_i$ for all $i \in \IntegerInterval{1}{r}$.
 
 
-\subsubsection{\DborSyntaxIdent{AllocatedValue}($m$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborAllocatedValue($m$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:AllocatedValue}{}
 
 \paragraph{Representable objects}
 
-An \DborSyntaxIdent{AllocatedValue} can represent any object of fixed size $m \in \IntegerInterval{0}{N + 23}$
+An \DborAllocatedValue{} can represent any object of fixed size $m \in \IntegerInterval{0}{N + 23}$
 that contains exactly one well-formed value $v$ with $\|v\| \le m$.
 This allows the definition of fixed offsets with a $v$ of variable size.
 
 \paragraph{Representation}
 
-A representable \DborSyntaxIdent{AllocatedValue}($m$, $v$) is represented as
-\DborSyntaxIdentRef{NaturalToken}($6$, $3$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$
+A representable \DborAllocatedValue($m$, $v$) is represented as
+\DborNaturalToken*($6$, $3$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$
 with arbitrary fill bytes $f_{\|v\| + 1}, \ldots, f_m$.
 
 \smallskip
@@ -657,11 +646,11 @@ Examples:
         \toprule
         Value & Representation \\
         \midrule
-        \DborSyntaxIdent{AllocatedValue}(3, \DborSyntaxIdent{IntegerValue(23)})
+        \DborAllocatedValue(3, \DborIntegerValue(23))
             & \ByteSequence{\DborFirstByteAllocated{D8}, \DborNextByte{02},
                     \DborFirstByteNumber{17},
                     \DborNextByteFill{FF}, \DborNextByteFill{FF}} \\
-        \DborSyntaxIdent{AllocatedValue}(3, \DborSyntaxIdent{IntegerValue(24)})
+        \DborAllocatedValue(3, \DborIntegerValue(24))
             & \ByteSequence{\DborFirstByteAllocated{D8}, \DborNextByte{02},
                     \DborFirstByteNumber{18}, \DborNextByte{00},
                     \DborNextByteFill{FF}} \\
@@ -670,16 +659,16 @@ Examples:
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborSyntaxIdent{AllocatedValue} if and only if
-it begins with \DborSyntaxIdentRef{NaturalToken}($6$, $3$, $m$) for an appropriate $m$
+\DborAllocatedValue{} if and only if
+it begins with \DborNaturalToken*($6$, $3$, $m$) for an appropriate $m$
 and is followed by a well-formed value $v$ of size $\|v\| \le m$.
-The sequence is an \emph{ill-formed} \DborSyntaxIdent{AllocatedValue} if and only if it is not a well-formed
-\DborSyntaxIdent{SequenceValue} but $b_1$ is the first byte of a \DborSyntaxIdentRef{NaturalToken}($6$, $3$, $m$).
+The sequence is an \emph{ill-formed} \DborAllocatedValue{} if and only if it is not a well-formed
+\DborSequenceValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $3$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborSyntaxIdent{AllocatedValue} representing the same object depends on its
+Whether there is more than one \DborAllocatedValue{} representing the same object depends on its
 contained element.
-The canonical value of \DborSyntaxIdent{AllocatedValue}($m$, $v$) is
-\DborSyntaxIdent{SequenceValue}($m$, $v'$) where $v'$ is the canonical value of $i$
+The canonical value of \DborAllocatedValue($m$, $v$) is
+\DborSequenceValue($m$, $v'$) where $v'$ is the canonical value of $i$
 and all fill bytes $f_{\|v'\| + 1}, \ldots, f_m$ are $\HexNumber{FF}$.

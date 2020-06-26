@@ -16,12 +16,40 @@
     \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
 
     \newcommand{\Concat}{\ensuremath{\lrtimes}}
-
     \newcommand{\ByteSequence}[1]{\ensuremath{\langle #1 \rangle}}
 
-    \newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}
-    \newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}
+    \newcommand{\DborSyntaxIdent}[1]{\texttt{#1}}  % TODO remove
+    \newcommand{\DborSyntaxIdentRef}[1]{\hyperlink{sec:def:#1}{\DborSyntaxIdent{#1}}}  % TODO remove
         % usage: \DborSyntaxIdentRef{IntegerToken}
+
+    \makeatletter
+    \DeclareRobustCommand{\DborSyntaxIdentX}[2]{%  TODO rename
+        \@ifstar{%
+            \hyperlink{sec:def:#1}{\texttt{#2}}%
+        }{%
+            \texttt{#2}%
+        }%
+    }
+    \makeatother
+
+    \newcommand{\DborNoneValue}{\DborSyntaxIdentX{NoneValue}{None\-Value}}
+    \newcommand{\DborMinusZeroValue}{\DborSyntaxIdentX{MinusZeroValue}{Minus\-Zero\-Value}}
+    \newcommand{\DborInfinityValue}{\DborSyntaxIdentX{InfinityValue}{Infinity\-Value}}
+    \newcommand{\DborMinusInfinityValue}{\DborSyntaxIdentX{MinusInfinityValue}{Minus\-Infinity\-Value}}
+    \newcommand{\DborIntegerValue}{\DborSyntaxIdentX{Integer}{Integer\-Value}}
+    \newcommand{\DborBinaryRationalValue}{\DborSyntaxIdentX{BinaryRationalValue}{Binary\-Rational\-Value}}
+    \newcommand{\DborDecimalRationalValue}{\DborSyntaxIdentX{DecimalRationalValue}{Decimal\-Rational\-Value}}
+    \newcommand{\DborByteStringValue}{\DborSyntaxIdentX{ByteStringValue}{Byte\-String\-Value}}
+    \newcommand{\DborUtfEightStringValue}{\DborSyntaxIdentX{Utf8EightStringValue}{Utf8\-String\-Value}}
+    \newcommand{\DborSequenceValue}{\DborSyntaxIdentX{SequenceValue}{Sequence\-Value}}
+    \newcommand{\DborDictionaryValue}{\DborSyntaxIdentX{DictionaryValue}{Dictionary\-Value}}
+    \newcommand{\DborAllocatedValue}{\DborSyntaxIdentX{AllocatedValue}{Allocated\-Value}}
+
+    \newcommand{\DborMinimalToken}{\DborSyntaxIdentX{MinimalToken}{Minimal\-Token}}
+    \newcommand{\DborNaturalToken}{\DborSyntaxIdentX{NaturalToken}{Natural\-Token}}
+    \newcommand{\DborBinaryRationalToken}{\DborSyntaxIdentX{BinaryRationalToken}{Binary\-Rational\-Token}}
+    \newcommand{\DborIntegerToken}{\DborSyntaxIdentX{IntegerToken}{Integer\-Token}}
+    \newcommand{\DborPowerOfTenToken}{\DborSyntaxIdentX{PowerOfTenToken}{Power\-Of\-Ten\-Token}}
 
     % colour coding of bytes sequences
     \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\ensuremath{\bm{\HexNumber{#2}}}}}

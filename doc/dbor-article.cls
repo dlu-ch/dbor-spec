@@ -32,6 +32,8 @@
 \deffootnotemark{\textsuperscript{\thefootnotemark)}}
 \deffootnote{1.5em}{1em}{\textsuperscript{\thefootnotemark)\ }}
 \setlength{\skip\footins}{3.5ex}
+\addtolength{\footnotesep}{.8ex}
+\usepackage[marginal]{footmisc}
 
 % colours (package 'xcolor')
 \definecolor{gray-std}{gray}{0.45}
@@ -54,7 +56,7 @@
 \let\mathbbm\mathds
 
 % layout
-\setlength\parindent{0em}
+\setlength{\parindent}{0em}
 \setlength{\mathindent}{2em}
 \setlength{\columnsep}{2em}
 

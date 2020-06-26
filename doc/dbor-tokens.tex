@@ -9,11 +9,11 @@
 \subsection{Elementary tokens}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{\DborSyntaxIdent{MinimalToken}($h$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborMinimalToken($h$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:MinimalToken}{}
 
-A \DborSyntaxIdent{MinimalToken}($h$, $v$)
+A \DborMinimalToken($h$, $v$)
 for $h \in \IntegerInterval{0}{7}$
 and $v \in \IntegerInterval{0}{2^5 - 1}$
 is the following byte:
@@ -21,11 +21,11 @@ is the following byte:
 \IncludeImageInPlace{MinimalToken}
 
 
-\subsubsection{\DborSyntaxIdent{NaturalToken}($h$, $u$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborNaturalToken($h$, $u$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:NaturalToken}{}
 
-An \DborSyntaxIdent{NaturalToken}($h$, $u$, $v$)
+An \DborNaturalToken($h$, $u$, $v$)
 for $h \in \IntegerInterval{0}{6}$,
 $u \in \IntegerInterval{0}{3}$,
 and $v \in \IntegerInterval{0}{\sum_{i = 1}^8 2^{8i}}$
@@ -44,11 +44,11 @@ defined by
 \end{equation}
 
 
-\subsubsection{\DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborBinaryRationalToken($p$, $o$, $s$, $M$, $E$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:BinaryRationalToken}{}
 
-A \DborSyntaxIdent{BinaryRationalToken}($p$, $o$, $s$, $M$, $E$) for
+A \DborBinaryRationalToken($p$, $o$, $s$, $M$, $E$) for
 \begin{align*}
     p & \in \{4, 10, 16, 23, 30, 37, 44, 52\} \\
     o & \in \{0, 1\} \\
@@ -81,26 +81,26 @@ with
 \subsection{Compound tokens}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{\DborSyntaxIdent{IntegerToken}($h$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborIntegerToken($h$, $v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:IntegerToken}{}
 
-An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
-$v \in \IntegerInterval{0}{23}$ is \DborSyntaxIdentRef{MinimalToken}($h$, $v$).
+An \DborIntegerToken($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
+$v \in \IntegerInterval{0}{23}$ is \DborMinimalToken($h$, $v$).
 
-An \DborSyntaxIdent{IntegerToken}($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
+An \DborIntegerToken($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
 $v \in \IntegerInterval{24}{N + 23}$
-is \DborSyntaxIdentRef{NaturalToken}($h$, $3$, $v - 23$).
+is \DborNaturalToken($h$, $3$, $v - 23$).
 
 
-\subsubsection{\DborSyntaxIdent{PowerOfTenToken}($v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborPowerOfTenToken($v$)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:PowerOfTenToken}{}
 
-A \DborSyntaxIdent{PowerOfTenToken}($v$) for $|v| \in \IntegerInterval{1}{8}$ is
-\DborSyntaxIdentRef{MinimalToken}($7$, $2^3 s + |v| - 1$).
+A \DborPowerOfTenToken($v$) for $|v| \in \IntegerInterval{1}{8}$ is
+\DborMinimalToken($7$, $2^3 s + |v| - 1$).
 
-A \DborSyntaxIdent{PowerOfTenToken}($v$) for $|v| \in \IntegerInterval{9}{N + 8}$ is
-\DborSyntaxIdentRef{NaturalToken}($6$, $s$, $|v| - 8$).
+A \DborPowerOfTenToken($v$) for $|v| \in \IntegerInterval{9}{N + 8}$ is
+\DborNaturalToken($6$, $s$, $|v| - 8$).
 
 Here, $s = 1$ for $v < 0$ and $s = 0$ otherwise.

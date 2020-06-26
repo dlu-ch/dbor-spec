@@ -6,13 +6,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:implementation}
 
-\subsection{Check if canonical \DborSyntaxIdent{BinaryRationalValue}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Check if canonical \DborBinaryRationalValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:implementation:BinaryRationalValue:canonical}
 
 A byte sequence \ByteSequence{\HexNumber{D0} + k, d_0, \ldots, d_k} with
 $k \in \IntegerInterval{0}{7}$ and $i := \lfloor \frac{k + 1}{4} \rfloor$
-is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
+is a \DborBinaryRationalValue{} that is canonical if and only if
 \begin{itemize}
     \item
     $k = 0$ or then
@@ -30,7 +30,7 @@ is a \DborSyntaxIdent{Binary\-Rational\-Value} that is canonical if and only if
     \wedge (d_0 \BitOr \cdots \BitOr d_{k - 1} \ne 0)$
 \end{itemize}
 
-\subsection{Check if \DborSyntaxIdent{IntegerValue} represents multiple of 10}
+\subsection{Check if \DborIntegerValue{} represents multiple of 10}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:implementation:IntegerValue:mod10}
 
@@ -41,7 +41,7 @@ and $2^{8i} \bmod 5 = 1$ for $i \in \{1, 2, \ldots\}$,
 a division of $v$ can be replaced by divisions of fewer bytes.
 
 Example:
-Let $\langle b, d_0, \ldots, d_k\rangle$ be \DborSyntaxIdent{IntegerValue}($v$) for $v \ge 24$.
+Let $\langle b, d_0, \ldots, d_k\rangle$ be \DborIntegerValue($v$) for $v \ge 24$.
 Then
 \begin{align*}
     v \bmod 2
