@@ -1,2 +1,4 @@
 .dlbroot/
 build/out/
+.idea/
+__pycache__/
