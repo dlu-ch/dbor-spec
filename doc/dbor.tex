@@ -16,12 +16,22 @@
     \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
 
     \newcommand{\Concat}{\ensuremath{\lrtimes}}
-    \newcommand{\ByteSequence}[1]{\ensuremath{\langle #1 \rangle}}
+    \newcommand{\ByteSequence}[1]{%
+        \texorpdfstring{% allow use in \section{...} etc.
+            \ensuremath{\langle #1 \rangle}%
+        }{%
+            <#1>%
+        }%
+    }
 
     \makeatletter
     \DeclareRobustCommand{\DborSyntaxIdent}[2]{%
-        \@ifstar{%
-            \hyperlink{sec:def:#1}{\texttt{#2}}%
+        \texorpdfstring{% allow use in \section{...} etc.
+            \@ifstar{%
+                \hyperlink{sec:def:#1}{\texttt{#2}}%
+            }{%
+                \texttt{#2}%
+            }%
         }{%
             \texttt{#2}%
         }%
