@@ -6,14 +6,120 @@
 %%%%%%%%%%%%%%%%
 \label{sec:values}
 
-This section defines the encoding of values as sequences of bytes by reducing them to tokens
-(section \ref{sec:tokens}).
+This section defines the representation of objects as bytes sequences - the core of DBOR.
+A byte sequence that represents a single object is called \emph{value} and is composed of \emph{tokens}
+(defined in section \ref{sec:tokens}).
 
 
-\subsection{Elementary values}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Overview (\DborValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\hypertarget{sec:def:Value}{}
+
+% Relation between value and byte sequence
+DBOR represents a sequence of \emph{objects} $O^*$ as a concatenation $B^*$ of their \emph{representations as byte
+sequences} in such a way that the efficient reconstruction of $O^*$ from $B^*$ alone is possible by traversing $B^*$
+in forward direction:
+\begin{align*}
+    \text{objects} & \quad\rightarrow\quad \text{byte sequence} \\[-2ex]
+    -100, \text{"¡Olé!"}
+        & \quad\mapsto\quad
+    \ByteSequence{
+        \underbrace{%
+            \DborFirstByteNumber{38}, \DborNextByte{4B}
+        }_{\hskip-\textwidth\DborIntegerValue(-100)\hskip-\textwidth},
+        %
+        \overbrace{%
+            \DborFirstByteString{67},
+            \DborNextByte{C2}, \DborNextByte{A1},
+            \DborNextByte{4F}, \DborNextByte{6C},
+            \DborNextByte{C3}, \DborNextByte{A9},
+            \DborNextByte{21}
+        }^{\DborUtfEightStringValue(\text{"¡Olé!"})}
+    }
+\end{align*}
+The representation is byte oriented and does not depend on word alignment or endianness.
+The byte sequence of each encoded object contains its own size.
+
+\medskip
+DBOR \emph{focuses on the represented "value" of an object} to be encoded, not its type --
+an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$ in this view.%
+\footnote{%
+    This approach enables the definition and simple implementation of compatible interfaces between independent systems.
+
+    Let's assume you need to send an unsigned $8$~bit number~$x$ as part of a command from a system~$A$ to
+    an independent system~$B$ over a EIA-232 connection~$T$.
+    \begin{enumerate}
+        \item
+        You implement the handling of $x$ as unsigned $8$~bit number on $A$ and $B$ and its transport over $T$
+        as \DborIntegerValue{}.
+        Then you release the systems~$A_1$ and $B_1$.
+
+        \item
+        You find out than $x$ sometimes needs $16$~bits.
+        Therefore you adapt $A$ and $B$ to support this larger numbers and release $A_2$ and $B_2$.
+    \end{enumerate}
+
+    In the result, $A_1$ or $A_2$ can send the number $100$ to $B_1$ or $B_2$ and
+    $A_2$ can send the number $1000$ to $B_1$ or $B_2$.
+    When $B_2$ receives the number $1000$ from $A_2$, it rejects the command due to an argument larger than supported.
+    All other combinations work as expected.
+
+    The same applies when you replace an \DborIntegerValue{} by any other subclass of \DborNumberValue{}.
+}
+The byte sequence encoding an object is therefore called "value".
+Wherever possible in a simple and efficient way, DBOR choses the shortest byte sequence to represent an object.
+
+\medskip
+DBOR groups objects of a common nature to be represented and encoded in a similar way by \emph{classes}
+named \DborSyntaxIdent{}{\dots Value}.
+The expression \DborIntegerValue($-100$) means the byte sequence that represents $-100$ as an instance of
+class \DborIntegerValue{}:
+\begin{equation*}
+    \begin{array}{c}
+        \DborIntegerValue(-1) \\
+        = \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}}
+    \end{array}
+    \quad\text{is an instance of}\quad \DborIntegerValue
+\end{equation*}
+Each value comprises in its first byte of the (concrete) class that it is an instance of.
+
+\medskip
+An abstract class like \DborNumberValue{} represent common traits of objects and can be used as placeholder for any
+of its concrete subclasses (like \DborIntegerValue{} or \DborInfinityValue{} in this case).
+The byte sequence \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}} "is a" \DborNumberValue{},
+an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
+
+\begin{figure}[H]
+    \begin{quote}
+        \noindent
+        \includegraphics[scale=0.7]{classdiag_value}%
+        \caption{Class hierarchy of values.}
+        \label{fig:class:Value}
+    \end{quote}
+\end{figure}
+
+See section~\ref{sec:elementaryvalues} and \ref{sec:containervalues} for a complete list of (concrete) values.
+
+
+\subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborStringValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:elementaryvalues}
+\hypertarget{sec:def:ElementaryValue}{}
+\hypertarget{sec:def:NumberValue}{}
+\hypertarget{sec:def:StringValue}{}
 
 Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
+
+% TODO complete
+
+\begin{figure}[H]
+    \begin{quote}
+        \noindent
+        \includegraphics[scale=0.7]{classdiag_elementary}%
+        \caption{Class hierarchy of elementary values.}
+        \label{fig:class:ElementaryValue}
+    \end{quote}
+\end{figure}
 
 
 \subsubsection{\DborNoneValue}
@@ -23,20 +129,19 @@ Elementary values are values that represent a single object with a meaning of it
 
 \paragraph{Representable objects}
 
-A \DborNoneValue{} represents the absence of an actual value (like \texttt{null} or \texttt{None} is some
+A \DborNoneValue{} represents the absence of an actual object (like \texttt{null} or \texttt{None} in some
 programming languages or NaN in IEEE-754:2008).
-It is considered different from any object represented by a \DborSyntaxIdentRef{Value} other than
-\DborNoneValue.
+It is considered different from any object represented by a \DborValue*{} other than \DborNoneValue.
 
 \paragraph{Representation}
 
-An \DborNoneValue{} is the \DborMinimalToken*($3$, $\HexNumber{1F}$).
+A \DborNoneValue{} is the \DborMinimalToken*($3$, $\HexNumber{1F}$).
 
 \smallskip
 \noindent
-Example:
-\nolinebreak
+Example:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -67,11 +172,11 @@ Every \DborNoneValue{} is well-formed.
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
 
 A \DborInfinityValue{} represents the "number" $\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered larger than any object represented by a \DborSyntaxIdentRef{NumberValue}
+It is considered larger than any object represented by a \DborNumberValue*{}
 other than \DborInfinityValue.
 
 A \DborMinusInfinityValue{} represents the "number" $-\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered smaller than any object represented by a \DborSyntaxIdentRef{NumberValue}
+It is considered smaller than any object represented by a \DborNumberValue*{}
 other than \DborMinusInfinityValue.
 
 \paragraph{Representation}
@@ -84,9 +189,9 @@ A \DborMinusInfinityValue{} is the \DborMinimalToken*($3$, $\HexNumber{1D}$).
 
 \smallskip
 \noindent
-Example:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -126,9 +231,9 @@ A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborIntegerTo
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -136,6 +241,8 @@ Examples:
         %
         \DborIntegerValue($0$)
             &  \ByteSequence{\DborFirstByteNumber{00}} \\
+        \DborIntegerValue($-1$)
+            &  \ByteSequence{\DborFirstByteNumber{20}} \\
         \DborIntegerValue($23$)
             &  \ByteSequence{\DborFirstByteNumber{17}} \\
         \DborIntegerValue($24$)
@@ -202,8 +309,7 @@ $M \in \SetOfIntegers \cap (0, 2^p)$ is represented as
 
 \smallskip
 \noindent
-Fore reference, here are the resulting combinations for all possible $p$:
-\nolinebreak
+For reference, here are the resulting combinations for all possible $p$:\nolinebreak
 \begin{quote}
     \newcolumntype{R}{>{$}r<{$}}  % package 'array'
     \begin{tabular}{R R R R >{\hspace{-.8em}$}c<{$\hspace{-.8em}} R}
@@ -224,9 +330,9 @@ Fore reference, here are the resulting combinations for all possible $p$:
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -296,9 +402,9 @@ is represented as \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*($m$).
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -344,9 +450,9 @@ is represented as \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldo
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{ll}
         \toprule
         Value & Representation \\
@@ -371,7 +477,7 @@ The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is
 
 \paragraph{Representable objects}
 
-A \DborUtfEightStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
+An \DborUtfEightStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
 with $m \in \IntegerInterval{0}{N + 23}$ that is empty or starts and ends with a well-formed "UTF-8" encoded integer.
 
 A byte sequence \ByteSequence{b_1, \ldots, b_k} is a well-formed "UTF-8" encoded integer if and only if
@@ -420,21 +526,21 @@ preferably in Normalization Form C (\href{https://www.unicode.org/versions/Unico
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{lll}
         \toprule
-        Value & Meaning & Representation \\
+        Value & Representation \\
         \midrule
-        \DborUtfEightStringValue(\ByteSequence{})
-            & ""
+        \DborUtfEightStringValue("")
             &  \ByteSequence{\DborFirstByteString{60}} \\
-        \DborUtfEightStringValue(\ByteSequence{\DborNextByte{52}, \DborNextByte{65},
-                                               \DborNextByte{C3}, \DborNextByte{A9}})
-            & "René"
-            &  \ByteSequence{\DborFirstByteString{65}, \DborNextByte{52}, \DborNextByte{65},
-                                                       \DborNextByte{C3}, \DborNextByte{A9}} \\
+        \DborUtfEightStringValue("¡Olé!")
+            &  \ByteSequence{\DborFirstByteString{67},
+                    \DborNextByte{C2}, \DborNextByte{A1},
+                    \DborNextByte{4F}, \DborNextByte{6C},
+                    \DborNextByte{C3}, \DborNextByte{A9},
+                    \DborNextByte{21}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -479,13 +585,24 @@ as follows:%
 \end{itemize}
 
 
-\subsection{Container values}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Container values (\DborContainerValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:containervalues}
+\hypertarget{sec:def:ContainerValue}{}
 
 Container values are mere collections of other values (elementary values or containers values) and derive their
 meaning from their elements.
 
 All container values can be nested.
+
+\begin{figure}[H]
+    \begin{quote}
+        \noindent
+        \includegraphics[scale=0.7]{classdiag_container}%
+        \caption{Class hierarchy of container values.}
+        \label{fig:class:ContainerValue}
+    \end{quote}
+\end{figure}
 
 
 \subsubsection{\DborSequenceValue($v_1, \ldots, v_r$)}
@@ -505,9 +622,9 @@ with $m := \sum_{i = 1}^r \|v_i\|$.
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{lll}
         \toprule
         Value & Representation \\
@@ -578,17 +695,17 @@ with $m := \sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big)$.
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{lll}
         \toprule
         Value & Representation \\
         \midrule
         \DborDictionaryValue()
             & \ByteSequence{\DborFirstByteDictionary{90}} \\
-        \DborDictionaryValue(\DborNoneValue, \DborIntegerValue($24$))
-            & \ByteSequence{\DborFirstByteSequence{83},
+        \DborDictionaryValue($\DborNoneValue \mapsto \DborIntegerValue($24$)$)
+            & \ByteSequence{\DborFirstByteDictionary{93},
                     \DborFirstByteNone{FF},
                     \DborFirstByteNumber{18}, \DborNextByte{00}} \\
         \bottomrule
@@ -639,9 +756,9 @@ with arbitrary fill bytes $f_{\|v\| + 1}, \ldots, f_m$.
 
 \smallskip
 \noindent
-Examples:
-\nolinebreak
+Examples:\nolinebreak
 \begin{quote}
+    \noindent
     \begin{tabular}{lll}
         \toprule
         Value & Representation \\

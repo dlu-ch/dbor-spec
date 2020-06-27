@@ -14,7 +14,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[osf]{mathpazo}  % use Palatino (similar: TeX Gyre Pagella)
 \linespread{1.05}\selectfont  % Palatino needs more interline-spacing (here: 5%)
-\usepackage[scaled=0.85]{beramono}  % use bremono as typewriter font (has bold variant)
+\usepackage[scaled=0.85]{beramono}  % use Bera Mono (similar: Bitstream Vera Mono) as typewriter font (has bold variant)
 \usepackage{dsfont}  % Type 1 font for \mathds{}
 \usepackage{bm}  % bold fonts in math mode
 \usepackage{pxfonts}
@@ -25,6 +25,8 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{footnote}
+\usepackage{float}
+\usepackage{caption}
 
 \makesavenoteenv{tabular}  % package 'footnote'
 
@@ -54,6 +56,8 @@
 }
 
 \let\mathbbm\mathds
+
+\captionsetup{justification=raggedright,singlelinecheck=false}  % package 'caption'
 
 % layout
 \setlength{\parindent}{0em}
@@ -85,7 +89,7 @@
     \def\@oddhead{\vbox{\hsize=\textwidth
         \hb@xt@\textwidth{%
             {\headfont\@title}%
-            {\headfont\hss\strut\rightmark}\hskip3em%
+            {\headfont\hss\strut}\hskip3em%
             \hbox to0pt{\hss\pnumfont\thepage}%
         }%
         \if@hsl \vskip 1.5\p@ \hrule \fi}}%

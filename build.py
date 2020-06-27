@@ -128,4 +128,9 @@ with dlb.ex.Context():
         if not r:
             break
 
+    # TODO: fix redo miss after change of state file (introduction of new section)
+    # TODO keep .log
+    # TODO summarize "Overfull \hbox" in .log
+    # TODO summarize warning in .log
+
 dlb.di.inform('finished successfully')
