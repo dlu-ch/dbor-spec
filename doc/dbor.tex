@@ -10,10 +10,14 @@
     \newcommand{\e}{\mathrm{e}}
     \DeclareMathOperator{\BitAnd}{AND}
     \DeclareMathOperator{\BitOr}{OR}
+    \newcommand{\SetOfReals}{\mathbbm{R}}
     \newcommand{\SetOfIntegers}{\mathbbm{Z}}
     \newcommand{\BinNumber}[1]{\mathrm{#1}_{2}}
     \newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
     \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
+
+    % TODO use \pdfstringdefDisableCommands
+    % https://tex.stackexchange.com/questions/430876/ways-to-avoid-package-hyperref-warning-token-not-allowed-in-a-pdf-string-warn?answertab=active#tab-top
 
     \newcommand{\Concat}{\ensuremath{\lrtimes}}
     \newcommand{\ByteSequence}[1]{%
@@ -103,7 +107,7 @@
     \input{dbor-introduction.tex}
     \input{dbor-values.tex}
     \input{dbor-tokens.tex}
-    % TODO behaviour, encoder, decoder, errorhandling
+    \input{dbor-behaviour.tex}
 
     \appendix
     \input{dbor-implementation.tex}

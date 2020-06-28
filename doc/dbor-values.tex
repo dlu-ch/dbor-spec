@@ -41,6 +41,10 @@ The representation is byte oriented and does not depend on word alignment or end
 The byte sequence of each encoded object contains its own size.
 
 \medskip
+The transformation of $O^*$ into $B^*$ is called \emph{encoding} (done by an DBOR encoder),
+and the transformation of $B^*$ into $O^*$ is called \emph{decoding} (done by a DBOR decoder).
+
+\medskip
 DBOR \emph{focuses on the represented "value" of an object} to be encoded, not its type --
 an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$ in this view.%
 \footnote{%
@@ -63,8 +67,6 @@ an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$
     $A_2$ can send the number $1000$ to $B_1$ or $B_2$.
     When $B_2$ receives the number $1000$ from $A_2$, it rejects the command due to an argument larger than supported.
     All other combinations work as expected.
-
-    The same applies when you replace an \DborIntegerValue{} by any other subclass of \DborNumberValue{}.
 }
 The byte sequence encoding an object is therefore called "value".
 Wherever possible in a simple and efficient way, DBOR choses the shortest byte sequence to represent an object.
@@ -98,8 +100,9 @@ an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
     \end{quote}
 \end{figure}
 
-See section~\ref{sec:elementaryvalues} and \ref{sec:containervalues} for a complete list of (concrete) values.
+See sections~\ref{sec:elementaryvalues} and \ref{sec:containervalues} for a complete list of (concrete) values.
 
+% TODO Define canonical value
 
 \subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborStringValue)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -171,10 +174,12 @@ Every \DborNoneValue{} is well-formed.
 
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
 
+\medskip
 A \DborInfinityValue{} represents the "number" $\infty$ in the sense of IEEE-754:2008 arithmetic.
 It is considered larger than any object represented by a \DborNumberValue*{}
 other than \DborInfinityValue.
 
+\medskip
 A \DborMinusInfinityValue{} represents the "number" $-\infty$ in the sense of IEEE-754:2008 arithmetic.
 It is considered smaller than any object represented by a \DborNumberValue*{}
 other than \DborMinusInfinityValue.
@@ -498,7 +503,6 @@ where each $x$ stands for a bit.%
     as a a mapping of Unicode scalar values to 1 to 4 bytes.
     It explicitly declares the representation of a value $\in \IntegerInterval{\HexNumber{D800}}{\HexNumber{DFFF}}$
     and byte sequences that are not in the shortest form as ill-formed.
-
     A byte sequence \ByteSequence{b_1, \ldots, b_k} is a well-formed UTF-8 encoded Unicode scalar value if and
     only if it has the form
     \begin{gather*}
@@ -590,7 +594,7 @@ as follows:%
 \label{sec:containervalues}
 \hypertarget{sec:def:ContainerValue}{}
 
-Container values are mere collections of other values (elementary values or containers values) and derive their
+Container values are mere collections of other values (elementary values or container values) and derive their
 meaning from their elements.
 
 All container values can be nested.

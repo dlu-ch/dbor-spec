@@ -118,11 +118,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.6677405"
-     inkscape:cx="42.470155"
-     inkscape:cy="175.29331"
+     inkscape:zoom="0.94432767"
+     inkscape:cx="414.88186"
+     inkscape:cy="183.45353"
      inkscape:document-units="mm"
-     inkscape:current-layer="g1084"
+     inkscape:current-layer="layer1"
      showgrid="true"
      inkscape:snap-bbox="false"
      inkscape:bbox-nodes="false"
@@ -341,7 +341,7 @@
            y="1176.3781"
            x="2072.8347"
            id="tspan1108-6-1"
-           sodipodi:role="line">[1.2, [&quot;A&quot;, 4]]</tspan></text>
+           sodipodi:role="line">[1, [&quot;A&quot;, 3]]</tspan></text>
     </g>
     <text
        id="text1110-7-3-0"
@@ -353,7 +353,7 @@
          y="1179.9214"
          x="2388.189"
          id="tspan1108-6-1-7"
-         sodipodi:role="line">{1↦&quot;A&quot;, 3↦4}</tspan></text>
+         sodipodi:role="line">{1 ↦ &quot;A&quot;, 3 ↦ 4}</tspan></text>
     <path
        style="opacity:1;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.88582677;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:0.90980392"
        d="m 2225.1969,1140.9449 v -21.2598"
@@ -708,18 +708,7 @@
          y="1268.504"
          x="2356.2993"
          id="tspan1108-6-1-7-6"
-         sodipodi:role="line">1↦&quot;A&quot;</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;line-height:0%;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="2388.189"
-       y="1179.9214"
-       id="text976"><tspan
-         sodipodi:role="line"
-         id="tspan974"
-         x="2388.189"
-         y="1179.9214"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5px;line-height:1.25;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;writing-mode:lr-tb;text-anchor:middle;stroke-width:1px">{1↦&quot;A&quot;, 3↦4}</tspan></text>
+         sodipodi:role="line">1 ↦ &quot;A&quot;</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:14.99999905px;line-height:0%;font-family:'TeX Gyre Pagella';-inkscape-font-specification:'TeX Gyre Pagella';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.99999994px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"

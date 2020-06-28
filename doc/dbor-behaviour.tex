@@ -1,0 +1,167 @@
+% SPDX-License-Identifier: CC-BY-4.0
+% DBOR specification - Dense Binary Object Representation
+% Copyright (C) 2020 Daniel Lutz <dlu-ch@users.noreply.github.com>
+
+\section{Behaviour}
+%%%%%%%%%%%%%%%%%%%
+\label{sec:behaviour}
+
+Representing objects as byte sequences (encoding) is only meaningful if there is also a decoding part involved:
+a \emph{sender} sends the objects to a \emph{receiver}.
+
+For senders (DBOR encoders) and receivers (DBOR decoders) to be iteroperable, the sender must be able to anticipate the
+behaviour of the receiver to some extend.
+That's why DBOR specifies certain behavioural aspects of encoders and decoders and how the are exposed by the API
+of an implementation.
+
+
+\subsection{Statically typed decoder}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Decoding a \DborValue{} in a statically typed environment (e.g. C++ without dynamic polymorphy) is a
+type-cast operation from the represented object to a given \emph{target type}.
+
+Such an operation can succeed (the represented value can represented exactly in the target type),
+can fail (the represented value cannot be represented at all in the target type or not exactly).
+
+A decoder must at least differentiate between these possible results:
+\begin{quote}
+    \newcommand{\addextrarowsep}{\addlinespace[1ex]}%
+    \noindent
+    \begin{tabular}{l p{0.5\textwidth}}
+        PRECISE* &
+            the returned object represents the value exactly \\ \addextrarowsep
+        %
+        IMPRECISE* &
+            object represented by value can be represented by target type only approximately
+            (only for \DborNumberValue) \\
+        OUT-OF-RANGE* &
+            object represented by value is too large or too small for being represented by target type;
+            \\ \addextrarowsep
+        %
+        NO-OBJECT &
+            value is \DborNoneValue \\
+        UNSUPPORTED-TYPE &
+            decoder does not support the type of the value \\ \addextrarowsep
+        %
+        INCOMPATIBLE-TYPE &
+            target type is not in associated set of native data types \\
+        ILL-FORMED &
+            value is ill-formed \\
+    \end{tabular}
+\end{quote}
+
+The results marked with * must be accompanied by an object of the target type.
+
+\medskip
+For each of the classes \DborIntegerValue, \DborBinaryRationalValue, \DborDecimalRationalValue, \DborByteStringValue,
+and \DborUtfEightStringValue, the decoder must assign an associated set of native data types to represent
+(a subset of) its objects.
+These sets must be pairwise disjunct:
+\begin{quote}
+    \noindent
+    \begin{tabular}{l p{0.3\textwidth} l}
+        \toprule
+        & \multicolumn{2}{l}{Example} \\
+        \cmidrule{2-3}
+        Value class & Set of native data types & concrete types for C \\
+        \midrule
+        \DborIntegerValue & signed and unsigned integers & \texttt{unsigned int} \\
+        \DborBinaryRationalValue & IEEE-754 binary floating point numbers & \texttt{float} \\
+        \DborDecimalRationalValue & decimal floating point numbers & tuple of two \texttt{int} \\
+        \DborByteStringValue & byte sequence & \texttt{const void *} \\
+        \DborUtfEightStringValue & character sequence & \texttt{const char *} \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+There must be no implicit conversion between these set of native types (e.g. between a decimal floating point number
+and an integer)%
+\footnote{
+    This is mainly for performance reasons related t conversions between non-canonical \DborDecimalRationalValue{}
+    and other \DborNumberValue{} and to limit the complexity.
+}
+-- with the only exception of some \DborNumberValue.
+
+
+\subsubsection{Decoding \DborNumberValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\DborNumberValue{} is special because the sets of objects representable by its subclasses are not pairwise disjunct.
+Each of them can represent integers, some can represent fractional numbers with different sets of possible denominators.
+
+Only \DborIntegerValue{} can represent~$0$. \DborMinusZeroValue, \DborMinusInfinityValue, and \DborInfinityValue{}
+have a meaning for all of them.
+
+\paragraph{From supported to associated}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let $V$ be one of \DborIntegerValue, \DborBinaryRationalValue, \DborDecimalRationalValue{}
+that is supported by the decoder and $T$ a member of the associated set of native data types
+(e.g. a signed 32~bit integer in two's complement representation) that can represent any number
+$\in T_{\text{repr}} \subset \SetOfReals \cup \{-\infty, \infty\}$ with $0 \in T$.
+
+Decoding a well-formed $V$ that represents the number~$v \in \SetOfReals$ into a~$T$ must lead to the following results:
+\begin{quote}
+    \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
+    \noindent
+    \begin{tabular}{p{0.3\textwidth} l p{0.3\textwidth}}
+        \toprule
+        Constraints & Result & Returned object as $T$ \\
+        \midrule
+        %
+        $v \in T_{\text{repr}}$ &
+            PRECISE & $v$ \\ \addextrarowsep
+        %
+        $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ and $v \notin T_{\text{repr}}$ &
+            IMPRECISE & smallest of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ \\ \addextrarowsep
+        %
+        $v$ is $-0$ and $-0$ cannot be represented by $T$ &
+            IMPRECISE & $0$ \\ \addextrarowsep
+        %
+        $v < \min{T_{\text{repr}}}$ &
+            OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
+        %
+        $v > \max{T_{\text{repr}}}$ &
+            OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
+        %
+        $v$ is $-\infty$ and $-\infty \notin T$ &
+            OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
+        %
+        $v$ is $\infty$ and $\infty \notin T$ &
+            OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+In addition, decoding an \DborIntegerValue(0) into a~$T$ must result in PRECISE and return $0$ as $T$.
+
+\paragraph{From supported to unassociated}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Decoding a well-formed \DborIntegerValue{} other than \DborIntegerValue(0), \DborBinaryRationalValue,
+or \DborDecimalRationalValue{} that is supported by the decoder into any type not in its
+associated set of native data types must result in INCOMPATIBLE-TYPE.
+
+\paragraph{From unsupported}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Decoding a (well-formed or ill-formed) \DborNumberValue{} \emph{not} supported by the decoder
+must result in UNSUPPORTED-TYPE or ILL-FORMED.%
+\footnote{%
+    The decoder may be unable to check if an unsupported \DborValue{} is well-formed.
+}
+
+
+\subsubsection{Decoding \DborValue{} other than \DborNumberValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Decoding a (well-formed or ill-formed) \DborValue{} \emph{not} supported by the decoder
+must result in UNSUPPORTED-TYPE or ILL-FORMED.%
+
+\medskip
+Decoding a well-formed \DborValue{} supported by the decoder that is not a subclass of \DborNumberValue{}
+into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE.
+
+\medskip
+Decoding a \DborNoneValue{} into any type must result in NO-OBJECT.
