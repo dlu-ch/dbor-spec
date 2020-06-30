@@ -19,7 +19,6 @@
 \usepackage{bm}  % bold fonts in math mode
 \usepackage{pxfonts}
 
-\usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{array}
 \usepackage{booktabs}
@@ -37,6 +36,8 @@
 \setlength{\skip\footins}{3.5ex}
 \addtolength{\footnotesep}{.8ex}
 \usepackage[marginal]{footmisc}
+% TODO remove paragraph indentation
+% TODO right-align footnote marks
 
 % colours (package 'xcolor')
 \definecolor{gray-std}{gray}{0.45}
@@ -45,16 +46,6 @@
 \definecolor{blue-std}{rgb}{0.16,0.24,0.64}
 \definecolor{blue-dark}{rgb}{0,0,0.42}
 \definecolor{violet-std}{rgb}{0.48,0.24,0.64}
-
-\hypersetup{% package 'hyperref'
-    bookmarksopen=true,
-    linktocpage=true,
-    colorlinks=true,
-    urlcolor=blue-dark,
-    citecolor=blue-dark,
-    linkcolor=blue-dark,
-    filecolor=blue-dark
-}
 
 \let\mathbbm\mathds
 
@@ -133,3 +124,17 @@
     \let\ps@myheadings\ps@lastsec
     \pagestyle{lastsec}
 \fi
+
+% load _after_ all packages that may affect footnotes
+% https://tex.stackexchange.com/questions/16268/warning-with-footnotes-namehfootnote-xx-has-been-referenced-but-does-not-exi/16269#16269
+\usepackage{hyperref}
+
+\hypersetup{% package 'hyperref'
+    bookmarksopen=true,
+    linktocpage=true,
+    colorlinks=true,
+    urlcolor=blue-dark,
+    citecolor=blue-dark,
+    linkcolor=blue-dark,
+    filecolor=blue-dark
+}
