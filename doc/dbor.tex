@@ -19,17 +19,8 @@
     \newcolumntype{v}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}% package 'ragged2e'
         % usage: v{5em}
 
-    % TODO use \pdfstringdefDisableCommands
-    % https://tex.stackexchange.com/questions/430876/ways-to-avoid-package-hyperref-warning-token-not-allowed-in-a-pdf-string-warn?answertab=active#tab-top
-
     \newcommand{\Concat}{\ensuremath{\lrtimes}}
-    \newcommand{\ByteSequence}[1]{%
-        \texorpdfstring{% allow use in \section{...} etc.
-            \ensuremath{\langle #1 \rangle}%
-        }{%
-            <#1>%
-        }%
-    }
+    \newcommand{\ByteSequence}[1]{\ensuremath{\langle #1 \rangle}}
 
     \makeatletter
     \DeclareRobustCommand{\DborSyntaxIdent}[2]{%

@@ -224,8 +224,8 @@ Every \DborMinusZeroValue, \DborInfinityValue,
 and \DborMinusInfinityValue{} is well-formed.
 
 
-\subsubsection{\DborIntegerValue($v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborIntegerValue(\texorpdfstring{$v$}{v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:IntegerValue}{}
 
 \paragraph{Representable objects}
@@ -283,8 +283,8 @@ There is at most one representation of a \DborIntegerValue($v$) for any $v$.
 It is canonical.
 
 
-\subsubsection{\DborBinaryRationalValue($p$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborBinaryRationalValue(\texorpdfstring{$p$, $v$}{p, v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:BinaryRationalValue}{}
 
 \paragraph{Representable objects}
@@ -387,8 +387,8 @@ a \DborBinaryRationalValue($p$, $v$) for any
 $q \in \{4, 10, 16, 23, 30, 37, 44, 52\}$ with $q > p$.
 
 
-\subsubsection{\DborDecimalRationalValue($m$, $e$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborDecimalRationalValue(\texorpdfstring{$m$, $e$}{m, e})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:DecimalRationalValue}{}
 
 \paragraph{Representable objects}
@@ -449,8 +449,8 @@ Of these, the one with the smallest $|m|$ is the canonical value.%
 }
 
 
-\subsubsection{\DborByteStringValue(\ByteSequence{b_1, \ldots, b_m})}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborByteStringValue(\texorpdfstring{\ByteSequence{b_1, \ldots, b_m}}{<b1, ..., bm>})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:ByteStringValue}{}
 
 \paragraph{Representable objects}
@@ -488,8 +488,8 @@ The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is
 \DborByteStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($2$, $m$).
 
 
-\subsubsection{\DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m})}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborUtfEightStringValue(\texorpdfstring{\ByteSequence{b_1, \ldots, b_m}}{<b1, ..., bm>})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:Utf8StringValue}{}
 
 \paragraph{Representable objects}
@@ -593,8 +593,8 @@ All container values can be nested.
 \end{figure}
 
 
-\subsubsection{\DborSequenceValue($v_1, \ldots, v_r$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborSequenceValue(\texorpdfstring{$v_1, \ldots, v_r$}{v1, ...m vr})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:SequenceValue}{}
 
 \paragraph{Representable objects}
@@ -647,8 +647,12 @@ The canonical value of \DborSequenceValue{}($v_1, \ldots, v_r$) is
 where $v_i'$ is the canonical value of $v_i$ for all $i \in \IntegerInterval{1}{r}$.
 
 
-\subsubsection{\DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborDictionaryValue(\texorpdfstring{%
+    $k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$%
+}{%
+    k1 -> v1, ..., kr -> vr%
+})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:DictionaryValue}{}
 
 \paragraph{Representable objects}
@@ -735,8 +739,8 @@ The canonical value of \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapst
 where $k_i', v_i'$ are the canonical values of $k_i, v_i$ for all $i \in \IntegerInterval{1}{r}$.
 
 
-\subsubsection{\DborAllocatedValue($m$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborAllocatedValue(\texorpdfstring{$m$, $v$}{m, v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:AllocatedValue}{}
 
 \paragraph{Representable objects}

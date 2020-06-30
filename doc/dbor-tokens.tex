@@ -9,8 +9,8 @@
 \subsection{Elementary tokens}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{\DborMinimalToken($h$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborMinimalToken(\texorpdfstring{$h$, $v$}{h, v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:MinimalToken}{}
 
 A \DborMinimalToken($h$, $v$)
@@ -21,8 +21,8 @@ is the following byte:
 \IncludeImageInPlace{MinimalToken}
 
 
-\subsubsection{\DborNaturalToken($h$, $u$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborNaturalToken(\texorpdfstring{$h$, $u$, $v$}{h, u, v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:NaturalToken}{}
 
 An \DborNaturalToken($h$, $u$, $v$)
@@ -44,8 +44,8 @@ defined by
 \end{equation}
 
 
-\subsubsection{\DborBinaryRationalToken($p$, $o$, $s$, $M$, $E$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborBinaryRationalToken(\texorpdfstring{$p$, $o$, $s$, $M$, $E$}{p, o, s, M, E})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:BinaryRationalToken}{}
 
 A \DborBinaryRationalToken($p$, $o$, $s$, $M$, $E$) for
@@ -81,8 +81,8 @@ with
 \subsection{Compound tokens}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsubsection{\DborIntegerToken($h$, $v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborIntegerToken(\texorpdfstring{$h$, $v$}{h, v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:IntegerToken}{}
 
 An \DborIntegerToken($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
@@ -93,8 +93,8 @@ $v \in \IntegerInterval{24}{N + 23}$
 is \DborNaturalToken($h$, $3$, $v - 23$).
 
 
-\subsubsection{\DborPowerOfTenToken($v$)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{\DborPowerOfTenToken(\texorpdfstring{$v$}{v})}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:PowerOfTenToken}{}
 
 A \DborPowerOfTenToken($v$) for $|v| \in \IntegerInterval{1}{8}$ is
