@@ -27,6 +27,7 @@
 \usepackage{footnote}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{ragged2e}
 
 \makesavenoteenv{tabular}  % package 'footnote'
 
