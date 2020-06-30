@@ -203,3 +203,128 @@ into any type not in its associated set of native data types must result in INCO
 \medskip
 Decoding of an ill-formed \DborValue{} other than \DborUtfEightStringValue{}
 that is supported by the decoder must result in ILL-FORMED.
+
+
+\subsection{Conformance levels}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:conformancelevels}
+
+DBOR encoders and decoders do not have to support \emph{all} types of value and \emph{all} representable value
+of supported classes (but as far as they do they must adhere to this specification, naturally).
+
+To allow easy description and comparision of capabilities of encoders and decoders,
+certain common capabilities (or constraints) are grouped by \emph{conformance levels}.
+
+If a conformance level specifies a value~$v$ as supported
+\begin{itemize}
+    \item
+    an encoder of this conformance level can produce a (well-formed)~$v$ if its represented object can be
+    efficiently represented by a native data type
+
+    \item
+    a decoder of this conformance level supports the type of~$v$, and
+
+    \item
+    a decoder of this conformance level can decode a (well-formed) $v$
+    (if statically typed: with the result PRECISE or OUT-OF-RANGE).
+\end{itemize}
+
+
+\subsubsection{Conformance level $0$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supported values:\nolinebreak
+\begin{quote}
+    \noindent
+    \begin{tabular}{l v{0.4\textwidth}}
+        \toprule
+        Supported type and value & Constraints (if any) \\
+        \midrule
+        \DborNoneValue() \\
+        \DborIntegerValue($v$) &
+            $v \in \IntegerInterval{-24}{23}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            $m \in \IntegerInterval{0}{23}$ \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            $m \in \IntegerInterval{0}{23}$ and $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$
+            for all $i \in \IntegerInterval{0}{m}$ (no multi-byte UTF-8 sequences) \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+
+\subsubsection{Conformance level $1_{16\,\text{bit}}$, $1_{32\,\text{bit}}$ to $1_{64\,\text{bit}}$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supported values in conformance level~$1_M$
+with  $M \in \{16, 32, 64\}$:\nolinebreak
+\begin{quote}
+    \noindent
+    \begin{tabular}{l v{0.4\textwidth}}
+        \toprule
+        Supported type and value & Constraints (if any) \\
+        \midrule
+        \DborNoneValue() \\
+        \DborIntegerValue($v$) &
+            $v \in \IntegerInterval{-2^M}{2^M - 1}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            $m \in \IntegerInterval{0}{2^M - 1}$ \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            $m \in \IntegerInterval{0}{2^M - 1}$ and $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$
+            for $i \in \IntegerInterval{0}{m}$ (no multi-byte UTF-8 sequences) \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+
+\subsubsection{Conformance level $2$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supported values:\nolinebreak
+\begin{quote}
+    \noindent
+    \begin{tabular}{l v{0.4\textwidth}}
+        \toprule
+        Supported type and value & Constraints (if any) \\
+        \midrule
+        \DborNoneValue() \\
+        \DborIntegerValue($v$) \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborSequenceValue($v_1, \ldots, v_r$) &
+            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{m}$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+
+\subsubsection{Conformance level $3$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supported values:\nolinebreak
+\begin{quote}
+    \noindent
+    \begin{tabular}{l v{0.4\textwidth}}
+        \toprule
+        Supported type and value & Constraints (if any) \\
+        \midrule
+        \DborNoneValue() \\
+        \DborMinusZeroValue() \\
+        \DborMinusInfinityValue() \\
+        \DborInfinityValue() \\
+        \DborIntegerValue($v$) \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborSequenceValue($v_1, \ldots, v_r$) &
+            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{m}$ \\
+        \DborBinaryRationalValue($52$, $v$) \\
+        \DborDecimalRationalValue($m$, $e$) \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
+
+
+\subsubsection{Conformance level $4$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Supported values: all.
