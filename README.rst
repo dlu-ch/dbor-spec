@@ -37,7 +37,7 @@ Main features:
   Allows the description of memory layouts and efficient replacements
   of small parts of large structures.
 
-Latest version of the specification: `here <https://github.com/dlu-ch/dbor-spec/releases/latest>`_.
+Latest version of the specification: `here <https://github.com/dlu-ch/dbor-spec/releases/latest/download/dbor.pdf>`_.
 
 A complete Python 3 implementation of a DBOR encoder (conformance level 2) looks like this:
 
