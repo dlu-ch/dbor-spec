@@ -18,7 +18,15 @@ of an implementation.
 \subsection{Statically typed decoder}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Decoding a \DborValue{} in a statically typed environment (e.g. C++ without dynamic polymorphy) is a
+Decoding%
+\footnote{
+    Decoding a value does not have to take place in one single operation.
+
+    When decoding a \DborUtfEightStringValue, \DborSequenceValue, or \DborDictionaryValue{} it is in fact recommended to
+    check only the size-correctness of the value and return a validating iterator
+    (over Unicode code points or container elements).
+}
+a \DborValue{} in a statically typed environment (e.g. C++ without dynamic polymorphy) is a
 type-cast operation from the represented object to a given \emph{target type}.
 
 Such an operation can succeed (the represented value can represented exactly in the target type),
@@ -33,8 +41,7 @@ A decoder must at least differentiate between these possible results:
             the returned object represents the value exactly \\ \addextrarowsep
         %
         IMPRECISE* &
-            object represented by value can be represented by target type only approximately
-            (only for \DborNumberValue) \\
+            object represented by value can be represented by target type only approximately \\
         OUT-OF-RANGE* &
             object represented by value is too large (numerically or by size) or too small for being represented
             by target type;
@@ -79,6 +86,7 @@ These sets must be pairwise disjunct:
 \medskip
 With the only exception of numerical conversions, there must be no implicit conversion between
 these sets of native types (e.g. between a integer and a character string)
+
 
 \subsubsection{Decoding supported \DborNumberValue}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -155,12 +163,33 @@ decoding a well-formed $V$ that represents the number~$v \in \SetOfReals$ into a
 
 If $V$ is \emph{not} numerically convertible into $T$, decoding of a well-formed~$V$ must result in INCOMPATIBLE-TYPE.
 
+\medskip
+Decoding of an ill-formed $V$ must result in ILL-FORMED.
+
+
+\subsubsection{Decoding \DborUtfEightStringValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Although an \DborUtfEightStringValue{} requires proper UTF-8 encoding for being well-formed,
+a decoder is not required to support multi-byte UTF-8 sequences (i.e. code points $> \HexNumber{7F}$).
+
+\medskip
+If a decoder \emph{does} support multi-byte UTF-8 sequences,
+decoding an ill-formed \DborUtfEightStringValue{} must result in ILL-FORMED.
+
+\medskip
+If a decoder does \emph{not} support multi-byte UTF-8 sequences,
+decoding a (well-formed or ill-formed) size-correct \DborUtfEightStringValue{} containing a byte $> \HexNumber{7F}$
+must result in UNSUPPORTED-TYPE and
+decoding of an \DborUtfEightStringValue{} that is not size-correct must result in ILL-FORMED.
+
 
 \subsubsection{Decoding other \DborValue}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Decoding a \DborNoneValue{} into any type must result in NO-OBJECT.
 
+\medskip
 Decoding a (well-formed or ill-formed) \DborValue{} \emph{not} supported by the decoder
 must result in UNSUPPORTED-TYPE or ILL-FORMED.%
 \footnote{%
@@ -172,4 +201,5 @@ Decoding a well-formed \DborValue{} supported by the decoder that is not a subcl
 into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE.
 
 \medskip
-Decoding a \DborNoneValue{} into any type must result in NO-OBJECT.
+Decoding of an ill-formed \DborValue{} other than \DborUtfEightStringValue{}
+that is supported by the decoder must result in ILL-FORMED.
