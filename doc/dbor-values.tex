@@ -69,7 +69,6 @@ an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$
     All other combinations work as expected.
 }
 The byte sequence encoding an object is therefore called "value".
-Wherever possible in a simple and efficient way, DBOR choses the shortest byte sequence to represent an object.
 
 \medskip
 DBOR groups objects of a common nature to be represented and encoded in a similar way by \emph{classes}
@@ -102,7 +101,15 @@ an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
 
 See sections~\ref{sec:elementaryvalues} and \ref{sec:containervalues} for a complete list of (concrete) values.
 
-% TODO Define canonical value
+\medskip
+For some objects and classes, there is more than one representation of the object as an instance of the class;
+The number $0.1$ can be represented as \DborDecimalRationalValue(1, -1) or \DborDecimalRationalValue(10, -2),
+for example.
+DBOR defines a \emph{canonical value} for each object and class to enable a unique representation.%
+\footnote{
+    This is important when a value is used as a key in a dictionary.
+}
+
 
 \subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborStringValue)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
