@@ -17,15 +17,15 @@ but is much simpler and more efficient in many ways.
 Main features:
 
 - Powerful:
-  Can represent integer up to 64 bit, IEEE-754 binary floating-point numbers of to 64 bit,
+  Can represent integers up to 64 bit, IEEE-754 binary floating-point numbers of to 64 bit,
   decimal floating point numbers up to 128 bit, byte and Unicode strings, sequences and dictionaries.
 - Precise:
   There is no undefined behaviour;
   all conformant implementations encode and decode in exactly the same way.
-- Extremely fast encoding/decoding suitable for real-time applications:
-  Encoders and decoders do not have to copy large datablocks,
-  decoding and checks for validity require only "fast" operations,
-  no "large" iterations.
+- Very fast to encode and decode:
+  Encoders and decoders do not have to copy large datablocks;
+  decoding and checks for validity require only "fast" operations and no "large" iterations;
+  suitable for real-time applications.
 - Compact:
   Little memory overhead and therefore suitable for
   storing in small EEPROM or transmission over slow medium.
@@ -36,7 +36,9 @@ Main features:
 - Supports fine-grained size hints (pre-allocation):
   Allows the description of memory layouts and efficient replacements
   of small parts of large structures.
-  
+
+Latest version of the specification: `here <https://github.com/dlu-ch/dbor-spec/releases/latest>`_.
+
 A complete Python 3 implementation of a DBOR encoder (conformance level 2) looks like this:
 
 .. code-block:: python
