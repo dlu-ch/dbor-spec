@@ -38,7 +38,7 @@ in forward direction:
     }
 \end{align*}
 The representation is byte oriented and does not depend on word alignment or endianness.
-The byte sequence of each encoded object contains its own size.
+The byte sequence of each encoded object describes its own size.
 
 \medskip
 The transformation of $O^*$ into $B^*$ is called \emph{encoding} (done by an DBOR encoder),
@@ -77,7 +77,7 @@ The expression \DborIntegerValue($-100$) means the byte sequence that represents
 class \DborIntegerValue{}:
 \begin{equation*}
     \begin{array}{c}
-        \DborIntegerValue(-1) \\
+        \DborIntegerValue(-100) \\
         = \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}}
     \end{array}
     \quad\text{is an instance of}\quad \DborIntegerValue
@@ -85,7 +85,7 @@ class \DborIntegerValue{}:
 Each value comprises in its first byte of the (concrete) class that it is an instance of.
 
 \medskip
-An abstract class like \DborNumberValue{} represent common traits of objects and can be used as placeholder for any
+An abstract class like \DborNumberValue{} represents common traits of objects and can be used as placeholder for any
 of its concrete subclasses (like \DborIntegerValue{} or \DborInfinityValue{} in this case).
 The byte sequence \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}} "is a" \DborNumberValue{},
 an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
@@ -557,7 +557,7 @@ It is a \emph{well-formed} \DborUtfEightStringValue{} if and only if it is a siz
 \ByteSequence{b_{n - m + 1}, \ldots, b_n} is empty or starts with a well-formed UTF-8 encoded Unicode code point.
 
 The sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if it is not a well-formed
-\DborUtfEightStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($2$, $m$).
+\DborUtfEightStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($3$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
@@ -681,7 +681,7 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
 \end{itemize}
 
 ${\prec}$ is the strict partial order on the set of byte sequences defined as follows:
-$v_i \prec v_j$ if and only if they are different with the first different byte smaller in $v_i$ than
+$v_i \prec v_j$ if and only if $v_i$ and $v_j$ are different with the first different byte smaller in $v_i$ than
 in $v_j$.
 
 \paragraph{Representation}
@@ -732,11 +732,11 @@ The sequence is an \emph{ill-formed} \DborDictionaryValue{} if and only if it is
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborDictionaryValue{} representing the same object depends on its
-elements.
-The canonical value of \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) is
-\DborDictionaryValue($k_1' \mapsto v_1', \ldots, k_r' \mapsto v_r'$)
-where $k_i', v_i'$ are the canonical values of $k_i, v_i$ for all $i \in \IntegerInterval{1}{r}$.
+Whether there is more than one \DborDictionaryValue{} representing the same object depends on its elements.
+The canonical value of a well-formed \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) is
+the well-formed \DborDictionaryValue{} whose pairs of keys and associated values are the members of
+$\{(k_i', v_i') \colon i \in I\}$ where $\Box'$ means the canonical value of $\Box$ and
+$I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\colon k_j' = k_i'\}\}$.
 
 
 \subsubsection{\DborAllocatedValue(\texorpdfstring{$m$, $v$}{m, v})}
