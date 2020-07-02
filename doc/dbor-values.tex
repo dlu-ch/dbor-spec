@@ -25,11 +25,11 @@ in forward direction:
         & \quad\mapsto\quad
     \ByteSequence{
         \underbrace{%
-            \DborFirstByteNumber{38}, \DborNextByte{4B}
+            \DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}
         }_{\hskip-\textwidth\DborIntegerValue(-100)\hskip-\textwidth},
         %
         \overbrace{%
-            \DborFirstByteString{67},
+            \DborFirstByte\DborStringValueColour{67},
             \DborNextByte{C2}, \DborNextByte{A1},
             \DborNextByte{4F}, \DborNextByte{6C},
             \DborNextByte{C3}, \DborNextByte{A9},
@@ -78,7 +78,7 @@ class \DborIntegerValue{}:
 \begin{equation*}
     \begin{array}{c}
         \DborIntegerValue(-100) \\
-        = \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}}
+        = \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}}
     \end{array}
     \quad\text{is an instance of}\quad \DborIntegerValue
 \end{equation*}
@@ -87,7 +87,7 @@ Each value comprises in its first byte of the (concrete) class that it is an ins
 \medskip
 An abstract class like \DborNumberValue{} represents common traits of objects and can be used as placeholder for any
 of its concrete subclasses (like \DborIntegerValue{} or \DborInfinityValue{} in this case).
-The byte sequence \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}} "is a" \DborNumberValue{},
+The byte sequence \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}} "is a" \DborNumberValue{},
 an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
 
 \begin{figure}[H]
@@ -156,7 +156,7 @@ Example:\nolinebreak
         \toprule
         Value & Representation \\
         \midrule
-        \DborNoneValue & \ByteSequence{\DborFirstByteNone{FF}} \\
+        \DborNoneValue & \ByteSequence{\DborFirstByte\DborNoneValueColour{FF}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -208,9 +208,9 @@ Examples:\nolinebreak
         \toprule
         Value & Representation \\
         \midrule
-        \DborMinusZeroValue & \ByteSequence{\DborFirstByteNumber{FC}} \\
-        \DborInfinityValue & \ByteSequence{\DborFirstByteNumber{FE}} \\
-        \DborMinusInfinityValue & \ByteSequence{\DborFirstByteNumber{FD}} \\
+        \DborMinusZeroValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FC}} \\
+        \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FE}} \\
+        \DborMinusInfinityValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FD}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -252,17 +252,17 @@ Examples:\nolinebreak
         \midrule
         %
         \DborIntegerValue($0$)
-            &  \ByteSequence{\DborFirstByteNumber{00}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{00}} \\
         \DborIntegerValue($-1$)
-            &  \ByteSequence{\DborFirstByteNumber{20}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{20}} \\
         \DborIntegerValue($23$)
-            &  \ByteSequence{\DborFirstByteNumber{17}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{17}} \\
         \DborIntegerValue($24$)
-            &  \ByteSequence{\DborFirstByteNumber{18}, \DborNextByte{00}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
         \DborIntegerValue($-100$)
-            &  \ByteSequence{\DborFirstByteNumber{38}, \DborNextByte{4B}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}} \\
         \DborIntegerValue($\HexNumber{FF\,FF\,FF\,FF}$)
-            &  \ByteSequence{\DborFirstByteNumber{1B}, \DborNextByte{E7}, \DborNextByte{FE},
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{1B}, \DborNextByte{E7}, \DborNextByte{FE},
                \DborNextByte{FE}, \DborNextByte{FE}} \\
         %
         \bottomrule
@@ -352,15 +352,14 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborBinaryRationalValue($3$, $\frac{1}{8}$)
-            &  \ByteSequence{\DborFirstByteNumber{D0}, \DborNextByte{00}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D0}, \DborNextByte{00}} \\
         \DborBinaryRationalValue($5$, $-(2^{17} - 2^6)$)%
             \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
-            &  \ByteSequence{\DborFirstByteNumber{D1}, \DborNextByte{FF}, \DborNextByte{FF}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D1}, \DborNextByte{FF}, \DborNextByte{FF}} \\
         \DborBinaryRationalValue($52$, $2^{-1074}$)
-            &  $\ByteSequence{\DborFirstByteNumber{D7}, \DborNextByte{01}, \DborNextByte{00},
-                                                        \DborNextByte{00}, \DborNextByte{00},$ \\
-            &  $                                        \DborNextByte{00}, \DborNextByte{00},
-                                                        \DborNextByte{00}, \DborNextByte{00}}$ \\
+            &  $\ByteSequence{\DborFirstByte\DborNumberValueColour{D7},
+                    \DborNextByte{01}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00},$ \\
+            &  $    \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -425,9 +424,10 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborDecimalRationalValue($1$, $-2$)
-            &  \ByteSequence{\DborFirstByteNumber{E9}, \DborNextByte{01}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{E9}, \DborNextByte{01}} \\
         \DborDecimalRationalValue($-123$, $100$)
-            &  \ByteSequence{\DborFirstByteNumber{C0}, \DborNextByte{5B}, \DborNextByte{38}, \DborNextByte{62}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C0},
+                    \DborNextByte{5B}, \DborNextByte{38}, \DborNextByte{62}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -474,9 +474,9 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborByteStringValue(\ByteSequence{})
-            &  \ByteSequence{\DborFirstByteString{40}} \\
+            &  \ByteSequence{\DborFirstByte\DborStringValueColour{40}} \\
         \DborByteStringValue(\ByteSequence{\HexNumber{12}, \HexNumber{34}})
-            &  \ByteSequence{\DborFirstByteString{42}, \DborNextByte{12}, \DborNextByte{34}} \\
+            &  \ByteSequence{\DborFirstByte\DborStringValueColour{42}, \DborNextByte{12}, \DborNextByte{34}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -539,9 +539,9 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborUtfEightStringValue("")
-            &  \ByteSequence{\DborFirstByteString{60}} \\
+            &  \ByteSequence{\DborFirstByte\DborStringValueColour{60}} \\
         \DborUtfEightStringValue("¡Olé!")
-            &  \ByteSequence{\DborFirstByteString{67},
+            &  \ByteSequence{\DborFirstByte\DborStringValueColour{67},
                     \DborNextByte{C2}, \DborNextByte{A1},
                     \DborNextByte{4F}, \DborNextByte{6C},
                     \DborNextByte{C3}, \DborNextByte{A9},
@@ -619,11 +619,11 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborSequenceValue()
-            & \ByteSequence{\DborFirstByteSequence{80}} \\
+            & \ByteSequence{\DborFirstByte\DborSequenceValueColour{80}} \\
         \DborSequenceValue(\DborNoneValue, \DborIntegerValue($24$))
-            & \ByteSequence{\DborFirstByteSequence{83},
-                    \DborFirstByteNone{FF},
-                    \DborFirstByteNumber{18}, \DborNextByte{00}} \\
+            & \ByteSequence{\DborFirstByte\DborSequenceValueColour{83},
+                    \DborFirstByte\DborNoneValueColour{FF},
+                    \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -701,11 +701,11 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborDictionaryValue()
-            & \ByteSequence{\DborFirstByteDictionary{90}} \\
+            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{90}} \\
         \DborDictionaryValue($\DborNoneValue \mapsto \DborIntegerValue($24$)$)
-            & \ByteSequence{\DborFirstByteDictionary{93},
-                    \DborFirstByteNone{FF},
-                    \DborFirstByteNumber{18}, \DborNextByte{00}} \\
+            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{93},
+                    \DborFirstByte\DborNoneValueColour{FF},
+                    \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -766,12 +766,12 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborAllocatedValue(3, \DborIntegerValue(23))
-            & \ByteSequence{\DborFirstByteAllocated{D8}, \DborNextByte{02},
-                    \DborFirstByteNumber{17},
+            & \ByteSequence{\DborFirstByte\DborAllocatedValueColour{D8}, \DborNextByte{02},
+                    \DborFirstByte\DborNumberValueColour{17},
                     \DborNextByteFill{FF}, \DborNextByteFill{FF}} \\
         \DborAllocatedValue(3, \DborIntegerValue(24))
-            & \ByteSequence{\DborFirstByteAllocated{D8}, \DborNextByte{02},
-                    \DborFirstByteNumber{18}, \DborNextByte{00},
+            & \ByteSequence{\DborFirstByte\DborAllocatedValueColour{D8}, \DborNextByte{02},
+                    \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00},
                     \DborNextByteFill{FF}} \\
         \bottomrule
     \end{tabular}

@@ -62,15 +62,17 @@
     \newcommand{\DborPowerOfTenToken}{\DborSyntaxIdent{PowerOfTenToken}{Power\-Of\-Ten\-Token}}
 
     % colour coding of bytes sequences
-    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\ensuremath{\bm{\HexNumber{#2}}}}}
-    \newcommand{\DborFirstByteNone}[1]{\DborFirstByte{red-std}{#1}}
-    \newcommand{\DborFirstByteNumber}[1]{\DborFirstByte{black}{#1}}
+    \newcommand{\DborNoneValueColour}{red-std}
+    \newcommand{\DborNumberValueColour}{black}
         % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
-    \newcommand{\DborFirstByteString}[1]{\DborFirstByte{green-std}{#1}}
+    \newcommand{\DborStringValueColour}{green-std}
         % ByteStringValue, Utf8StringValue
-    \newcommand{\DborFirstByteSequence}[1]{\DborFirstByte{blue-std}{#1}}
-    \newcommand{\DborFirstByteDictionary}[1]{\DborFirstByte{violet-std}{#1}}
-    \newcommand{\DborFirstByteAllocated}[1]{\DborFirstByte{gray-std}{#1}}
+    \newcommand{\DborSequenceValueColour}{blue-std}
+    \newcommand{\DborDictionaryValueColour}{violet-std}
+    \newcommand{\DborAllocatedValueColour}{gray-std}
+
+    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\ensuremath{\bm{\HexNumber{#2}}}}}
+    \newcommand{\DborFirstByteBin}[2]{\textcolor{#1}{\ensuremath{\bm{\BinNumber{#2}}}}}
     \newcommand{\DborNextByte}[1]{\ensuremath{\HexNumber{#1}}}
     \newcommand{\DborNextByteFill}[1]{\textcolor{gray-std}{\ensuremath{\HexNumber{#1}}}}
 

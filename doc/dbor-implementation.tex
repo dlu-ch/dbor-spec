@@ -19,35 +19,35 @@ Values:\nolinebreak
         \toprule
         \text{First byte} & Value type & \text{Constraints} \\
         \midrule
-        \BinNumber{000x\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{000x\,xxxx}
             & \DborIntegerValue*($v$)
             & v \ge 0 \\
-        \BinNumber{001x\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{001x\,xxxx}
             & \DborIntegerValue*($-v - 1$)
             & v < 0 \\
-        \BinNumber{010x\,xxxx}
+        \DborFirstByteBin\DborStringValueColour{010x\,xxxx}
             & \DborByteStringValue(\dots) \\
-        \BinNumber{011x\,xxxx}
+        \DborFirstByteBin\DborStringValueColour{011x\,xxxx}
             & \DborUtfEightStringValue(\dots) \\
-        \BinNumber{100x\,xxxx}
+        \DborFirstByteBin\DborSequenceValueColour{100x\,xxxx}
             & \DborSequenceValue*(\dots) \\
-        \BinNumber{101x\,xxxx}
+        \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
             & \DborDictionaryValue*(\dots) \\
-        \BinNumber{1100\,0xxx}
+        \DborFirstByteBin\DborAllocatedValueColour{1100\,0xxx}
             & \DborAllocatedValue*(\dots) \\
-        \BinNumber{1100\,1xxx}
+        \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
             & \DborBinaryRationalValue*(\dots) \\
-        \BinNumber{1101\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
             & \DborDecimalRationalValue*($m$, $e$)
             & |e| > 8 \\
-        \BinNumber{1110\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{1110\,xxxx}
             & \DborDecimalRationalValue*($m$, $e$)
             & |e| \le 8 \\
         \BinNumber{1111\,0xxx}
             & reserved \\
         \BinNumber{1111\,10xx}
             & reserved \\
-        \BinNumber{1111\,11xx}
+        \DborFirstByteBin\DborNoneValueColour{1111\,11xx}
             & \DborNoneValue*, \DborMinusZeroValue*, \DborInfinityValue*, \DborMinusInfinityValue* \\
         \bottomrule
     \end{tabular}
@@ -63,28 +63,28 @@ Tokens:\nolinebreak
         \toprule
         \text{First byte} & Token representation & \text{Constraints} \\
         \midrule
-        \BinNumber{000x\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{000x\,xxxx}
             & \DborIntegerToken*(0, $v$)
             & v \ge 0 \\
-        \BinNumber{001x\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{001x\,xxxx}
             & \DborIntegerToken*(1, $-v - 1$)
             & v < 0 \\
-        \BinNumber{010x\,xxxx}
+        \DborFirstByteBin\DborStringValueColour{010x\,xxxx}
             & \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m} \\
-        \BinNumber{011x\,xxxx}
+        \DborFirstByteBin\DborStringValueColour{011x\,xxxx}
             & \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m} \\
-        \BinNumber{100x\,xxxx}
+        \DborFirstByteBin\DborSequenceValueColour{100x\,xxxx}
             & \DborIntegerToken*($4$, $m$) {\Concat} $v_1 \Concat \cdots \Concat v_r$ \\
-        \BinNumber{101x\,xxxx}
+        \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
             & \DborIntegerToken*($5$, $m$) {\Concat} $k_1 \Concat v_1 \Concat \cdots \Concat k_r \Concat v_r$ \\
-        \BinNumber{1100\,0xxx}
+        \DborFirstByteBin\DborAllocatedValueColour{1100\,0xxx}
             & \DborNaturalToken*($6$, $0$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$ \\
-        \BinNumber{1100\,1xxx}
+        \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
             & \DborBinaryRationalToken*(\dots) \\
-        \BinNumber{1101\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
             & \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*(\dots)
             & |e| > 8 \\
-        \BinNumber{1110\,xxxx}
+        \DborFirstByteBin\DborNumberValueColour{1110\,xxxx}
             & \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*(\dots)
             & |e| \le 8 \\
         \BinNumber{1111\,0xxx}
@@ -93,7 +93,7 @@ Tokens:\nolinebreak
         \BinNumber{1111\,10xx}
             & \DborMinimalToken*($7$, $v$)
             & \HexNumber{1B} \le v < \HexNumber{1C} \\
-        \BinNumber{1111\,11xx}
+        \DborFirstByteBin\DborNoneValueColour{1111\,11xx}
             & \DborMinimalToken*($7$, $v$)
             & v \ge \HexNumber{1C} \\
         \bottomrule
