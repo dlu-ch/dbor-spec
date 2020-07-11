@@ -39,6 +39,7 @@
     \newcommand{\DborValue}{\DborSyntaxIdent{Value}{Value}}
     \newcommand{\DborElementaryValue}{\DborSyntaxIdent{ElementaryValue}{Elementary\-Value}}
     \newcommand{\DborNumberValue}{\DborSyntaxIdent{NumberValue}{Number\-Value}}
+    \newcommand{\DborNumberlikeValue}{\DborSyntaxIdent{NumberlikeValue}{Number\-like\-Value}}
     \newcommand{\DborStringValue}{\DborSyntaxIdent{StringValue}{String\-Value}}
     \newcommand{\DborContainerValue}{\DborSyntaxIdent{ContainerValue}{Container\-Value}}
 
@@ -63,8 +64,8 @@
 
     % colour coding of bytes sequences
     \newcommand{\DborNoneValueColour}{red-std}
-    \newcommand{\DborNumberValueColour}{black}
-        % IntegerValue, BinaryRationalValue, DecimalRationalValue, MinusZero, Infinity, MinusInfinity
+    \newcommand{\DborNumberValueColour}{black}  % IntegerValue, BinaryRationalValue, DecimalRationalValue,
+    \newcommand{\DborNumberlikeValueColour}{\DborNumberValueColour} % MinusZero, Infinity, MinusInfinity
     \newcommand{\DborStringValueColour}{green-std}
         % ByteStringValue, Utf8StringValue
     \newcommand{\DborSequenceValueColour}{blue-std}

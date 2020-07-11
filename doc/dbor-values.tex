@@ -111,16 +111,15 @@ DBOR defines a \emph{canonical value} for each object and class to enable a uniq
 }
 
 
-\subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborStringValue)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborNumberlikeValue, \DborStringValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:elementaryvalues}
 \hypertarget{sec:def:ElementaryValue}{}
 \hypertarget{sec:def:NumberValue}{}
+\hypertarget{sec:def:NumberlikeValue}{}
 \hypertarget{sec:def:StringValue}{}
 
 Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
-
-% TODO complete
 
 \begin{figure}[H]
     \begin{quote}
@@ -130,6 +129,11 @@ Elementary values are values that represent a single object with a meaning of it
         \label{fig:class:ElementaryValue}
     \end{quote}
 \end{figure}
+
+Each \DborNumberValue{} represents a real number.
+
+Each \DborNumberlikeValue{} represents an object that is no (real) number but can be compared to any real number and
+to any \DborNumberlikeValue{}.
 
 
 \subsubsection{\DborNoneValue}
@@ -169,7 +173,7 @@ Every \DborNoneValue{} is well-formed.
 
 
 \subsubsection{\DborMinusZeroValue, \DborInfinityValue, \DborMinusInfinityValue}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:MinusZeroValue}
 \label{sec:def:InfinityValue}
 \label{sec:def:MinusInfinityValue}
@@ -180,16 +184,24 @@ Every \DborNoneValue{} is well-formed.
 \paragraph{Representable objects}
 
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
+It is considered larger than any object represented by a \DborNumberValue*{} with a negative numeric value and $< 0$.%
+\footnote{%
+    This reflects the idea of a negative infinitesimal (\href{https://en.wikipedia.org/wiki/Hyperreal_number}{hyperreal}
+    or \href{https://en.wikipedia.org/wiki/Surreal_number}{surreal}) number as members of an extension field
+    of $\SetOfReals$.
+
+    In IEEE-754:2008 arithmetic however (which introduces "non-numbers" primarily as an elegant means to make fast
+    floating-point arithmetic more robust), $-0 = 0$ but $x / -0 \ne x / 0$ for finite $x \ne 0$;
+    $-0$ and $0$ are treated as a negative or positive infinitesimal numbers in this operation.
+}
 
 \medskip
 A \DborInfinityValue{} represents the "number" $\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered larger than any object represented by a \DborNumberValue*{}
-other than \DborInfinityValue.
+It is considered larger than any object represented by a \DborNumberValue*{}.
 
 \medskip
 A \DborMinusInfinityValue{} represents the "number" $-\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered smaller than any object represented by a \DborNumberValue*{}
-other than \DborMinusInfinityValue.
+It is considered smaller than any object represented by a \DborNumberValue*{}.
 
 \paragraph{Representation}
 
@@ -208,9 +220,9 @@ Examples:\nolinebreak
         \toprule
         Value & Representation \\
         \midrule
-        \DborMinusZeroValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FC}} \\
-        \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FE}} \\
-        \DborMinusInfinityValue & \ByteSequence{\DborFirstByte\DborNumberValueColour{FD}} \\
+        \DborMinusZeroValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FC}} \\
+        \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FE}} \\
+        \DborMinusInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FD}} \\
         \bottomrule
     \end{tabular}
 \end{quote}

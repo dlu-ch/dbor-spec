@@ -27,6 +27,7 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{ragged2e}
+\usepackage[shortlabels]{enumitem}
 
 \makesavenoteenv{tabular}  % package 'footnote'
 

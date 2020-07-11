@@ -88,18 +88,18 @@ With the only exception of numerical conversions, there must be no implicit conv
 these sets of native types (e.g. between a integer and a character string)
 
 
-\subsubsection{Decoding supported \DborNumberValue}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Decoding supported \DborNumberValue{} and \DborNumberlikeValue}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \DborNumberValue{} is special because the sets of objects representable by its subclasses are not pairwise disjunct:
-small non-zero integers and \DborMinusZeroValue, \DborMinusInfinityValue, and \DborInfinityValue{} have a meaning for
-all of them.
+small non-zero integers have a meaning for all of them.
 On the other hand, only \DborIntegerValue{} can represent~$0$.
 
 \medskip
-Decoding a \DborNumberValue{} into a (numerical) native data type is called a \emph{numerical conversion}.
-
-A \DborNumberValue{} of type~$V$ is said to be \emph{numerically convertible} into~$T$ if and only if%
+Decoding a \DborNumberValue{} or \DborNumberlikeValue{} into a (numerical) native data type is called
+a \emph{numerical conversion}.
+A \DborNumberValue{} or \DborNumberlikeValue{} of type~$V$ is said to be \emph{numerically convertible} into~$T$
+if and only if%
 \footnote{
     Note that~\DborDecimalRationalValue{} is \emph{not} numerically convertible into any member of an
     associated set of native data types of any other subclass of \DborNumberValue{}.
@@ -109,62 +109,60 @@ A \DborNumberValue{} of type~$V$ is said to be \emph{numerically convertible} in
 }
 \begin{itemize}
     \item
-    $T$ is a member of the associated set of native data types of~$V$ or
+    $V$ is a subclass of \DborNumberValue{} and $T$ is a member of the associated set of native data types of~$V$, or
 
     \item
     $V$ is \DborIntegerValue{} and
     $T$ is a member of the associated set of native data types of \DborBinaryRationalValue{}
-    or of \DborDecimalRationalValue{}.
+    or of \DborDecimalRationalValue{}, or
 
     \item
-    $V$ is \DborMinusZeroValue, \DborMinusInfinityValue{} or \DborInfinityValue{} and
+    $V$ is a subclass of \DborNumberlikeValue{} and
     $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
 \end{itemize}
 
-Let $V$ be a subclass of \DborNumberValue{} that is supported by the decoder and
-$T$ a native data type that can represent any number $\in T_{\text{repr}} \subset \SetOfReals \cup \{-\infty, \infty\}$
+Let $V$ be a subclass of \DborNumberValue{} or \DborNumberlikeValue{} that is supported by the decoder and
+$T$ a native data type that can represent any number
+$\in T_{\text{repr}} \subset \SetOfReals \cup \{-\infty, -0, \infty\}$
 with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation).
 
-\medskip
-If $V$ is numerically convertible into $T$,
-decoding a well-formed $V$ that represents the number~$v \in \SetOfReals$ into a~$T$ must lead to the following results:
-\begin{quote}
-    \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
-    \noindent
-    \begin{tabular}{v{0.25\textwidth} l v{0.35\textwidth}}
-        \toprule
-        Constraints & Result & Returned object as $T$ \\
-        \midrule
-        %
-        $v \in T_{\text{repr}}$ &
-            PRECISE & $v$ \\ \addextrarowsep
-        %
-        $v \notin T_{\text{repr}}$ and $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
-            IMPRECISE &
-            of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
-        %
-        $v$ is $-0$ and $-0$ cannot be represented by $T$ &
-            IMPRECISE & $0$ \\ \addextrarowsep
-        %
-        $v < \min{T_{\text{repr}}}$ &
-            OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
-        %
-        $v > \max{T_{\text{repr}}}$ &
-            OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
-        %
-        $v$ is $-\infty$ and $-\infty \notin T$ &
-            OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
-        %
-        $v$ is $\infty$ and $\infty \notin T$ &
-            OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\
-        \bottomrule
-    \end{tabular}
-\end{quote}
+\begin{enumerate}[a)]
+    \item
+    If $V$ is numerically convertible into~$T$,
+    decoding a well-formed $V$ that represents~$v \in T_{\text{repr}}$ into a~$T$ must result in PRECISE with
+    the exact representation of $v$ as the returned object.
 
-If $V$ is \emph{not} numerically convertible into $T$, decoding of a well-formed~$V$ must result in INCOMPATIBLE-TYPE.
+    \item
+    If $V$ is numerically convertible into~$T$,
+    decoding a well-formed $V$ that represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
+    \begin{quote}
+        \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
+        \noindent
+        \begin{tabular}{v{0.25\textwidth} l v{0.25\textwidth}}
+            \toprule
+            Constraints & Result & Returned object as $T$ \\
+            \midrule
+            %
+            $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
+                IMPRECISE &
+                of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
+            %
+            $v < \min{T_{\text{repr}}}$ &
+                OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
+            %
+            $v > \max{T_{\text{repr}}}$ &
+                OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
+            \bottomrule
+        \end{tabular}
+    \end{quote}
 
-\medskip
-Decoding of an ill-formed $V$ must result in ILL-FORMED.
+    \item
+    If $V$ is \emph{not} numerically convertible into $T$, decoding a well-formed~$V$ must
+    result in INCOMPATIBLE-TYPE.
+
+    \item
+    Decoding an ill-formed $V$ must result in ILL-FORMED.
+\end{enumerate}
 
 
 \subsubsection{Decoding \DborUtfEightStringValue}
@@ -181,7 +179,7 @@ decoding an ill-formed \DborUtfEightStringValue{} must result in ILL-FORMED.
 If a decoder does \emph{not} support multi-byte UTF-8 sequences,
 decoding a (well-formed or ill-formed) size-correct \DborUtfEightStringValue{} containing a byte $> \HexNumber{7F}$
 must result in UNSUPPORTED-TYPE and
-decoding of an \DborUtfEightStringValue{} that is not size-correct must result in ILL-FORMED.
+decoding an \DborUtfEightStringValue{} that is not size-correct must result in ILL-FORMED.
 
 
 \subsubsection{Decoding other \DborValue}
@@ -201,7 +199,7 @@ Decoding a well-formed \DborValue{} supported by the decoder that is not a subcl
 into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE.
 
 \medskip
-Decoding of an ill-formed \DborValue{} other than \DborUtfEightStringValue{}
+Decoding an ill-formed \DborValue{} other than \DborUtfEightStringValue{}
 that is supported by the decoder must result in ILL-FORMED.
 
 
