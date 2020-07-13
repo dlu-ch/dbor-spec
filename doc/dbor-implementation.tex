@@ -23,12 +23,12 @@ Values:\nolinebreak
             & \DborIntegerValue*($v$)
             & v \ge 0 \\
         \DborFirstByteBin\DborNumberValueColour{001x\,xxxx}
-            & \DborIntegerValue*($-v - 1$)
+            & \DborIntegerValue*($v$)
             & v < 0 \\
         \DborFirstByteBin\DborStringValueColour{010x\,xxxx}
-            & \DborByteStringValue(\dots) \\
+            & \DborByteStringValue*(\dots) \\
         \DborFirstByteBin\DborStringValueColour{011x\,xxxx}
-            & \DborUtfEightStringValue(\dots) \\
+            & \DborUtfEightStringValue*(\dots) \\
         \DborFirstByteBin\DborSequenceValueColour{100x\,xxxx}
             & \DborSequenceValue*(\dots) \\
         \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
@@ -38,15 +38,15 @@ Values:\nolinebreak
         \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
             & \DborBinaryRationalValue*(\dots) \\
         \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
-            & \DborDecimalRationalValue*($m$, $e$)
+            & \DborDecimalRationalValue*(\dots, $e$)
             & |e| > 8 \\
         \DborFirstByteBin\DborNumberValueColour{1110\,xxxx}
-            & \DborDecimalRationalValue*($m$, $e$)
+            & \DborDecimalRationalValue*(\dots, $e$)
             & |e| \le 8 \\
         \BinNumber{1111\,0xxx}
-            & reserved \\
+            & - \\
         \BinNumber{1111\,10xx}
-            & reserved \\
+            & - \\
         \DborFirstByteBin\DborNoneValueColour{1111\,11xx}
             & \DborNoneValue*, \DborMinusZeroValue*, \DborInfinityValue*, \DborMinusInfinityValue* \\
         \bottomrule

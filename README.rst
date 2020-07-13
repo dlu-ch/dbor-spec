@@ -17,13 +17,13 @@ but is much simpler and more efficient in many ways.
 Main features:
 
 - Powerful:
-  Can represent integers up to 64 bit, IEEE-754 binary floating-point numbers of to 64 bit,
-  decimal floating point numbers up to 128 bit, byte and Unicode strings, sequences and dictionaries.
+  Can represent integers up to 65 bit, IEEE-754 binary floating-point numbers of to 64 bit,
+  decimal floating point numbers up to 130 bit, byte and Unicode strings, sequences and dictionaries.
 - Precise:
   There is no undefined behaviour;
   all conformant implementations encode and decode in exactly the same way.
 - Very fast to encode and decode:
-  Encoders and decoders do not have to copy large datablocks;
+  Encoders and decoders do not have to copy large data blocks;
   decoding and checks for validity require only "fast" operations and no "large" iterations;
   suitable for real-time applications.
 - Compact:
