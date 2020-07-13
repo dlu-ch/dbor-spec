@@ -28,38 +28,8 @@ Decoding%
 }
 a \DborValue{} in a statically typed environment (e.g. C++ without dynamic polymorphy) is a
 type-cast operation from the represented object to a given \emph{target type}.
-
-Such an operation can succeed (the represented value can represented exactly in the target type),
+Such an operation can succeed (the represented value can represented exactly in the target type) or
 can fail (the represented value cannot be represented at all in the target type or not exactly).
-
-A decoder must at least differentiate between these possible results:
-\begin{quote}
-    \newcommand{\addextrarowsep}{\addlinespace[1ex]}%
-    \noindent
-    \begin{tabular}{l p{0.5\textwidth}}
-        PRECISE* &
-            the returned object represents the value exactly \\ \addextrarowsep
-        %
-        IMPRECISE* &
-            object represented by value can be represented by target type only approximately \\
-        OUT-OF-RANGE* &
-            object represented by value is too large (numerically or by size) or too small for being represented
-            by target type;
-            \\ \addextrarowsep
-        %
-        NO-OBJECT &
-            value is \DborNoneValue \\
-        UNSUPPORTED-TYPE &
-            decoder does not support the type of the value \\ \addextrarowsep
-        %
-        INCOMPATIBLE-TYPE &
-            target type is not in associated set of native data types \\
-        ILL-FORMED &
-            value is ill-formed \\
-    \end{tabular}
-\end{quote}
-
-The results marked with * must be accompanied by an instance of the target type.
 
 \medskip
 For each of the classes \DborIntegerValue, \DborBinaryRationalValue, \DborDecimalRationalValue, \DborByteStringValue,
@@ -86,6 +56,39 @@ These sets must be pairwise disjunct:
 \medskip
 With the only exception of numerical conversions, there must be no implicit conversion between
 these sets of native types (e.g. between a integer and a character string)
+
+\medskip
+A decoder must at least differentiate between these possible decoding results:
+\begin{quote}
+    \newcommand{\addextrarowsep}{\addlinespace[1ex]}%
+    \noindent
+    \begin{tabular}{l p{0.5\textwidth}}
+        PRECISE* &
+            object is represented exactly in the target type \\ \addextrarowsep
+        %
+        APPROX-IMPRECISE* &
+            object is approximated by a different object representable by the target type \\
+        APPROX-EXTREME* &
+            object is approximated by the minimum or maximum value representable by the target type
+            because it is larger than the maximum or smaller than the minimum
+            \\ \addextrarowsep
+        %
+        RANGE &
+            object cannot by represented by the target type, which is in associated set of native data types,
+            not even approximately \\
+        NO-OBJECT &
+            value is \DborNoneValue \\
+        UNSUPPORTED-TYPE &
+            decoder does not support the type of the value \\
+        %
+        INCOMPATIBLE-TYPE &
+            target type is not in associated set of native data types \\
+        ILL-FORMED &
+            value is ill-formed \\
+    \end{tabular}
+\end{quote}
+
+The results marked with * must be accompanied by an instance of the target type.
 
 
 \subsubsection{Decoding supported \DborNumberValue{} and \DborNumberlikeValue}
@@ -144,14 +147,14 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
             \midrule
             %
             $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
-                IMPRECISE &
+                APPROX-IMPRECISE &
                 of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
             %
             $v < \min{T_{\text{repr}}}$ &
-                OUT-OF-RANGE & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
+                APPROX-EXTREME & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
             %
             $v > \max{T_{\text{repr}}}$ &
-                OUT-OF-RANGE & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
+                APPROX-EXTREME & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
             \bottomrule
         \end{tabular}
     \end{quote}
@@ -224,7 +227,7 @@ If a conformance level specifies a value~$v$ as supported
 
     \item
     a decoder of this conformance level can decode a (well-formed) $v$
-    (if statically typed: with the result PRECISE or OUT-OF-RANGE).
+    (if statically typed: with the result PRECISE or APPROX-IMPRECISE).
 \end{itemize}
 
 \paragraph{Supported values in conformance level 0}
