@@ -92,7 +92,7 @@ an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
 \begin{figure}[H]
     \begin{quote}
         \noindent
-        \includegraphics[scale=0.7]{classdiag_value}%
+        \includegraphics[scale=0.8]{classdiag_value}%
         \caption{Class hierarchy of values.}
         \label{fig:class:Value}
     \end{quote}
@@ -110,43 +110,16 @@ DBOR defines a \emph{canonical value} for each object and class to enable a uniq
 }
 
 
-\subsection{Elementary values (\DborElementaryValue)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\label{sec:elementaryvalues}
-\hypertarget{sec:def:ElementaryValue}{}
-\hypertarget{sec:def:NumberValue}{}
-\hypertarget{sec:def:NumberlikeValue}{}
-\hypertarget{sec:def:StringValue}{}
-
-Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
-
-\begin{figure}[H]
-    \begin{quote}
-        \noindent
-        \includegraphics[scale=0.7]{classdiag_elementary}%
-        \caption{Class hierarchy of elementary values.}
-        \label{fig:class:ElementaryValue}
-    \end{quote}
-\end{figure}
-
-Each \DborNumberValue{} represents a real number.
-
-Each \DborNumberlikeValue{} represents an object that is no (real) number but can be compared to any real number and
-to any \DborNumberlikeValue{}.
-
-
-\subsubsection{\DborNoneValue}
+\subsection{\DborNoneValue}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:NoneValue}
 \hypertarget{sec:def:NoneValue}{}
-
-% TODO should NoneValue really be an ElementaryValue?
 
 \paragraph{Representable objects}
 
 A \DborNoneValue{} represents the absence of an actual object (like \texttt{null} or \texttt{None} in some
 programming languages or NaN in IEEE-754:2008).
-It is considered different from any object represented by a \DborValue*{} other than \DborNoneValue.
+It is considered different from any object represented by a \DborValue*{} other than a \DborNoneValue.
 
 \paragraph{Representation}
 
@@ -171,6 +144,31 @@ Example:\nolinebreak
 There is only one representation of a \DborNoneValue.
 It is canonical.
 Every \DborNoneValue{} is well-formed.
+
+
+\subsection{Elementary values (\DborElementaryValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:elementaryvalues}
+\hypertarget{sec:def:ElementaryValue}{}
+\hypertarget{sec:def:NumberValue}{}
+\hypertarget{sec:def:NumberlikeValue}{}
+\hypertarget{sec:def:StringValue}{}
+
+Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
+
+\begin{figure}[H]
+    \begin{quote}
+        \noindent
+        \includegraphics[scale=0.8]{classdiag_elementary}%
+        \caption{Class hierarchy of elementary values.}
+        \label{fig:class:ElementaryValue}
+    \end{quote}
+\end{figure}
+
+Each \DborNumberValue{} represents a real number.
+
+Each \DborNumberlikeValue{} represents an object that is no (real) number but can be compared to any real number and
+to any \DborNumberlikeValue{}.
 
 
 \subsubsection{\DborMinusZeroValue, \DborInfinityValue, \DborMinusInfinityValue}
@@ -591,15 +589,14 @@ brought to Normalization Form C.%
 \label{sec:containervalues}
 \hypertarget{sec:def:ContainerValue}{}
 
-Container values are mere collections of other values (elementary values or container values) and derive their
-meaning from their elements.
+Container values are mere collections of other values and derive their meaning from their elements.
 
 All container values can be nested.
 
 \begin{figure}[H]
     \begin{quote}
         \noindent
-        \includegraphics[scale=0.7]{classdiag_container}%
+        \includegraphics[scale=0.8]{classdiag_container}%
         \caption{Class hierarchy of container values.}
         \label{fig:class:ContainerValue}
     \end{quote}
