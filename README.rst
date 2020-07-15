@@ -19,23 +19,19 @@ Main features:
 - Powerful:
   Can represent integers up to 65 bit, IEEE-754 binary floating-point numbers of to 64 bit,
   decimal floating point numbers up to 130 bit, byte and Unicode strings, sequences and dictionaries.
-- Precise:
-  There is no undefined behaviour;
-  all conformant implementations encode and decode in exactly the same way.
-- Very fast to encode and decode:
-  Encoders and decoders do not have to copy large data blocks;
-  decoding and checks for validity require only "fast" operations and no "large" iterations;
+- Precise and unambiguous:
+  Compliant implementations on all platforms encode and decode in exactly the same way (to the last bit).
+- Very fast:
+  Decoding and checks for validity require only "fast" operations and no "large" iterations;
   suitable for real-time applications.
 - Compact:
-  Little memory overhead and therefore suitable for
-  storing in small EEPROM or transmission over slow medium.
+  The memory overhead is small; DBOR encoded data is suitable for storing in small EEPROMs
+  or transmitting over slow media.
 - Scalable:
-  Defines conformance levels for implementations;
-  this allows trade-offs between code size / complexity and features
-  and simple compatibility checks.
-- Supports fine-grained size hints (pre-allocation):
-  Allows the description of memory layouts and efficient replacements
-  of small parts of large structures.
+  Defines conformance levels for implementations to control the trade-off between small code size and complexity
+  vs. feature richness.
+- Supports fine-grained memory layout control:
+  Allows to define a fixed size for each object.
 
 Latest version of the specification: `here <https://github.com/dlu-ch/dbor-spec/releases/latest/download/dbor.pdf>`_.
 
