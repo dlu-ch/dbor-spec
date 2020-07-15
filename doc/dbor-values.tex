@@ -81,7 +81,7 @@ class \DborIntegerValue{}:
     \end{array}
     \quad\text{is an instance of}\quad \DborIntegerValue
 \end{equation*}
-Each value comprises in its first byte of the (concrete) class that it is an instance of.
+Each value identifies in its first byte the (concrete) class that it is an instance of.
 
 \medskip
 An abstract class like \DborNumberValue{} represents common traits of objects and can be used as placeholder for any
@@ -185,13 +185,13 @@ to any \DborNumberlikeValue{}.
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
 It is considered larger than any object represented by a \DborNumberValue*{} with a negative numeric value and $< 0$.%
 \footnote{%
-    This reflects the idea of a negative infinitesimal (\href{https://en.wikipedia.org/wiki/Hyperreal_number}{hyperreal}
-    or \href{https://en.wikipedia.org/wiki/Surreal_number}{surreal}) number as members of an extension field
+    This reflects the idea of negative infinitesimal (\href{https://en.wikipedia.org/wiki/Hyperreal_number}{hyperreal}
+    or \href{https://en.wikipedia.org/wiki/Surreal_number}{surreal}) numbers as members of an extension field
     of $\SetOfReals$.
 
     In IEEE-754:2008 arithmetic however (which introduces "non-numbers" primarily as an elegant means to make fast
     floating-point arithmetic more robust), $-0 = 0$ but $x / -0 \ne x / 0$ for finite $x \ne 0$;
-    $-0$ and $0$ are treated as a negative or positive infinitesimal numbers in this operation.
+    $-0$ and $0$ are treated as negative or positive infinitesimal numbers, respectively, in this operation.
 }
 
 \medskip
