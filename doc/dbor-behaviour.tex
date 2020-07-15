@@ -311,18 +311,47 @@ If a conformance level specifies a value~$v$ as supported and the constraints ar
         \DborMinusZeroValue() \\
         \DborMinusInfinityValue() \\
         \DborInfinityValue() \\
-        \DborIntegerValue($v$) \\
+        \DborIntegerValue($v$)  &
+            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
+        \DborBinaryRationalValue($p$, $v$) &
+            encoder may always use $p = 52$ (value is not necessarily canonical) \\
+        \DborDecimalRationalValue($m$, $e$) &
+            $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
         \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
         \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
         \DborSequenceValue($v_1, \ldots, v_r$) &
-            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{m}$ \\
-        \DborBinaryRationalValue($52$, $v$) \\
-        \DborDecimalRationalValue($m$, $e$) \\
+            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+        \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) &
+            $k_i$, $v_i$ are supported values of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
-\paragraph{Supported values in conformance level 4}
+\paragraph{Supported values in conformance level 5}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All.
+\begin{quote}
+    \noindent
+    \begin{tabular}{l v{0.4\textwidth}}
+        \toprule
+        Supported type and value & Constraints (if any) \\
+        \midrule
+        \DborNoneValue() \\
+        \DborMinusZeroValue() \\
+        \DborMinusInfinityValue() \\
+        \DborInfinityValue() \\
+        \DborIntegerValue($v$)  &
+            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
+        \DborBinaryRationalValue($p$, $v$) &
+            encoder produces canonical values only \\
+        \DborDecimalRationalValue($m$, $e$) &
+            $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+        \DborSequenceValue($v_1, \ldots, v_r$) &
+            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+        \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) &
+            $k_i$, $v_i$ are supported values of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+        \bottomrule
+    \end{tabular}
+\end{quote}
