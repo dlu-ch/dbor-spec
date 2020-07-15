@@ -55,7 +55,7 @@ These sets must be pairwise disjunct:
 
 \medskip
 With the only exception of numerical conversions, there must be no implicit conversion between
-these sets of native types (e.g. between a integer and a character string)
+these sets of native types (e.g. between an integer and a character string)
 
 \medskip
 A decoder must at least differentiate between these possible decoding results:
@@ -101,7 +101,7 @@ On the other hand, only \DborIntegerValue{} can represent~$0$.
 \medskip
 Decoding a \DborNumberValue{} or \DborNumberlikeValue{} into a (numerical) native data type is called
 a \emph{numerical conversion}.
-A \DborNumberValue{} or \DborNumberlikeValue{} of type~$V$ is said to be \emph{numerically convertible} into~$T$
+A \DborNumberValue{} or \DborNumberlikeValue{}~$v$ of type~$V$ is said to be \emph{numerically convertible} into~$T$
 if and only if%
 \footnote{
     Note that~\DborDecimalRationalValue{} is \emph{not} numerically convertible into any member of an
@@ -121,6 +121,10 @@ if and only if%
 
     \item
     $V$ is a subclass of \DborNumberlikeValue{} and
+    $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
+
+    \item
+    $v$ is \DborIntegerValue{}($0$) and
     $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
 \end{itemize}
 
@@ -216,18 +220,20 @@ of supported classes (but as far as they do they must adhere to this specificati
 To allow easy description and comparision of capabilities of encoders and decoders,
 certain common capabilities (or constraints) are grouped by \emph{conformance levels}.
 
-If a conformance level specifies a value~$v$ as supported
+\medskip
+If a conformance level specifies a value~$v$ as supported and the constraints are fulfilled
 \begin{itemize}
     \item
-    an encoder of this conformance level can produce a (well-formed)~$v$ if its represented object can be
-    efficiently represented by a native data type
+    an encoder of this conformance level can produce a (well-formed)~$v$,
+    provided the available memory is sufficient,
 
     \item
     a decoder of this conformance level supports the type of~$v$, and
 
     \item
     a decoder of this conformance level can decode a (well-formed) $v$
-    (if statically typed: with the result PRECISE or APPROX-IMPRECISE).
+    (if statically typed: with the result PRECISE or APPROX-IMPRECISE),
+    provided the available memory is sufficient.
 \end{itemize}
 
 \paragraph{Supported values in conformance level 0}
@@ -262,7 +268,7 @@ If a conformance level specifies a value~$v$ as supported
         \midrule
         \DborNoneValue() \\
         \DborIntegerValue($v$) &
-            $v \in \IntegerInterval{-2^M}{2^M - 1}$ \\
+            $v \in \IntegerInterval{-2^{M-1}}{2^M - 1}$ \\
         \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
             $m \in \IntegerInterval{0}{2^M - 1}$ \\
         \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
@@ -282,11 +288,12 @@ If a conformance level specifies a value~$v$ as supported
         Supported type and value & Constraints (if any) \\
         \midrule
         \DborNoneValue() \\
-        \DborIntegerValue($v$) \\
+        \DborIntegerValue($v$) &
+            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
         \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
         \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
         \DborSequenceValue($v_1, \ldots, v_r$) &
-            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{m}$ \\
+            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}

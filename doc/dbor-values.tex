@@ -7,8 +7,6 @@
 \label{sec:values}
 
 This section defines the representation of objects as bytes sequences - the core of DBOR.
-A byte sequence that represents a single object is called \emph{value} and is composed of \emph{tokens}
-(defined in section \ref{sec:tokens}).
 
 
 \subsection{Overview (\DborValue)}
@@ -112,8 +110,8 @@ DBOR defines a \emph{canonical value} for each object and class to enable a uniq
 }
 
 
-\subsection{Elementary values (\DborElementaryValue, \DborNumberValue, \DborNumberlikeValue, \DborStringValue)}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Elementary values (\DborElementaryValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:elementaryvalues}
 \hypertarget{sec:def:ElementaryValue}{}
 \hypertarget{sec:def:NumberValue}{}
@@ -141,6 +139,8 @@ to any \DborNumberlikeValue{}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:NoneValue}
 \hypertarget{sec:def:NoneValue}{}
+
+% TODO should NoneValue really be an ElementaryValue?
 
 \paragraph{Representable objects}
 
@@ -222,8 +222,8 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborMinusZeroValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FC}} \\
-        \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FE}} \\
         \DborMinusInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FD}} \\
+        \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FE}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -330,8 +330,7 @@ is represented as
 \DborBinaryRationalToken*($p$, $0$, $s$, $M$, $e + 2^{r - 1} - 1$).
 
 A number $(-1)^s \cdot M/2^p \cdot 2^{-1022}$ with $p := 52$, $s \in \{0, 1\}$ and
-$M \in \SetOfIntegers \cap (0, 2^p)$ is represented as
-\DborBinaryRationalToken*($p$, $1$, $s$, $M$, $0$).
+$M \in \IntegerInterval{1}{2^p - 1}$ is represented as \DborBinaryRationalToken*($p$, $1$, $s$, $M$, $0$).
 
 \smallskip
 \noindent
@@ -341,7 +340,7 @@ For reference, here are the resulting combinations for all possible $p$:\nolineb
     \newcolumntype{R}{>{$}r<{$}}% package 'array'
     \begin{tabular}{R R R R >{\hspace{-.8em}$}c<{$\hspace{-.8em}} R}
         \toprule
-        k & p & r & & e \\
+        k & r & p & & e \\
         \midrule
         0 &  3 &  4 & -3 & \ldots & 4 \\
         1 &  5 & 10 & -15 & \ldots & 16 \\
@@ -674,7 +673,7 @@ where $v_i'$ is the canonical value of $v_i$ for all $i \in \IntegerInterval{1}{
 A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$ with
 \begin{itemize}
     \item
-    pairwise distinct, well-formed \emph{elementary values}%
+    pairwise distinct, well-formed $k_i$ (its keys) that are instances of \DborElementaryValue
     \footnote{
         Comparision of keys is an important operation and must be fast.
         When the keys must be compared efficiently and the fill bytes in \DborAllocatedValue*{} must be
@@ -682,7 +681,7 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
         which makes such a comparison operation complex and slow.
         Disallowing container values makes the comparison operation simple and fast.
     }
-    $k_i$ (its keys) and
+    and
 
     \item
     well-formed values $v_i$ (the values associated to $k_i$)
@@ -734,7 +733,7 @@ It is a \emph{well-formed} \DborDictionaryValue{} if and only if it is a size-co
     well-formed values $k_1, v_1, \ldots, k_r, v_r$ with total size $m$, and
 
     \item
-    the $k_1, \ldots, k_r$ are all elementary values and
+    the $k_1, \ldots, k_r$ are instances of \DborElementaryValue, and
 
     \item
     $v_{i - 1} \prec v_{i}$ for all $i \in \IntegerInterval{2}{r}$.
