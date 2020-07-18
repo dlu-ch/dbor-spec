@@ -111,26 +111,32 @@ with dlb.ex.Context():
                 output_file=generated_directory / 'g/' / p[:-1] / p.parts[-1].replace('.svg', '.pdf')
             ).start()
 
+    latex = PdfLatex(
+        toplevel_file=source_directory / 'dbor.tex',
+        output_file=output_directory / 'dbor.pdf',
+        input_search_directories=[
+            source_directory,
+            generated_directory,
+            generated_directory / 'g/'
+        ],
+        log_file = output_directory / 'dbor.log',
+        state_files=[
+            output_directory / 'dbor.aux',
+            output_directory / 'dbor.toc',
+            output_directory / 'dbor.out'
+        ])
+
     # repeat redo until all state files exist and their content remains unchanged but at most 10 times
     for i in range(10):
-        r = PdfLatex(toplevel_file=source_directory / 'dbor.tex',
-                     output_file=output_directory / 'dbor.pdf',
-                     input_search_directories=[
-                         source_directory,
-                         generated_directory,
-                         generated_directory / 'g/'
-                     ],
-                     state_files=[
-                         output_directory / 'dbor.aux',
-                         output_directory / 'dbor.toc',
-                         output_directory / 'dbor.out'
-                     ]).start()
-        if not r:
+        if not latex.start():
             break
 
-    # TODO: fix redo miss after change of state file (introduction of new section)
-    # TODO keep .log
-    # TODO summarize "Overfull \hbox" in .log
-    # TODO summarize warning in .log
+    overfull_warning_number = 0
+    with open(latex.log_file.native, 'r') as f:
+        for line in f:
+            if line.startswith('Overfull \hbox '):
+                overfull_warning_number += 1
+    if overfull_warning_number:
+        dlb.di.inform(f'number of overfull warnings: {overfull_warning_number}', level=dlb.di.WARNING)
 
 dlb.di.inform('finished successfully')
