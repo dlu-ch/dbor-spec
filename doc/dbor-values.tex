@@ -756,7 +756,7 @@ $I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\co
 \paragraph{Representable objects}
 
 An \DborAllocatedValue{} can represent any object of fixed size $m \in \IntegerInterval{0}{N + 23}$
-that contains exactly one well-formed value $v$ with $\|v\| \le m$.
+that contains exactly one well-formed value $v$ with $\|v\| \le m$ that is not an \DborAllocatedValue.
 This allows the definition of fixed offsets with a $v$ of variable size.
 
 \paragraph{Representation}
@@ -787,9 +787,11 @@ Examples:\nolinebreak
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborAllocatedValue{} if and only if
-it begins with \DborNaturalToken*($6$, $0$, $m$) for an appropriate $m \in \IntegerInterval{0}{N + 23}$
-and is followed by a well-formed value $v$ of size $\|v\| \le m$.
+\DborAllocatedValue{} if and only if it is
+\DborNaturalToken*($6$, $0$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
+$m \in \IntegerInterval{1}{N}$.
+It is a \emph{well-formed} \DborAllocatedValue{} if and only if it is a size-correct \DborAllocatedValue{} and
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} is a well-formed value $v$ that is not an \DborAllocatedValue.
 
 The sequence is an \emph{ill-formed} \DborAllocatedValue{} if and only if it is not a well-formed
 \DborSequenceValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $0$, $m$).
