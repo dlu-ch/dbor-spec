@@ -78,8 +78,8 @@ A decoder must at least differentiate between these possible decoding results:
             not even approximately \\
         NO-OBJECT &
             value is \DborNoneValue \\
-        UNSUPPORTED-TYPE &
-            decoder does not support the type of the value \\
+        UNSUPPORTED &
+            decoder does not support the value \\
         %
         INCOMPATIBLE-TYPE &
             target type is not in associated set of native data types \\
@@ -128,7 +128,7 @@ if and only if%
     $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
 \end{itemize}
 
-Let $V$ be a subclass of \DborNumberValue{} or \DborNumberlikeValue{} that is supported by the decoder and
+Let $V$ be a subclass of \DborNumberValue{} or \DborNumberlikeValue{} and
 $T$ a native data type that can represent any number
 $\in T_{\text{repr}} \subset \SetOfReals \cup \{-\infty, -0, \infty\}$
 with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation).
@@ -136,12 +136,14 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
 \begin{enumerate}[a)]
     \item
     If $V$ is numerically convertible into~$T$,
-    decoding a well-formed $V$ that represents~$v \in T_{\text{repr}}$ into a~$T$ must result in PRECISE with
+    decoding a well-formed $V$ that is supported by the decoder and
+    represents~$v \in T_{\text{repr}}$ into a~$T$ must result in PRECISE with
     the exact representation of $v$ as the returned object.
 
     \item
     If $V$ is numerically convertible into~$T$,
-    decoding a well-formed $V$ that represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
+    decoding a well-formed $V$ that is supported by the decoder and
+    represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
     \begin{quote}
         \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
         \noindent
@@ -164,29 +166,12 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
     \end{quote}
 
     \item
-    If $V$ is \emph{not} numerically convertible into $T$, decoding a well-formed~$V$ must
-    result in INCOMPATIBLE-TYPE.
+    If $V$ is \emph{not} numerically convertible into $T$, decoding a well-formed~$V$ that is supported by the decoder
+    must result in INCOMPATIBLE-TYPE.
 
     \item
-    Decoding an ill-formed $V$ must result in ILL-FORMED.
+    Decoding an ill-formed $V$ that is supported by the decoder must result in ILL-FORMED.
 \end{enumerate}
-
-
-\subsubsection{Decoding \DborUtfEightStringValue}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Although an \DborUtfEightStringValue{} requires proper UTF-8 encoding for being well-formed,
-a decoder is not required to support multi-byte UTF-8 sequences (i.e. code points $> \HexNumber{7F}$).
-
-\medskip
-If a decoder \emph{does} support multi-byte UTF-8 sequences,
-decoding an ill-formed \DborUtfEightStringValue{} must result in ILL-FORMED.
-
-\medskip
-If a decoder does \emph{not} support multi-byte UTF-8 sequences,
-decoding a (well-formed or ill-formed) size-correct \DborUtfEightStringValue{} containing a byte $> \HexNumber{7F}$
-must result in UNSUPPORTED-TYPE and
-decoding an \DborUtfEightStringValue{} that is not size-correct must result in ILL-FORMED.
 
 
 \subsubsection{Decoding other \DborValue}
@@ -196,7 +181,7 @@ Decoding a \DborNoneValue{} into any type must result in NO-OBJECT.
 
 \medskip
 Decoding a (well-formed or ill-formed) \DborValue{} \emph{not} supported by the decoder
-must result in UNSUPPORTED-TYPE or ILL-FORMED.%
+must result in UNSUPPORTED or ILL-FORMED.%
 \footnote{%
     The decoder may be unable to check if an unsupported \DborValue{} is well-formed.
 }
@@ -206,35 +191,50 @@ Decoding a well-formed \DborValue{} supported by the decoder that is not a subcl
 into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE.
 
 \medskip
-Decoding an ill-formed \DborValue{} other than \DborUtfEightStringValue{}
-that is supported by the decoder must result in ILL-FORMED.
+Decoding an \DborContainerValue{} or \DborUtfEightStringValue{} that is supported by the decoder and
+is not size-correct must result in ILL-FORMED.
+If it is size-correct but ill-formed it must result in ILL-FORMED or RANGE
+(if another decoding restriction is violated).%
+\footnote{%
+    Although an \DborUtfEightStringValue{} requires proper UTF-8 encoding for being well-formed,
+    a decoder is not required to support multi-byte UTF-8 sequences (i.e. code points $> \HexNumber{7F}$).
 
+    A decoder that \emph{does} supports multi-byte UTF-8 sequences
+    may return RANGE when decoding a \DborUtfEightStringValue{} as soon as it encounters a codepoint outside
+    an expected range and without checking the UTF-8 encoding of the remaining code points.
+}
 
 \subsection{Conformance levels}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:conformancelevels}
 
-DBOR encoders and decoders do not have to support \emph{all} types of value and \emph{all} representable value
-of supported classes (but as far as they do they must adhere to this specification, naturally).
+DBOR encoders and decoders do not have to support \emph{all} types of values and \emph{all} their instances
+(but as far as they do they must adhere to this specification, naturally).
 
 To allow easy description and comparision of capabilities of encoders and decoders,
 certain common capabilities (or constraints) are grouped by \emph{conformance levels}.
 
 \medskip
-If a conformance level specifies a value~$v$ as supported and the constraints are fulfilled
+If a conformance level specifies a value~$v$ as \emph{supported},
+a decoder of this conformance level supports $v$ and can decode $v$ into at least one native data type~$T$:
+\begin{enumerate}[a)]
+    \item successfully, representing $o$ exactly or approximately, or
+    \item unsuccessfully, if $T$ cannot represent $o$ at least approximately.
+\end{enumerate}
+
+\medskip
+If a conformance level specifies a value~$v$ representing an object~$o$ as \emph{supported and representable}
 \begin{itemize}
     \item
-    an encoder of this conformance level can produce a (well-formed)~$v$,
-    provided the available memory is sufficient,
+    an encoder of this conformance level can produce a well-formed~$v$ from at least one native data type
+    representing $o$ exactly, provided the available memory is sufficient,
 
     \item
-    a decoder of this conformance level supports the type of~$v$, and
-
-    \item
-    a decoder of this conformance level can decode a (well-formed) $v$
-    (if statically typed: with the result PRECISE or APPROX-IMPRECISE),
+    a decoder of this conformance level supports~$v$ and can
+    decode a (well-formed) $v$ into a at least one native data type representing $o$ exactly,
     provided the available memory is sufficient.
 \end{itemize}
+
 
 \paragraph{Supported values in conformance level 0}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -243,35 +243,44 @@ If a conformance level specifies a value~$v$ as supported and the constraints ar
     \noindent
     \begin{tabular}{l v{0.4\textwidth}}
         \toprule
-        Supported type and value & Constraints (if any) \\
+        Value & Supported/representable if \\
         \midrule
-        \DborNoneValue() \\
+        \DborNoneValue() &
+            supported \\
         \DborIntegerValue($v$) &
+            supported and representable:
             $v \in \IntegerInterval{-24}{23}$ \\
         \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable:
             $m \in \IntegerInterval{0}{23}$ \\
         \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable:
             $m \in \IntegerInterval{0}{23}$ and $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$
             for all $i \in \IntegerInterval{0}{m}$ (no multi-byte UTF-8 sequences) \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
-\paragraph{Supported values in conformance level~$1_M$ with  $M \in \{16, 32, 64\}$}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\paragraph{Supported values in conformance level~$1_M$ with $M \in \{16, 32, 64\}$}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{quote}
     \noindent
     \begin{tabular}{l v{0.4\textwidth}}
         \toprule
-        Supported type and value & Constraints (if any) \\
+        Value & Supported/representable if \\
         \midrule
-        \DborNoneValue() \\
+        \DborNoneValue() &
+            supported \\
         \DborIntegerValue($v$) &
-            $v \in \IntegerInterval{-2^{M-1}}{2^M - 1}$ \\
+            supported;\par
+            representable: $v \in \IntegerInterval{-2^{M-1}}{2^M - 1}$ \\
         \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
-            $m \in \IntegerInterval{0}{2^M - 1}$ \\
+            supported;\par
+            representable: $m \in \IntegerInterval{0}{2^M - 1}$ \\
         \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported;\par
+            representable:
             $m \in \IntegerInterval{0}{2^M - 1}$ and $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$
             for $i \in \IntegerInterval{0}{m}$ (no multi-byte UTF-8 sequences) \\
         \bottomrule
@@ -285,15 +294,19 @@ If a conformance level specifies a value~$v$ as supported and the constraints ar
     \noindent
     \begin{tabular}{l v{0.4\textwidth}}
         \toprule
-        Supported type and value & Constraints (if any) \\
+        Value & Supported/representable if \\
         \midrule
-        \DborNoneValue() \\
+        \DborNoneValue() &
+            supported \\
         \DborIntegerValue($v$) &
-            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
-        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
-        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+            supported;\par
+            representable: $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
         \DborSequenceValue($v_1, \ldots, v_r$) &
-            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+            $v_i$ is a supported/representable value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -305,24 +318,33 @@ If a conformance level specifies a value~$v$ as supported and the constraints ar
     \noindent
     \begin{tabular}{l v{0.4\textwidth}}
         \toprule
-        Supported type and value & Constraints (if any) \\
+        Value & Supported/representable if \\
         \midrule
-        \DborNoneValue() \\
-        \DborMinusZeroValue() \\
-        \DborMinusInfinityValue() \\
-        \DborInfinityValue() \\
-        \DborIntegerValue($v$)  &
-            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
+        \DborNoneValue() &
+            supported \\
+        \DborMinusZeroValue() &
+            supported and representable \\
+        \DborMinusInfinityValue() &
+            supported and representable \\
+        \DborInfinityValue() &
+            supported and representable \\
+        \DborIntegerValue($v$) &
+            supported;\par
+            representable: $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
         \DborBinaryRationalValue($p$, $v$) &
+            supported and representable;\par
             encoder may always use $p = 52$ (value is not necessarily canonical) \\
         \DborDecimalRationalValue($m$, $e$) &
-            $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
-        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
-        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+            supported: $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$;\par
+            representable: $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
         \DborSequenceValue($v_1, \ldots, v_r$) &
-            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+            $v_i$ is a supported/representable value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) &
-            $k_i$, $v_i$ are supported values of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+            $k_i$, $v_i$ are supported/representable values of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -334,24 +356,35 @@ If a conformance level specifies a value~$v$ as supported and the constraints ar
     \noindent
     \begin{tabular}{l v{0.4\textwidth}}
         \toprule
-        Supported type and value & Constraints (if any) \\
+        Value & Supported/representable if \\
         \midrule
-        \DborNoneValue() \\
-        \DborMinusZeroValue() \\
-        \DborMinusInfinityValue() \\
-        \DborInfinityValue() \\
-        \DborIntegerValue($v$)  &
-            $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
+        \DborNoneValue() &
+            supported \\
+        \DborMinusZeroValue() &
+            supported and representable \\
+        \DborMinusInfinityValue() &
+            supported and representable \\
+        \DborInfinityValue() &
+            supported and representable \\
+        \DborIntegerValue($v$) &
+            supported;\par
+            representable: $v \in \IntegerInterval{-2^{63}}{2^{64} - 1}$ \\
         \DborBinaryRationalValue($p$, $v$) &
+            supported and representable;\par
             encoder produces canonical values only \\
         \DborDecimalRationalValue($m$, $e$) &
-            $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
-        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
-        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) \\
+            supported: $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$;\par
+            representable: $m \in \IntegerInterval{-2^{63}}{2^{63} - 1}$ and
+                $e \in \IntegerInterval{-2^{31}}{2^{31} - 1}$ \\
+        \DborByteStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
+        \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) &
+            supported and representable \\
         \DborSequenceValue($v_1, \ldots, v_r$) &
-            $v_i$ is a supported value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+            $v_i$ is a supported/representable value of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
         \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) &
-            $k_i$, $v_i$ are supported values of this conformance level for $i \in \IntegerInterval{0}{r}$ \\
+            $k_i$, $v_i$ are supported/representable values of this conformance level
+            for $i \in \IntegerInterval{0}{r}$ \\
         \bottomrule
     \end{tabular}
 \end{quote}
