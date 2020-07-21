@@ -86,11 +86,11 @@ with
 \hypertarget{sec:def:IntegerToken}{}
 
 An \DborIntegerToken($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
-$v \in \IntegerInterval{0}{23}$ is \DborMinimalToken($h$, $v$).
+$v \in \IntegerInterval{0}{23}$ is \DborMinimalToken*($h$, $v$).
 
 An \DborIntegerToken($h$, $v$) for $h \in \IntegerInterval{0}{6}$ and
 $v \in \IntegerInterval{24}{N + 23}$
-is \DborNaturalToken($h$, $3$, $v - 23$).
+is \DborNaturalToken*($h$, $3$, $v - 23$).
 
 
 \subsubsection{\DborPowerOfTenToken(\texorpdfstring{$v$}{v})}
@@ -98,9 +98,9 @@ is \DborNaturalToken($h$, $3$, $v - 23$).
 \hypertarget{sec:def:PowerOfTenToken}{}
 
 A \DborPowerOfTenToken($v$) for $|v| \in \IntegerInterval{1}{8}$ is
-\DborMinimalToken($7$, $2^3 s + |v| - 1$).
+\DborMinimalToken*($7$, $2^3 s + |v| - 1$).
 
 A \DborPowerOfTenToken($v$) for $|v| \in \IntegerInterval{9}{N + 8}$ is
-\DborNaturalToken($6$, $2 + s$, $|v| - 8$).
+\DborNaturalToken*($6$, $2 + s$, $|v| - 8$).
 
 Here, $s = 1$ for $v < 0$ and $s = 0$ otherwise.

@@ -282,7 +282,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed} \DborIntegerValue{}
 if and only if it is an \DborIntegerToken*(0, $w$) or an \DborIntegerToken*(1, $w$) for
-an appropriate $w \in \IntegerInterval{0}{N + 23}$
+a suitable $w \in \IntegerInterval{0}{N + 23}$
 
 The sequence is an \emph{ill-formed} \DborIntegerValue{} if and only if it is not a well-formed
 \DborIntegerValue{} but $b_1$ is the first byte of a \DborIntegerToken*(0, $w$) or
@@ -376,7 +376,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
 \DborBinaryRationalValue{} if and only if
-it is a \DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$) for some appropriate $p$, $o$, $s$, $M$ and $E$.
+it is a \DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$) for suitable $p$, $o$, $s$, $M$ and $E$.
 
 The sequence is an \emph{ill-formed} \DborBinaryRationalValue{} if and only if it is not a well-formed
 \DborBinaryRationalValue{} but $b_1$ is the first byte of a
@@ -444,8 +444,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
 \DborDecimalRationalValue{} if and only if
-it is \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerToken*($m$) for
-appropriate $m \ne 0$ and $e$.
+it is \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerToken*($m$) for suitable $m \ne 0$ and $e$.
 
 The sequence is an \emph{ill-formed} \DborDecimalRationalValue{} if and only if it is not a well-formed
 \DborDecimalRationalValue{} but $b_1$ is the first byte of a \DborPowerOfTenToken*($e$).
@@ -492,7 +491,7 @@ Examples:\nolinebreak
 \end{quote}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborByteStringValue{} if and only if begins with \DborIntegerToken*($2$, $m$) for an appropriate
+\DborByteStringValue{} if and only if begins with \DborIntegerToken*($2$, $m$) for a suitable
 $m \in \IntegerInterval{0}{N + 23}$
 
 The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is not a well-formed
@@ -562,7 +561,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct}
 \DborUtfEightStringValue{} if and only if
-it is \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for an appropriate
+it is \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{0}{N + 23}$.
 It is a \emph{well-formed} \DborUtfEightStringValue{} if and only if it is a size-correct \DborUtfEightStringValue{} and
 \ByteSequence{b_{n - m + 1}, \ldots, b_n} is empty or starts with a well-formed UTF-8 encoded Unicode code point.
@@ -639,7 +638,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct} \DborSequenceValue{}
 if and only if it is
-\DborIntegerToken*($4$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for an appropriate
+\DborIntegerToken*($4$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{0}{N + 23}$.
 It is a well-formed \DborSequenceValue{} if and only if it is a size-correct \DborSequenceValue{} and
 \ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of ($0$ or more)
@@ -721,7 +720,7 @@ Examples:\nolinebreak
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct} \DborDictionaryValue{}
 if and only if it is
-\DborIntegerToken*($5$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for an appropriate
+\DborIntegerToken*($5$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{0}{N + 23}$.
 It is a \emph{well-formed} \DborDictionaryValue{} if and only if it is a size-correct \DborDictionaryValue{} and
 \begin{itemize}
