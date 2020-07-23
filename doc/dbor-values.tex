@@ -67,7 +67,6 @@ an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$
     All other combinations work as expected.
 }
 The byte sequence encoding an object is therefore called \emph{value}.
-A concatenation of values (like $B^*$) is called a \emph{value block}.
 
 \medskip
 DBOR groups objects of a common nature to be represented and encoded in a similar way by \emph{classes}
@@ -300,7 +299,7 @@ It is canonical.
 
 \paragraph{Representable objects}
 
-A \DborBinaryRationalValue can represent any number
+A \DborBinaryRationalValue{} can represent any number
 \begin{equation}
     v = (-1)^s \cdot \sum_{i = -52}^0 m_i s^i \cdot 2^e
 \end{equation}
@@ -361,13 +360,13 @@ Examples:\nolinebreak
         \toprule
         Value & Representation \\
         \midrule
-        \DborBinaryRationalValue($3$, $\frac{1}{8}$)
-            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D0}, \DborNextByte{00}} \\
-        \DborBinaryRationalValue($5$, $-(2^{17} - 2^6)$)%
+        \DborBinaryRationalValue($4$, $\frac{1}{8}$)
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C8}, \DborNextByte{00}} \\
+        \DborBinaryRationalValue($10$, $-(2^{17} - 2^6)$)%
             \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
-            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D1}, \DborNextByte{FF}, \DborNextByte{FF}} \\
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C9}, \DborNextByte{FF}, \DborNextByte{FF}} \\
         \DborBinaryRationalValue($52$, $2^{-1074}$)
-            &  $\ByteSequence{\DborFirstByte\DborNumberValueColour{D7},
+            &  $\ByteSequence{\DborFirstByte\DborNumberValueColour{CF},
                     \DborNextByte{01}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00},$ \\
             &  $    \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}}$ \\
         \bottomrule
