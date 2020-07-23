@@ -15,10 +15,12 @@ import dlb.di
 import dlb.fs
 import dlb.ex
 import dlb_contrib.tex
+import dlb_contrib.exctrace
 import dlb_contrib.iso6429
 import dlb_contrib.git
 
 
+dlb_contrib.exctrace.enable_compact_with_cwd()
 if sys.stderr.isatty():
     # assume terminal compliant with ISO/IEC 6429 ("VT-100 compatible")
     dlb.di.set_output_file(dlb_contrib.iso6429.MessageColorator(sys.stderr))
@@ -108,7 +110,7 @@ with dlb.ex.Context():
         for p in image_directory.iterdir_r(name_filter=r'[^.]+\.svg', recurse_name_filter=''):
             ConvertSvgToPdfWithInkscape(
                 input_file=image_directory / p,
-                output_file=generated_directory / 'g/' / p[:-1] / p.parts[-1].replace('.svg', '.pdf')
+                output_file=generated_directory / 'g/' / p.with_replacing_suffix('.pdf')
             ).start()
 
     latex = PdfLatex(
