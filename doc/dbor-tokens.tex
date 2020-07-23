@@ -13,9 +13,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypertarget{sec:def:MinimalToken}{}
 
-A \DborMinimalToken($h$, $v$)
-for $h \in \IntegerInterval{0}{7}$
-and $v \in \IntegerInterval{0}{2^5 - 1}$
+A \DborMinimalToken($h$, $v$) for $h \in \IntegerInterval{0}{7}$ and $v \in \IntegerInterval{0}{2^5 - 1}$
 is the following byte:
 
 \IncludeImageInPlace{MinimalToken}
@@ -28,7 +26,7 @@ is the following byte:
 An \DborNaturalToken($h$, $u$, $v$)
 for $h \in \IntegerInterval{0}{6}$,
 $u \in \IntegerInterval{0}{3}$,
-and $v \in \IntegerInterval{0}{\sum_{i = 1}^8 2^{8i}}$
+and $v \in \IntegerInterval{1}{N}$
 is the following sequence of 2 to 9 bytes:
 
 \IncludeImageInPlace{NaturalToken}
