@@ -688,9 +688,7 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
     $v_{i - 1} \prec v_{i}$ for all $i \in \IntegerInterval{2}{r}$.
 \end{itemize}
 
-${\prec}$ is the strict partial order on the set of byte sequences defined as follows:
-$v_i \prec v_j$ if and only if $v_i$ and $v_j$ are different with the first different byte smaller in $v_i$ than
-in $v_j$.
+${\prec}$ is the strict total order on the set of byte sequences defined in section~\ref{sec:stricttotalorder}.
 
 \paragraph{Representation}
 
@@ -801,3 +799,42 @@ contained element.
 The canonical value of \DborAllocatedValue($m$, $v$) is
 \DborSequenceValue($m$, $v'$) where $v'$ is the canonical value of $i$
 and all fill bytes $f_{\|v'\| + 1}, \ldots, f_m$ are $\HexNumber{FF}$.
+
+
+\subsection{Strict total order}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:stricttotalorder}
+
+On the set of all byte sequences, ${\prec}$ induces a strict total order when defined as follows:
+
+\paragraph{Definition}
+
+For each pair of non-empty byte sequences
+$a := \ByteSequence{a_1, \ldots, a_m}$,
+$b := \ByteSequence{b_1, \ldots, b_n}$,
+$a \prec b$ if and only if
+\begin{itemize}
+    \item $a_1 < b_1$, or
+    \item $a_1 = b_1$ and $m < n$, or
+    \item $a_1 = b_1$ and $m = n$ and $a_i < b_i$ where $i$ is the largest index
+    $\in \IntegerInterval{2}{m}$ with $a_i \ne b_i$.
+\end{itemize}
+In addition: $\ByteSequence{} \prec a$ if and only if $a$ is a non-empty byte sequence.
+
+\paragraph{Resulting order of values}
+\begin{flushleft}
+    $\ByteSequence{}
+    \prec \DborIntegerValue(0) \prec \DborIntegerValue(1) \prec \dots \prec \DborIntegerValue(N + 23)
+    \prec \DborIntegerValue(-1) \prec \DborIntegerValue(-2) \prec \dots \prec \DborIntegerValue(-(N + 24))
+    \prec \DborByteStringValue(\ldots)
+    \prec \DborUtfEightStringValue(\ldots)
+    \prec \DborSequenceValue(\ldots)
+    \prec \DborDictionaryValue(\ldots)
+    \prec \DborAllocatedValue(\ldots)
+    \prec \DborBinaryRationalValue(\ldots)
+    \prec \DborDecimalRationalValue(\ldots)
+    \prec \DborMinusZeroValue()
+    \prec \DborMinusInfinityValue()
+    \prec \DborInfinityValue()
+    \prec \DborNoneValue()$.
+\end{flushleft}
