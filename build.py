@@ -4,9 +4,9 @@
 
 # Run this script by one of the following shell commands:
 #
-#    dlb build-all                  # from anywhere in the working tree (with directory of 'dlb' in $PATH)
-#    python3 -m build-all           # in the directory of this file
-#    python3 "$PWD"/build-all.py'   # in the directory of this file
+#    dlb build                  # from anywhere in the working tree (with directory of 'dlb' in $PATH)
+#    python3 -m build           # in the directory of this file
+#    python3 "$PWD"/build.py'   # in the directory of this file
 
 import sys
 import re
