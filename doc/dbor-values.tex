@@ -529,17 +529,15 @@ well-formed UTF-8 encoded Unicode code points.%
     (the most significant bit in the first, the least significant bit in the last byte) is
     $\in \IntegerInterval{0}{\HexNumber{D7FF}} \cup \IntegerInterval{\HexNumber{E000}}{\HexNumber{10\,FFFF}}$.
 }
+Preferred: Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
+\footnote{
+    Python 3: \texttt{unicodedata.normalize('NFC', \dots)}
+}
 
 \paragraph{Representation}
 
 A representable byte sequence \ByteSequence{b_1, \ldots, b_m} with $m \in \IntegerInterval{0}{N + 23}$
 is represented as \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m}.
-
-\ByteSequence{b_1, \ldots, b_m} should be a well-formed UTF-8 encoded string of Unicode code points,
-preferably in Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
-\footnote{
-    Python 3: \texttt{unicodedata.normalize('NFC', \dots)}
-}
 
 \smallskip
 \noindent
@@ -567,22 +565,32 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correc
 it is \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{0}{N + 23}$.
 It is a \emph{well-formed} \DborUtfEightStringValue{} if and only if it is a size-correct \DborUtfEightStringValue{} and
-\ByteSequence{b_{n - m + 1}, \ldots, b_n} is empty or starts with a well-formed UTF-8 encoded Unicode code point.
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of (0 or more) well-formed
+UTF-8 encoded Unicode code points.
 
 The sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if it is not a well-formed
 \DborUtfEightStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($3$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one \DborUtfEightStringValue{} representing the same Unicode string.
-The canonical value of \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) is
-the longest prefix of \ByteSequence{b_1, \ldots, b_m} that is a well-formed UTF-8 encoded Unicode string,
-brought to Normalization Form C.%
+There may be more than one \DborUtfEightStringValue{} representing the same (canonically equivalent) Unicode string.
+The canonical value of a well-formed \DborUtfEightStringValue{} is in Normalization Form C.%
 \footnote{
-    The check whether a well-formed \DborUtfEightStringValue(\ByteSequence{b_1, \ldots, b_m}) is canonical
-    is a very complex operation and not available at all on many platform.
-    However, the check whether it is a \emph{canonical ASCII-only} \DborUtfEightStringValue{} is simple and fast;
-    it is if and only if $b_i \in \IntegerInterval{0}{\HexNumber{7F}}$ for all $i \in \IntegerInterval{1}{m}$.
+    The check whether an arbitrary well-formed \DborUtfEightStringValue{} is canonical
+    is a complex operation and not available at all on many platforms.
+
+    However, a fast and simple check according to
+    \href{https://unicode.org/reports/tr15/\#Detecting_Normalization_Forms}{Unicode Standard Annex \#15}
+    is possible for subranges.
+    For example, a well-formed \DborUtfEightStringValue{} that contains only code points < $\HexNumber{300}$ is
+    in Normalization Form C and therefore canonical
+    since NFC\_Quick\_Check is YES for all code points < $\HexNumber{340}$ and Canonical\_Combining\_Class = 0
+    for all code points < $\HexNumber{300}$.
+}%
+\footnote{%
+  Unicode \href{https://unicode.org/reports/tr15/\#Stability_of_Normalized_Forms}{guarantees}:
+  "[\dots] if a string has been normalized according to a particular version of Unicode and contains only
+  characters allocated in that version, it will qualify as normalized according to any future version of Unicode."
 }
 
 
