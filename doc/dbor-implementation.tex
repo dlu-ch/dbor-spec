@@ -47,8 +47,14 @@ Values:\nolinebreak
             & - \\
         \BinNumber{1111\,10xx}
             & - \\
-        \DborFirstByteBin\DborNoneValueColour{1111\,11xx}
-            & \DborNoneValue*, \DborMinusZeroValue*, \DborInfinityValue*, \DborMinusInfinityValue* \\
+        \DborFirstByteBin\DborNumberlikeValueColour{1111\,1100}
+            & \DborMinusZeroValue* \\
+        \DborFirstByteBin\DborNumberlikeValueColour{1111\,1101}
+            & \DborMinusInfinityValue* \\
+        \DborFirstByteBin\DborNumberlikeValueColour{1111\,1110}
+            & \DborInfinityValue* \\
+        \DborFirstByteBin\DborNoneValueColour{1111\,1111}
+            & \DborNoneValue* \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -93,9 +99,12 @@ Tokens:\nolinebreak
         \BinNumber{1111\,10xx}
             & \DborMinimalToken*($7$, $v$)
             & \HexNumber{1B} \le v < \HexNumber{1C} \\
-        \DborFirstByteBin\DborNoneValueColour{1111\,11xx}
+        \DborFirstByteBin\DborNumberlikeValueColour{1111\,11xx}
             & \DborMinimalToken*($7$, $v$)
-            & v \ge \HexNumber{1C} \\
+            & \HexNumber{1C} \le v < \HexNumber{1F} \\
+        \DborFirstByteBin\DborNoneValueColour{1111\,1111}
+            & \DborMinimalToken*($7$, $v$)
+            & v = \HexNumber{1F} \\
         \bottomrule
     \end{tabular}
 \end{quote}
