@@ -439,7 +439,7 @@ Examples:\nolinebreak
         \DborDecimalRationalValue($1$, $-2$)
             &  \ByteSequence{\DborFirstByte\DborNumberValueColour{E9}, \DborNextByte{01}} \\
         \DborDecimalRationalValue($-123$, $100$)
-            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C0},
+            &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D0},
                     \DborNextByte{5B}, \DborNextByte{38}, \DborNextByte{62}} \\
         \bottomrule
     \end{tabular}
@@ -582,10 +582,10 @@ The canonical value of a well-formed \DborUtfEightStringValue{} is in Normalizat
     However, a fast and simple check according to
     \href{https://unicode.org/reports/tr15/\#Detecting_Normalization_Forms}{Unicode Standard Annex \#15}
     is possible for subranges.
-    For example, a well-formed \DborUtfEightStringValue{} that contains only code points < $\HexNumber{300}$ is
+    For example, a well-formed \DborUtfEightStringValue{} that contains only code points $< \HexNumber{300}$ is
     in Normalization Form C and therefore canonical
     since NFC\_Quick\_Check is YES for all code points < $\HexNumber{340}$ and Canonical\_Combining\_Class = 0
-    for all code points < $\HexNumber{300}$.
+    for all code points $< \HexNumber{300}$.
 }%
 \footnote{%
   Unicode \href{https://unicode.org/reports/tr15/\#Stability_of_Normalized_Forms}{guarantees}:
@@ -683,15 +683,15 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
     pairwise distinct, well-formed $k_i$ (its keys) that are instances of \DborElementaryValue
     \footnote{
         Comparision of keys is an important operation and must be fast.
-        When the keys must be compared efficiently and the fill bytes in \DborAllocatedValue*{} must be
-        ignored; a container value that can contain an \DborAllocatedValue*{} must be processed in depth
+        When the keys must be compared efficiently and the fill bytes in \DborAllocatorValue*{} must be
+        ignored; a container value that can contain an \DborAllocatorValue*{} must be processed in depth
         which makes such a comparison operation complex and slow.
         Disallowing container values makes the comparison operation simple and fast.
     }
     and
 
     \item
-    well-formed values $v_i$ (the values associated to $k_i$)
+    well-formed values $v_i$ (the values associated with $k_i$)
 
     \item
     with the total size $\sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big) \in \IntegerInterval{0}{N + 23}$ and
@@ -718,11 +718,11 @@ Examples:\nolinebreak
         Value & Representation \\
         \midrule
         \DborDictionaryValue()
-            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{90}} \\
-        \DborDictionaryValue($\DborNoneValue \mapsto \DborIntegerValue($24$)$)
-            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{93},
-                    \DborFirstByte\DborNoneValueColour{FF},
-                    \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
+            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{A0}} \\
+        \DborDictionaryValue($\DborIntegerValue(24) \mapsto \DborNoneValue$)
+            & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{A3},
+                    \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00},
+                    \DborFirstByte\DborNoneValueColour{FF}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
@@ -756,20 +756,29 @@ the well-formed \DborDictionaryValue{} whose pairs of keys and associated values
 $\{(k_i', v_i') \colon i \in I\}$ where $\Box'$ means the canonical value of $\Box$ and
 $I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\colon k_j' = k_i'\}\}$.
 
+\medskip
+Note:
+The keys are formed by the bytes sequences, \emph{not} the represented objects.
+It is therefore recommended to use only canonical values as keys.
+\DborIntegerValue{}, \DborByteStringValue{}, and \DborUtfEightStringValue{} with code points $< \HexNumber{300}$
+are especially well suited; they are all canonical and can easily be ordered according to
+section~\ref{sec:stricttotalorder} \emph{before} encoding.
 
-\subsubsection{\DborAllocatedValue(\texorpdfstring{$m$, $v$}{m, v})}
+
+\subsubsection{\DborAllocatorValue(\texorpdfstring{$m$, $v$}{m, v})}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\hypertarget{sec:def:AllocatedValue}{}
+\hypertarget{sec:def:AllocatorValue}{}
 
 \paragraph{Representable objects}
 
-An \DborAllocatedValue{} can represent any object of fixed size $m \in \IntegerInterval{0}{N + 23}$
-that contains exactly one well-formed value $v$ with $\|v\| \le m$ that is not an \DborAllocatedValue.
-This allows the definition of fixed offsets with a $v$ of variable size.
+An \DborAllocatorValue{} can represent the fixed-size allocation of a well-formed object~$v$
+that is not an \DborAllocatorValue with $\|v\| \le m$ for $m \in \IntegerInterval{1}{N}$.
+
+For all such $v$, $\|\DborAllocatorValue($m$,{} $v$)\|$ is independent of $\|v\|$.
 
 \paragraph{Representation}
 
-A representable \DborAllocatedValue($m$, $v$) is represented as
+A representable \DborAllocatorValue($m$, $v$) is represented as
 \DborNaturalToken*($6$, $0$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$
 with arbitrary fill bytes $f_{\|v\| + 1}, \ldots, f_m$.
 
@@ -782,34 +791,34 @@ Examples:\nolinebreak
         \toprule
         Value & Representation \\
         \midrule
-        \DborAllocatedValue(3, \DborIntegerValue(23))
-            & \ByteSequence{\DborFirstByte\DborAllocatedValueColour{D8}, \DborNextByte{02},
+        \DborAllocatorValue(3, \DborIntegerValue(23))
+            & \ByteSequence{\DborFirstByte\DborAllocatorValueColour{C0}, \DborNextByte{02},
                     \DborFirstByte\DborNumberValueColour{17},
                     \DborNextByteFill{FF}, \DborNextByteFill{FF}} \\
-        \DborAllocatedValue(3, \DborIntegerValue(24))
-            & \ByteSequence{\DborFirstByte\DborAllocatedValueColour{D8}, \DborNextByte{02},
+        \DborAllocatorValue(3, \DborIntegerValue(24))
+            & \ByteSequence{\DborFirstByte\DborAllocatorValueColour{C0}, \DborNextByte{02},
                     \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00},
                     \DborNextByteFill{FF}} \\
         \bottomrule
     \end{tabular}
 \end{quote}
 
-A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
-\DborAllocatedValue{} if and only if it is
+A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct}
+\DborAllocatorValue{} if and only if it is
 \DborNaturalToken*($6$, $0$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{1}{N}$.
-It is a \emph{well-formed} \DborAllocatedValue{} if and only if it is a size-correct \DborAllocatedValue{} and
-\ByteSequence{b_{n - m + 1}, \ldots, b_n} is a well-formed value $v$ that is not an \DborAllocatedValue.
+It is a \emph{well-formed} \DborAllocatorValue{} if and only if it is a size-correct \DborAllocatorValue{} and
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} is a well-formed value $v$ that is not an \DborAllocatorValue.
 
-The sequence is an \emph{ill-formed} \DborAllocatedValue{} if and only if it is not a well-formed
-\DborSequenceValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $0$, $m$).
+The sequence is an \emph{ill-formed} \DborAllocatorValue{} if and only if it is not a well-formed
+\DborAllocatorValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $0$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborAllocatedValue{} representing the same object depends on its
+Whether there is more than one \DborAllocatorValue{} representing the same object depends on its
 contained element.
-The canonical value of \DborAllocatedValue($m$, $v$) is
-\DborSequenceValue($m$, $v'$) where $v'$ is the canonical value of $i$
+The canonical value of \DborAllocatorValue($m$, $v$) is
+\DborAllocatorValue($m$, $v'$) where $v'$ is the canonical value of $v$
 and all fill bytes $f_{\|v'\| + 1}, \ldots, f_m$ are $\HexNumber{FF}$.
 
 
@@ -842,7 +851,7 @@ In addition: $\ByteSequence{} \prec a$ if and only if $a$ is a non-empty byte se
     \prec \DborUtfEightStringValue(\ldots)
     \prec \DborSequenceValue(\ldots)
     \prec \DborDictionaryValue(\ldots)
-    \prec \DborAllocatedValue(\ldots)
+    \prec \DborAllocatorValue(\ldots)
     \prec \DborBinaryRationalValue(\ldots)
     \prec \DborDecimalRationalValue(\ldots)
     \prec \DborMinusZeroValue()

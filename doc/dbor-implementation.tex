@@ -33,8 +33,8 @@ Values:\nolinebreak
             & \DborSequenceValue*(\dots) \\
         \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
             & \DborDictionaryValue*(\dots) \\
-        \DborFirstByteBin\DborAllocatedValueColour{1100\,0xxx}
-            & \DborAllocatedValue*(\dots) \\
+        \DborFirstByteBin\DborAllocatorValueColour{1100\,0xxx}
+            & \DborAllocatorValue*(\dots) \\
         \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
             & \DborBinaryRationalValue*(\dots) \\
         \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
@@ -83,7 +83,7 @@ Tokens:\nolinebreak
             & \DborIntegerToken*($4$, $m$) {\Concat} $v_1 \Concat \cdots \Concat v_r$ \\
         \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
             & \DborIntegerToken*($5$, $m$) {\Concat} $k_1 \Concat v_1 \Concat \cdots \Concat k_r \Concat v_r$ \\
-        \DborFirstByteBin\DborAllocatedValueColour{1100\,0xxx}
+        \DborFirstByteBin\DborAllocatorValueColour{1100\,0xxx}
             & \DborNaturalToken*($6$, $0$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$ \\
         \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
             & \DborBinaryRationalToken*(\dots) \\
