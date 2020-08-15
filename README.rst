@@ -35,7 +35,7 @@ Main features:
 
 Latest version of the specification: `here <https://github.com/dlu-ch/dbor-spec/releases/latest/download/dbor.pdf>`_.
 
-Online DBOR encoder: `dbor-js <https://dlu-ch.github.io/dbor-js/encoder.html>`_.
+Online DBOR encoder (conformance level 5): `dbor-js <https://dlu-ch.github.io/dbor-js/encoder.html>`_.
 
 A complete Python 3 implementation of a DBOR encoder (conformance level 2) looks like this:
 
