@@ -20,7 +20,9 @@
         % usage: v{5em}
 
     \newcommand{\Concat}{\ensuremath{\lrtimes}}
-    \newcommand{\ByteSequence}[1]{\ensuremath{\langle #1 \rangle}}
+    \newcommand{\ByteSequenceOpening}{\langle}
+    \newcommand{\ByteSequenceClosing}{\rangle}
+    \newcommand{\ByteSequence}[1]{\ensuremath{\ByteSequenceOpening #1 \ByteSequenceClosing}}
 
     \makeatletter
     \DeclareRobustCommand{\DborSyntaxIdent}[2]{%
