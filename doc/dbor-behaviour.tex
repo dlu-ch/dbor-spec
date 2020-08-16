@@ -35,58 +35,62 @@ can fail (the represented value cannot be represented at all in the target type 
 For each of the classes \DborIntegerValue, \DborBinaryRationalValue, \DborDecimalRationalValue, \DborByteStringValue,
 and \DborUtfEightStringValue, the decoder must assign an associated set of native data types to represent
 (a subset of) its objects.
-These sets must be pairwise disjunct:
-\begin{quote}
-    \noindent
-    \begin{tabular}{l v{0.25\textwidth} v{0.25\textwidth}}
-        \toprule
-        & \multicolumn{2}{l}{Example} \\
-        \cmidrule{2-3}
-        Value class & Set of native data types & concrete types for C \\
-        \midrule
-        \DborIntegerValue & signed and unsigned integers & \texttt{signed int}, \texttt{unsigned int} \\
-        \DborBinaryRationalValue & IEEE-754 binary floating point numbers & \texttt{float}, \texttt{double} \\
-        \DborDecimalRationalValue & decimal floating point numbers & tuple of two \texttt{int} \\
-        \DborByteStringValue & byte sequence & \texttt{const void *} \\
-        \DborUtfEightStringValue & character sequence & \texttt{const char *} \\
-        \bottomrule
-    \end{tabular}
-\end{quote}
+\begin{beginparpenalty}
+    These sets must be pairwise disjunct:
+    \begin{quote}
+        \noindent
+        \begin{tabular}{l v{0.25\textwidth} v{0.25\textwidth}}
+            \toprule
+            & \multicolumn{2}{l}{Example} \\
+            \cmidrule{2-3}
+            Value class & Set of native data types & concrete types for C \\
+            \midrule
+            \DborIntegerValue & signed and unsigned integers & \texttt{signed int}, \texttt{unsigned int} \\
+            \DborBinaryRationalValue & IEEE-754 binary floating point numbers & \texttt{float}, \texttt{double} \\
+            \DborDecimalRationalValue & decimal floating point numbers & tuple of two \texttt{int} \\
+            \DborByteStringValue & byte sequence & \texttt{const void *} \\
+            \DborUtfEightStringValue & character sequence & \texttt{const char *} \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+\end{beginparpenalty}
 
 \medskip
 With the only exception of numerical conversions, there must be no implicit conversion between
 these sets of native types (e.g. between an integer and a character string)
 
 \medskip
-A decoder must at least differentiate between these possible decoding results:
-\begin{quote}
-    \newcommand{\addextrarowsep}{\addlinespace[1ex]}%
-    \noindent
-    \begin{tabular}{l p{0.5\textwidth}}
-        PRECISE* &
-            object is represented exactly in the target type \\ \addextrarowsep
-        %
-        APPROX-IMPRECISE* &
-            object is approximated by a different object representable by the target type \\
-        APPROX-EXTREME* &
-            object is approximated by the minimum or maximum value representable by the target type
-            because it is larger than the maximum or smaller than the minimum
-            \\ \addextrarowsep
-        %
-        RANGE &
-            object cannot by represented by the target type, which is in associated set of native data types,
-            not even approximately \\
-        NO-OBJECT &
-            value is \DborNoneValue \\
-        UNSUPPORTED &
-            decoder does not support the value \\
-        %
-        INCOMPATIBLE-TYPE &
-            target type is not in associated set of native data types \\
-        ILL-FORMED &
-            value is ill-formed \\
-    \end{tabular}
-\end{quote}
+\begin{beginparpenalty}
+    A decoder must at least differentiate between these possible decoding results:
+    \begin{quote}
+        \newcommand{\addextrarowsep}{\addlinespace[1ex]}%
+        \noindent
+        \begin{tabular}{l p{0.5\textwidth}}
+            PRECISE* &
+                object is represented exactly in the target type \\ \addextrarowsep
+            %
+            APPROX-IMPRECISE* &
+                object is approximated by a different object representable by the target type \\
+            APPROX-EXTREME* &
+                object is approximated by the minimum or maximum value representable by the target type
+                because it is larger than the maximum or smaller than the minimum
+                \\ \addextrarowsep
+            %
+            RANGE &
+                object cannot by represented by the target type, which is in associated set of native data types,
+                not even approximately \\
+            NO-OBJECT &
+                value is \DborNoneValue \\
+            UNSUPPORTED &
+                decoder does not support the value \\
+            %
+            INCOMPATIBLE-TYPE &
+                target type is not in associated set of native data types \\
+            ILL-FORMED &
+                value is ill-formed \\
+        \end{tabular}
+    \end{quote}
+\end{beginparpenalty}
 
 The results marked with * must be accompanied by an instance of the target type.
 
@@ -141,29 +145,31 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
     the exact representation of $v$ as the returned object.
 
     \item
-    If $V$ is numerically convertible into~$T$,
-    decoding a well-formed $V$ that is supported by the decoder and
-    represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
-    \begin{quote}
-        \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
-        \noindent
-        \begin{tabular}{v{0.25\textwidth} l v{0.25\textwidth}}
-            \toprule
-            Constraints & Result & Returned object as $T$ \\
-            \midrule
-            %
-            $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
-                APPROX-IMPRECISE &
-                of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
-            %
-            $v < \min{T_{\text{repr}}}$ &
-                APPROX-EXTREME & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
-            %
-            $v > \max{T_{\text{repr}}}$ &
-                APPROX-EXTREME & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
-            \bottomrule
-        \end{tabular}
-    \end{quote}
+    \begin{beginparpenalty}
+        If $V$ is numerically convertible into~$T$,
+        decoding a well-formed $V$ that is supported by the decoder and
+        represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
+        \begin{quote}
+            \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
+            \noindent
+            \begin{tabular}{v{0.25\textwidth} l v{0.25\textwidth}}
+                \toprule
+                Constraints & Result & Returned object as $T$ \\
+                \midrule
+                %
+                $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
+                    APPROX-IMPRECISE &
+                    of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
+                %
+                $v < \min{T_{\text{repr}}}$ &
+                    APPROX-EXTREME & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
+                %
+                $v > \max{T_{\text{repr}}}$ &
+                    APPROX-EXTREME & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
+                \bottomrule
+            \end{tabular}
+        \end{quote}
+    \end{beginparpenalty}
 
     \item
     If $V$ is \emph{not} numerically convertible into $T$, decoding a well-formed~$V$ that is supported by the decoder
@@ -235,6 +241,7 @@ If a conformance level specifies a value~$v$ representing an object~$o$ as \emph
     provided the available memory is sufficient.
 \end{itemize}
 
+\begin{beginparpenalty}
 
 \paragraph{Supported values in conformance level 0}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -388,3 +395,5 @@ If a conformance level specifies a value~$v$ representing an object~$o$ as \emph
         \bottomrule
     \end{tabular}
 \end{quote}
+
+\end{beginparpenalty}

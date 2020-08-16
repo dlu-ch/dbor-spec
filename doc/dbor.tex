@@ -91,6 +91,12 @@
         \end{addmargin}%
     }
 
+    \makeatletter
+    \newenvironment{beginparpenalty}[1][10000]{%
+        \@beginparpenalty=#1%
+    }{}
+    \makeatother
+
     \newcommand{\DborVersion}{\input{repo_wd_version.tex}}
     \title{DBOR specification \DborVersion}
     \subject{\url{https://github.com/dlu-ch/dbor-spec/}}
