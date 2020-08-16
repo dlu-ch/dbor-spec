@@ -23,15 +23,15 @@ in forward direction:
         & \quad\mapsto\quad
     \ByteSequence{
         \underbrace{%
-            \DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}
+            \DborFirstByteHex{Number}{38}, \DborNextByteHex{4B}
         }_{\hskip-\textwidth\DborIntegerValue(-100)\hskip-\textwidth},
         %
         \overbrace{%
-            \DborFirstByte\DborStringValueColour{67},
-            \DborNextByte{C2}, \DborNextByte{A1},
-            \DborNextByte{4F}, \DborNextByte{6C},
-            \DborNextByte{C3}, \DborNextByte{A9},
-            \DborNextByte{21}
+            \DborFirstByteHex{String}{67},
+            \DborNextByteHex{C2}, \DborNextByteHex{A1},
+            \DborNextByteHex{4F}, \DborNextByteHex{6C},
+            \DborNextByteHex{C3}, \DborNextByteHex{A9},
+            \DborNextByteHex{21}
         }^{\DborUtfEightStringValue(\text{"¡Olé!"})}
     }
 \end{align*}
@@ -76,7 +76,7 @@ class \DborIntegerValue{}:
 \begin{equation*}
     \begin{array}{c}
         \DborIntegerValue(-100) \\
-        = \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}}
+        = \ByteSequence{\DborFirstByteHex{Number}{38}, \DborNextByteHex{4B}}
     \end{array}
     \quad\text{is an instance of}\quad \DborIntegerValue
 \end{equation*}
@@ -85,7 +85,7 @@ Each value identifies in its first byte the (concrete) class that it is an insta
 \medskip
 An abstract class like \DborNumberValue{} represents common traits of objects and can be used as placeholder for any
 of its concrete subclasses (like \DborIntegerValue{} or \DborInfinityValue{} in this case).
-The byte sequence \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}} "is a" \DborNumberValue{},
+The byte sequence \ByteSequence{\DborFirstByteHex{Number}{38}, \DborNextByteHex{4B}} "is a" \DborNumberValue{},
 an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
 
 \begin{figure}[H]
@@ -126,7 +126,7 @@ A \DborNoneValue{} is the \DborMinimalToken*($3$, $\HexNumber{1F}$).
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Example:
     \begin{quote}
         \noindent
@@ -134,11 +134,11 @@ A \DborNoneValue{} is the \DborMinimalToken*($3$, $\HexNumber{1F}$).
             \toprule
             Value & Representation \\
             \midrule
-            \DborNoneValue & \ByteSequence{\DborFirstByte\DborNoneValueColour{FF}} \\
+            \DborNoneValue & \ByteSequence{\DborFirstByteHex{None}{FF}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 \paragraph{Ambiguity, canonical value}
 
@@ -213,7 +213,7 @@ A \DborMinusInfinityValue{} is the \DborMinimalToken*($3$, $\HexNumber{1D}$).
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -221,13 +221,13 @@ A \DborMinusInfinityValue{} is the \DborMinimalToken*($3$, $\HexNumber{1D}$).
             \toprule
             Value & Representation \\
             \midrule
-            \DborMinusZeroValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FC}} \\
-            \DborMinusInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FD}} \\
-            \DborInfinityValue & \ByteSequence{\DborFirstByte\DborNumberlikeValueColour{FE}} \\
+            \DborMinusZeroValue & \ByteSequence{\DborFirstByteHex{Numberlike}{FC}} \\
+            \DborMinusInfinityValue & \ByteSequence{\DborFirstByteHex{Numberlike}{FD}} \\
+            \DborInfinityValue & \ByteSequence{\DborFirstByteHex{Numberlike}{FE}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 \paragraph{Ambiguity, canonical value}
 
@@ -257,7 +257,7 @@ A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborIntegerTo
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -267,23 +267,23 @@ A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborIntegerTo
             \midrule
             %
             \DborIntegerValue($0$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{00}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{00}} \\
             \DborIntegerValue($-1$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{20}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{20}} \\
             \DborIntegerValue($23$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{17}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{17}} \\
             \DborIntegerValue($24$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{18}, \DborNextByteHex{00}} \\
             \DborIntegerValue($-100$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{38}, \DborNextByte{4B}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{38}, \DborNextByteHex{4B}} \\
             \DborIntegerValue($\HexNumber{FF\,FF\,FF\,FF}$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{1B}, \DborNextByte{E7}, \DborNextByte{FE},
-                   \DborNextByte{FE}, \DborNextByte{FE}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{1B}, \DborNextByteHex{E7}, \DborNextByteHex{FE},
+                   \DborNextByteHex{FE}, \DborNextByteHex{FE}} \\
             %
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed} \DborIntegerValue{}
 if and only if it is an \DborIntegerToken*(0, $w$) or an \DborIntegerToken*(1, $w$) for
@@ -337,7 +337,7 @@ $M \in \IntegerInterval{1}{2^p - 1}$ is represented as \DborBinaryRationalToken*
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     For reference, here are the resulting combinations for all possible $p$:
     \begin{quote}
         \noindent
@@ -357,11 +357,11 @@ $M \in \IntegerInterval{1}{2^p - 1}$ is represented as \DborBinaryRationalToken*
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -370,22 +370,22 @@ $M \in \IntegerInterval{1}{2^p - 1}$ is represented as \DborBinaryRationalToken*
             Value & Representation \\
             \midrule
             \DborBinaryRationalValue($4$, $\frac{1}{8}$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C8}, \DborNextByte{00}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{C8}, \DborNextByteHex{00}} \\
             \DborBinaryRationalValue($10$, $-(2^{17} - 2^6)$)%
                 \footnote{$-\left(1 + (1 - 2^{-10})\right) \cdot 2^{16}$}
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{C9}, \DborNextByte{FF}, \DborNextByte{FF}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{C9}, \DborNextByteHex{FF}, \DborNextByteHex{FF}} \\
             \DborBinaryRationalValue($52$, $2^{-1022}$)
-                &  $\ByteSequence{\DborFirstByte\DborNumberValueColour{CF},
-                        \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00},$ \\
-                &  $    \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{10}, \DborNextByte{00}}$ \\
+                &  $\ByteSequence{\DborFirstByteHex{Number}{CF},
+                        \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{00},$ \\
+                &  $    \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{10}, \DborNextByteHex{00}}$ \\
             \DborBinaryRationalValue($52$, $2^{-1074}$)
-                &  $\ByteSequence{\DborFirstByte\DborNumberValueColour{CF},
-                        \DborNextByte{01}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00},$ \\
-                &  $    \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}, \DborNextByte{00}}$ \\
+                &  $\ByteSequence{\DborFirstByteHex{Number}{CF},
+                        \DborNextByteHex{01}, \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{00},$ \\
+                &  $    \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{00}, \DborNextByteHex{00}}$ \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
 \DborBinaryRationalValue{} if and only if
@@ -439,7 +439,7 @@ is represented as \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*($m$).
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -448,14 +448,14 @@ is represented as \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*($m$).
             Value & Representation \\
             \midrule
             \DborDecimalRationalValue($1$, $-2$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{E9}, \DborNextByte{01}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{E9}, \DborNextByteHex{01}} \\
             \DborDecimalRationalValue($-123$, $100$)
-                &  \ByteSequence{\DborFirstByte\DborNumberValueColour{D0},
-                        \DborNextByte{5B}, \DborNextByte{38}, \DborNextByte{62}} \\
+                &  \ByteSequence{\DborFirstByteHex{Number}{D0},
+                        \DborNextByteHex{5B}, \DborNextByteHex{38}, \DborNextByteHex{62}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
 \DborDecimalRationalValue{} if and only if
@@ -490,7 +490,7 @@ is represented as \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldo
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -499,13 +499,13 @@ is represented as \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldo
             Value & Representation \\
             \midrule
             \DborByteStringValue(\ByteSequence{})
-                &  \ByteSequence{\DborFirstByte\DborStringValueColour{40}} \\
+                &  \ByteSequence{\DborFirstByteHex{String}{40}} \\
             \DborByteStringValue(\ByteSequence{\HexNumber{12}, \HexNumber{34}})
-                &  \ByteSequence{\DborFirstByte\DborStringValueColour{42}, \DborNextByte{12}, \DborNextByte{34}} \\
+                &  \ByteSequence{\DborFirstByteHex{String}{42}, \DborNextByteHex{12}, \DborNextByteHex{34}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed}
 \DborByteStringValue{} if and only if begins with \DborIntegerToken*($2$, $m$) for a suitable
@@ -555,7 +555,7 @@ is represented as \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldo
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -564,17 +564,17 @@ is represented as \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldo
             Value & Representation \\
             \midrule
             \DborUtfEightStringValue("")
-                &  \ByteSequence{\DborFirstByte\DborStringValueColour{60}} \\
+                &  \ByteSequence{\DborFirstByteHex{String}{60}} \\
             \DborUtfEightStringValue("¡Olé!")
-                &  \ByteSequence{\DborFirstByte\DborStringValueColour{67},
-                        \DborNextByte{C2}, \DborNextByte{A1},
-                        \DborNextByte{4F}, \DborNextByte{6C},
-                        \DborNextByte{C3}, \DborNextByte{A9},
-                        \DborNextByte{21}} \\
+                &  \ByteSequence{\DborFirstByteHex{String}{67},
+                        \DborNextByteHex{C2}, \DborNextByteHex{A1},
+                        \DborNextByteHex{4F}, \DborNextByteHex{6C},
+                        \DborNextByteHex{C3}, \DborNextByteHex{A9},
+                        \DborNextByteHex{21}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct}
 \DborUtfEightStringValue{} if and only if
@@ -646,7 +646,7 @@ with $m := \sum_{i = 1}^r \|v_i\|$.
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -655,15 +655,15 @@ with $m := \sum_{i = 1}^r \|v_i\|$.
             Value & Representation \\
             \midrule
             \DborSequenceValue()
-                & \ByteSequence{\DborFirstByte\DborSequenceValueColour{80}} \\
+                & \ByteSequence{\DborFirstByteHex{Sequence}{80}} \\
             \DborSequenceValue(\DborNoneValue, \DborIntegerValue($24$))
-                & \ByteSequence{\DborFirstByte\DborSequenceValueColour{83},
-                        \DborFirstByte\DborNoneValueColour{FF},
-                        \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00}} \\
+                & \ByteSequence{\DborFirstByteHex{Sequence}{83},
+                        \DborFirstByteHex{None}{FF},
+                        \DborFirstByteHex{Number}{18}, \DborNextByteHex{00}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct} \DborSequenceValue{}
 if and only if it is
@@ -728,7 +728,7 @@ with $m := \sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big)$.
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -737,15 +737,15 @@ with $m := \sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big)$.
             Value & Representation \\
             \midrule
             \DborDictionaryValue()
-                & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{A0}} \\
+                & \ByteSequence{\DborFirstByteHex{Dictionary}{A0}} \\
             \DborDictionaryValue($\DborIntegerValue(24) \mapsto \DborNoneValue$)
-                & \ByteSequence{\DborFirstByte\DborDictionaryValueColour{A3},
-                        \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00},
-                        \DborFirstByte\DborNoneValueColour{FF}} \\
+                & \ByteSequence{\DborFirstByteHex{Dictionary}{A3},
+                        \DborFirstByteHex{Number}{18}, \DborNextByteHex{00},
+                        \DborFirstByteHex{None}{FF}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct} \DborDictionaryValue{}
 if and only if it is
@@ -804,7 +804,7 @@ with arbitrary fill bytes $f_{\|v\| + 1}, \ldots, f_m$.
 
 \smallskip
 \noindent
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Examples:
     \begin{quote}
         \noindent
@@ -813,17 +813,17 @@ with arbitrary fill bytes $f_{\|v\| + 1}, \ldots, f_m$.
             Value & Representation \\
             \midrule
             \DborAllocatorValue(3, \DborIntegerValue(23))
-                & \ByteSequence{\DborFirstByte\DborAllocatorValueColour{C0}, \DborNextByte{02},
-                        \DborFirstByte\DborNumberValueColour{17},
-                        \DborNextByteFill{FF}, \DborNextByteFill{FF}} \\
+                & \ByteSequence{\DborFirstByteHex{Allocator}{C0}, \DborNextByteHex{02},
+                        \DborFirstByteHex{Number}{17},
+                        \DborNextByteFillHex{FF}, \DborNextByteFillHex{FF}} \\
             \DborAllocatorValue(3, \DborIntegerValue(24))
-                & \ByteSequence{\DborFirstByte\DborAllocatorValueColour{C0}, \DborNextByte{02},
-                        \DborFirstByte\DborNumberValueColour{18}, \DborNextByte{00},
-                        \DborNextByteFill{FF}} \\
+                & \ByteSequence{\DborFirstByteHex{Allocator}{C0}, \DborNextByteHex{02},
+                        \DborFirstByteHex{Number}{18}, \DborNextByteHex{00},
+                        \DborNextByteFillHex{FF}} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correct}
 \DborAllocatorValue{} if and only if it is

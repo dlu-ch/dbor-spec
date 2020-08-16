@@ -11,8 +11,9 @@
     \DeclareMathOperator{\BitOr}{OR}
     \newcommand{\SetOfReals}{\mathbbm{R}}
     \newcommand{\SetOfIntegers}{\mathbbm{Z}}
-    \newcommand{\BinNumber}[1]{\mathrm{#1}_{2}}
-    \newcommand{\HexNumber}[1]{\mathrm{#1}_{16}}
+    \newcommand{\Number}[1]{\mathrm{#1}}
+    \newcommand{\BinNumber}[1]{\Number{#1}_{2}}
+    \newcommand{\HexNumber}[1]{\Number{#1}_{16}}
     \newcommand{\IntegerInterval}[2]{\{#1 \,\ldots\, #2\}}
 
     \newcolumntype{v}[1]{>{\RaggedRight\hspace{0pt}}p{#1}}% package 'ragged2e'
@@ -65,16 +66,17 @@
     \newcommand{\DborNoneValueColour}{red-std}
     \newcommand{\DborNumberValueColour}{black}  % IntegerValue, BinaryRationalValue, DecimalRationalValue,
     \newcommand{\DborNumberlikeValueColour}{\DborNumberValueColour} % MinusZero, Infinity, MinusInfinity
-    \newcommand{\DborStringValueColour}{green-std}
-        % ByteStringValue, Utf8StringValue
+    \newcommand{\DborStringValueColour}{green-std}  % ByteStringValue, Utf8StringValue
     \newcommand{\DborSequenceValueColour}{blue-std}
     \newcommand{\DborDictionaryValueColour}{violet-std}
     \newcommand{\DborAllocatorValueColour}{gray-std}
 
-    \newcommand{\DborFirstByte}[2]{\textcolor{#1}{\ensuremath{\bm{\HexNumber{#2}}}}}
-    \newcommand{\DborFirstByteBin}[2]{\textcolor{#1}{\ensuremath{\bm{\BinNumber{#2}}}}}
-    \newcommand{\DborNextByte}[1]{\ensuremath{\HexNumber{#1}}}
-    \newcommand{\DborNextByteFill}[1]{\textcolor{gray-std}{\ensuremath{\HexNumber{#1}}}}
+    \newcommand{\DborFirstByte}[3]{\textcolor{\csname Dbor#1ValueColour\endcsname}{\ensuremath{\bm{#3{#2}}}}}
+    \newcommand{\DborNextByte}[2]{\ensuremath{#2{#1}}}
+    \newcommand{\DborFirstByteHex}[2]{\DborFirstByte{#1}{#2}\HexNumber}
+    \newcommand{\DborFirstByteBin}[2]{\DborFirstByte{#1}{#2}\BinNumber}
+    \newcommand{\DborNextByteHex}[1]{\DborNextByte{1}\HexNumber}
+    \newcommand{\DborNextByteFillHex}[1]{\textcolor{gray-std}{\ensuremath{\HexNumber{#1}}}}
 
     \newenvironment{Note}{\medskip\bgroup\small\ignorespaces}{\par\egroup\smallskip}
 
@@ -85,14 +87,8 @@
         \end{quotation}%
     }
 
-    \newenvironment{Indented}{%
-        \begin{addmargin}[\mathindent]{\mathindent}% KOMA script
-    }{%
-        \end{addmargin}%
-    }
-
     \makeatletter
-    \newenvironment{beginparpenalty}[1][10000]{%
+    \newenvironment{BeginParPenalty}[1][10000]{%
         \@beginparpenalty=#1%
     }{}
     \makeatother

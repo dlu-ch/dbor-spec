@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:implementation:representation_by_first_byte}
 
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Values:
     \begin{quote}
         \noindent
@@ -20,49 +20,49 @@
             \toprule
             \text{First byte} & Value type & \text{Constraints} \\
             \midrule
-            \DborFirstByteBin\DborNumberValueColour{000x\,xxxx}
+            \DborFirstByteBin{Number}{000x\,xxxx}
                 & \DborIntegerValue*($v$)
                 & v \ge 0 \\
-            \DborFirstByteBin\DborNumberValueColour{001x\,xxxx}
+            \DborFirstByteBin{Number}{001x\,xxxx}
                 & \DborIntegerValue*($v$)
                 & v < 0 \\
-            \DborFirstByteBin\DborStringValueColour{010x\,xxxx}
+            \DborFirstByteBin{String}{010x\,xxxx}
                 & \DborByteStringValue*(\dots) \\
-            \DborFirstByteBin\DborStringValueColour{011x\,xxxx}
+            \DborFirstByteBin{String}{011x\,xxxx}
                 & \DborUtfEightStringValue*(\dots) \\
-            \DborFirstByteBin\DborSequenceValueColour{100x\,xxxx}
+            \DborFirstByteBin{Sequence}{100x\,xxxx}
                 & \DborSequenceValue*(\dots) \\
-            \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
+            \DborFirstByteBin{Dictionary}{101x\,xxxx}
                 & \DborDictionaryValue*(\dots) \\
-            \DborFirstByteBin\DborAllocatorValueColour{1100\,0xxx}
+            \DborFirstByteBin{Allocator}{1100\,0xxx}
                 & \DborAllocatorValue*(\dots) \\
-            \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
+            \DborFirstByteBin{Number}{1100\,1xxx}
                 & \DborBinaryRationalValue*(\dots) \\
-            \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
+            \DborFirstByteBin{Number}{1101\,xxxx}
                 & \DborDecimalRationalValue*(\dots, $e$)
                 & |e| > 8 \\
-            \DborFirstByteBin\DborNumberValueColour{1110\,xxxx}
+            \DborFirstByteBin{Number}{1110\,xxxx}
                 & \DborDecimalRationalValue*(\dots, $e$)
                 & |e| \le 8 \\
             \BinNumber{1111\,0xxx}
                 & - \\
             \BinNumber{1111\,10xx}
                 & - \\
-            \DborFirstByteBin\DborNumberlikeValueColour{1111\,1100}
+            \DborFirstByteBin{Numberlike}{1111\,1100}
                 & \DborMinusZeroValue* \\
-            \DborFirstByteBin\DborNumberlikeValueColour{1111\,1101}
+            \DborFirstByteBin{Numberlike}{1111\,1101}
                 & \DborMinusInfinityValue* \\
-            \DborFirstByteBin\DborNumberlikeValueColour{1111\,1110}
+            \DborFirstByteBin{Numberlike}{1111\,1110}
                 & \DborInfinityValue* \\
-            \DborFirstByteBin\DborNoneValueColour{1111\,1111}
+            \DborFirstByteBin{None}{1111\,1111}
                 & \DborNoneValue* \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 \medskip
-\begin{beginparpenalty}
+\begin{BeginParPenalty}
     Tokens:
     \begin{quote}
         \noindent
@@ -72,28 +72,28 @@
             \toprule
             \text{First byte} & Token representation & \text{Constraints} \\
             \midrule
-            \DborFirstByteBin\DborNumberValueColour{000x\,xxxx}
+            \DborFirstByteBin{Number}{000x\,xxxx}
                 & \DborIntegerToken*(0, $v$)
                 & v \ge 0 \\
-            \DborFirstByteBin\DborNumberValueColour{001x\,xxxx}
+            \DborFirstByteBin{Number}{001x\,xxxx}
                 & \DborIntegerToken*(1, $-v - 1$)
                 & v < 0 \\
-            \DborFirstByteBin\DborStringValueColour{010x\,xxxx}
+            \DborFirstByteBin{String}{010x\,xxxx}
                 & \DborIntegerToken*($2$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m} \\
-            \DborFirstByteBin\DborStringValueColour{011x\,xxxx}
+            \DborFirstByteBin{String}{011x\,xxxx}
                 & \DborIntegerToken*($3$, $m$) {\Concat} \ByteSequence{b_1, \ldots, b_m} \\
-            \DborFirstByteBin\DborSequenceValueColour{100x\,xxxx}
+            \DborFirstByteBin{Sequence}{100x\,xxxx}
                 & \DborIntegerToken*($4$, $m$) {\Concat} $v_1 \Concat \cdots \Concat v_r$ \\
-            \DborFirstByteBin\DborDictionaryValueColour{101x\,xxxx}
+            \DborFirstByteBin{Dictionary}{101x\,xxxx}
                 & \DborIntegerToken*($5$, $m$) {\Concat} $k_1 \Concat v_1 \Concat \cdots \Concat k_r \Concat v_r$ \\
-            \DborFirstByteBin\DborAllocatorValueColour{1100\,0xxx}
+            \DborFirstByteBin{Allocator}{1100\,0xxx}
                 & \DborNaturalToken*($6$, $0$, $m$) {\Concat} $v \Concat \ByteSequence{f_{\|v\| + 1}, \ldots, f_m}$ \\
-            \DborFirstByteBin\DborNumberValueColour{1100\,1xxx}
+            \DborFirstByteBin{Number}{1100\,1xxx}
                 & \DborBinaryRationalToken*(\dots) \\
-            \DborFirstByteBin\DborNumberValueColour{1101\,xxxx}
+            \DborFirstByteBin{Number}{1101\,xxxx}
                 & \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*(\dots)
                 & |e| > 8 \\
-            \DborFirstByteBin\DborNumberValueColour{1110\,xxxx}
+            \DborFirstByteBin{Number}{1110\,xxxx}
                 & \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerValue*(\dots)
                 & |e| \le 8 \\
             \BinNumber{1111\,0xxx}
@@ -102,16 +102,16 @@
             \BinNumber{1111\,10xx}
                 & \DborMinimalToken*($7$, $v$)
                 & \HexNumber{1B} \le v < \HexNumber{1C} \\
-            \DborFirstByteBin\DborNumberlikeValueColour{1111\,11xx}
+            \DborFirstByteBin{Numberlike}{1111\,11xx}
                 & \DborMinimalToken*($7$, $v$)
                 & \HexNumber{1C} \le v < \HexNumber{1F} \\
-            \DborFirstByteBin\DborNoneValueColour{1111\,1111}
+            \DborFirstByteBin{None}{1111\,1111}
                 & \DborMinimalToken*($7$, $v$)
                 & v = \HexNumber{1F} \\
             \bottomrule
         \end{tabular}
     \end{quote}
-\end{beginparpenalty}
+\end{BeginParPenalty}
 
 
 \subsection{Check if canonical \DborBinaryRationalValue}
