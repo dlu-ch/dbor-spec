@@ -94,13 +94,42 @@
     \makeatother
 
     \newcommand{\DborVersion}{\input{repo_wd_version.tex}}
-    \title{DBOR specification \DborVersion}
-    \subject{\url{https://github.com/dlu-ch/dbor-spec/}}
-    \author{Daniel Lutz}
+
+    % from scrkernel-title.dtx of KOMA Script v3.20
+    % (https://komascript.de/repository/tds/koma-script-2458.tds.zip),
+    % date and unused conditionals removed
+    \makeatletter
+    \renewcommand*{\@maketitle}{%
+        \global\@topnum=\z@
+        \null
+        \vskip 2em%
+        \begin{center}%
+            {\usekomafont{subject}{\@subject \par}}%
+            \vskip 1.5em
+            {\usekomafont{title}{\huge \@title \par}}%
+            \vskip 1.5em
+            {%
+                \usekomafont{author}%
+                \lineskip .5em%
+                \begin{tabular}[t]{c}
+                    \@author
+                \end{tabular}\par
+            }%
+            \vskip 1em%
+            \vskip \z@ \@plus 1em
+        \end{center}%
+        \par
+        \vskip 2em
+    }%
+    \makeatother
 
 \begin{document}
 
+    \title{DBOR specification \DborVersion}
+    \subject{\url{https://github.com/dlu-ch/dbor-spec/}}
+    \author{Daniel Lutz}
     \maketitle
+
     \tableofcontents
 
     \input{dbor-introduction.tex}
