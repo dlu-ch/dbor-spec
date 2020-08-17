@@ -15,6 +15,39 @@ That's why DBOR specifies certain behavioural aspects of encoders and decoders a
 of an implementation.
 
 
+\subsection{Reserved bytes}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:reservedbytes}
+
+There are 12~numbers that are cannot form the first byte of an (ill-formed or well-formed) DBOR value:
+$\IntegerInterval{\HexNumber{F0}}{\HexNumber{FB}}$. These are called \emph{reserved bytes}.
+
+\medskip
+A DBOR encoder must never produce a token or value that starts with a reserved byte.
+
+A DBOR decoder must treat each reserved bytes as an invalid or unsupported value of size 1~byte.
+
+\medskip
+Applications may prepend or append reserved bytes to DBOR-encoded objects:
+\begin{BeginParPenalty}
+    Examples:
+    \begin{itemize}
+        \item
+        An application may use $\HexNumber{F0}$ as fill-byte in a buffer that starts with
+        DBOR-encoded objects.
+
+        \item
+        A binary file that contains DBOR-encoded objects as a byte sequence may have the byte sequence
+        \ByteSequence{\HexNumber{F0}, \HexNumber{F0}} prepended to mark it as a non-text file.%
+        \footnote{%
+           No well-formed UTF-8 string starts with $\HexNumber{F0}$.
+           \ByteSequence{\HexNumber{F0}, \HexNumber{F0}} is a valid UTF-16LE and UTF-16BE encoded code point U+F0F0,
+           which is part of the Private Use Area.
+        }
+    \end{itemize}
+\end{BeginParPenalty}
+
+
 \subsection{Statically typed decoder}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -209,6 +242,7 @@ If it is size-correct but ill-formed it must result in ILL-FORMED or RANGE
     may return RANGE when decoding a \DborUtfEightStringValue{} as soon as it encounters a codepoint outside
     an expected range and without checking the UTF-8 encoding of the remaining code points.
 }
+
 
 \subsection{Conformance levels}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
