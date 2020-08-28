@@ -5,9 +5,75 @@
 \section{Introduction}
 %%%%%%%%%%%%%%%%%%%%%%
 
+DBOR (short for Dense Binary Object Representation) specifies the representation of structured data by
+sequences of bytes. Think of it as a binary XML or JSON, much like CBOR (RFC~7049)%
+\footnote{%
+    \url{https://tools.ietf.org/html/rfc7049}
+}%
+.
 
-\subsection{Usage examples}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Objectives}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+The shared objective of DBOR \href{https://tools.ietf.org/html/rfc7049\#section-1.1}{and CBOR} is to be
+\emph{self-describing} (no separate schema description) and
+\emph{compact} (high information density of encoded data and small code size of encoders and decoders).
+The reasoning why CBOR meets these objectives better than earlier binary formats (like ASN.1) is outlined in~RFC~7049%
+\footnote{%
+    \url{https://tools.ietf.org/html/rfc7049\#appendix-E}
+}
+and applies to DBOR as well.
+
+\medskip
+There are important differences, however.
+
+In contrast to CBOR, DBOR is meant as a self-contained and simple building block for storage and transport
+of structured data in embedded real-time systems and not so much as a pragmatic replacement of JSON in the internet
+to be extended gradually over the years.%
+\footnote{%
+    The limitations of existing implementations of CBOR encoders and decoders suggests
+    that the complexity and ambiguity of CBOR is too high.
+}
+Therefore, DBOR is simpler, less ambiguous, has a higher information density, and gives more attention
+to the presentation of numbers.
+
+\medskip
+See section~\ref{sec:comparisontocbor} for a more detailed comparison between DBOR and CBOR.
+
+
+\subsection{Terms and notation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In this specification, $N$ always denotes the constant
+$\sum_{i = 1}^8 2^{8i}
+= 18\,519\,084\,246\,547\,628\,288
+\approx 1.003922 \cdot 2^{64}$.
+
+\noindent
+{%
+    \setlength\extrarowheight{0.8ex}%
+    \begin{tabular}{@{} p{.1\textwidth} p{.8\textwidth}}
+        $\SetOfReals$: &
+            the set of real numbers \\
+        $\SetOfIntegers$: &
+            the set of integers $\subset \SetOfReals$ \\
+        $\IntegerInterval{a}{b}$: &
+            $\{i \in \SetOfIntegers\colon a \le i \le b\}$ \\
+        $\ByteSequence{a, b, \ldots}$: &
+            byte sequence, starting with byte $a$ \\
+        $a \Concat b$: &
+            concatenation of bytes sequences $a$, $b$: $a$ followed by $b$ \\
+        $\|a\|$: &
+            size of bytes sequence $a$ in byte \\
+        "\dots": &
+            UTF-8 encoded Unicode string in Normalization Form C (NFC) \\
+    \end{tabular}%
+}
+
+
+\subsection{Application examples}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \paragraph{Marshalling of a command (remote procedure call)}
 
@@ -70,13 +136,7 @@ Instead of just discarding all dynamic information, one can proceed as follows t
     least \emph{one} object of size $\le n_{\text{max}}$ at any time, for example in a look-free queue.
 
     \item
-    Assign each run-time event type a unique integer identifier like this:
-    \begin{itemize}
-        \item an even value > 0 if the event is application-related
-        \item an odd value > 0 if the event is developer-related
-        \item an even value < 0 if the event is a fatal error
-        \item an odd value < 0 if the event is a non-fatal error
-    \end{itemize}
+    Assign each run-time event type a unique integer identifier.
     When DBOR-encoded, the identifier must be at most $n_{\text{max}} - 2$ bytes long.
 
     Associate each such run-time event type with a sequence of context objects describing the cause or detection context
@@ -198,33 +258,3 @@ The smallest corresponding \href{https://www.qrcode.com/en/about/version.html}{Q
         \label{fig:class:Value}
     \end{quote}
 \end{figure}
-
-
-\subsection{Terms and notation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-In this specification, $N$ always denotes the constant
-$\sum_{i = 1}^8 2^{8i}
-= 18\,519\,084\,246\,547\,628\,288
-\approx 1.003922 \cdot 2^{64}$.
-
-\noindent
-{%
-    \setlength\extrarowheight{0.8ex}%
-    \begin{tabular}{@{} p{.1\textwidth} p{.8\textwidth}}
-        $\SetOfReals$: &
-            the set of real numbers \\
-        $\SetOfIntegers$: &
-            the set of integers $\subset \SetOfReals$ \\
-        $\IntegerInterval{a}{b}$: &
-            $\{i \in \SetOfIntegers\colon a \le i \le b\}$ \\
-        $\ByteSequence{a, b, \ldots}$: &
-            byte sequence, starting with byte $a$ \\
-        $a \Concat b$: &
-            concatenation of bytes sequences $a$, $b$: $a$ followed by $b$ \\
-        $\|a\|$: &
-            size of bytes sequence $a$ in byte \\
-        "\dots": &
-            UTF-8 encoded Unicode string in Normalization Form C (NFC) \\
-    \end{tabular}%
-}

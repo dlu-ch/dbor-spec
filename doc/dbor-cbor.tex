@@ -1,0 +1,102 @@
+% SPDX-License-Identifier: CC-BY-4.0
+% DBOR specification - Dense Binary Object Representation
+% Copyright (C) 2020 Daniel Lutz <dlu-ch@users.noreply.github.com>
+
+\section{Comparison to CBOR}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\label{sec:comparisontocbor}
+
+In contrast to CBOR, DBOR prioritizes simplicity, precision and efficiency over extensibility.
+DBOR is focused on the representation of objects and does not try to provide a one-size-fits-all solution
+to express context-specific meaning (like "this string represents a date").
+
+\medskip
+\begin{BeginParPenalty}
+    This leads to the following main differences:
+    \begin{itemize}
+        \item
+        Where feasible, there is only \emph{one} representation for an object,
+        and for each representable object there is a unique \emph{canonical} representation.
+        For example, there is only \emph{one} well-formed \DborIntegerValue{} that represents the integer~$7$
+        (CBOR: 5~different representations with major type 0).
+
+        \item
+        Numbers -- integers with an optional base-2 or base-10 factor -- are first-class citizens
+        (CBOR: numbers with a base-10 factor require the extension mechanism).
+
+        The number-like object $-0$, $\infty$, $-\infty$ can be used to complement \emph{any} number
+        (CBOR: only float).
+
+        \item
+        The size of containers is described by the total size of the contained encoded elements
+        (CBOR: number of elements). This allows fast forward-traversal.
+
+        Keys in a dictionary must be unique \emph{and ordered}, which makes validation and look-up fast
+        (CBOR: keys have to be unique but not ordered, so a decoder has to sort first).
+
+        \item
+        The size of encoded objects can be fixed (\DborAllocatorValue).
+        This enables the definition of memory layouts and in-place updates of objects without
+        following objects being affected.
+    \end{itemize}
+\end{BeginParPenalty}
+
+\begin{BeginParPenalty}
+    Features provided by CBOR but not by DBOR:
+    \begin{itemize}
+        \item
+        null, undefined, false, true:
+        these ECMAScript values cannot be mapped 1:1 to DBOR values
+        (approximations: \DborNoneValue(), \DborNoneValue(), \DborIntegerValue(0), and \DborIntegerValue(1),
+        respectively).
+
+        \item Tags:
+        the mechanism to modify the meaning of the following object
+        (e.g. number represented by array).
+
+        \item
+        Arrays, maps, byte strings, and text strings of indefinite lengths (for stream encoding).
+    \end{itemize}
+\end{BeginParPenalty}
+
+DBOR-encoded data is typically significantly smaller than the corresponding CBOR encoded data.
+For each subnormal, non-zero IEEE-754:2008 binary16 or binary32 the DBOR-encoded object consists of
+\emph{exactly one byte more} than the CBOR-encoded object.
+For each other object that both DBOR and CBOR can encode, the DBOR-encoded object consists of \emph{at most as many}
+bytes as the CBOR-encoded object.
+
+\begin{BeginParPenalty}
+    Examples (smaller one marked with ${}^\diamond$):
+    \begin{quote}
+        \noindent
+        \newcolumntype{R}{>{$}r<{$}}% package 'array'
+        \newcommand{\D}{\hbox to 0pt{$\,{}^\diamond$}\hss}
+        \begin{tabular}{l Rl Rl}
+            \toprule
+            & \multicolumn{2}{l}{DBOR} & \multicolumn{2}{l}{CBOR} \\
+            \cmidrule(lr){2-3}
+            \cmidrule(lr){4-5}
+            Object & \text{size} & class & \text{size} & type \\
+            \midrule
+            $2^{32}$ &
+                5\D & \DborIntegerValue & 9 & unsigned int \\
+            $2^{64}$ &
+                9\D & \DborIntegerValue & 11 & bignum \\[1ex]
+            $2^{-3}$ &
+                2\D & \DborBinaryRationalValue & 3 & float \\
+            $2^{-150}$ &
+                6\D & \DborBinaryRationalValue & 9 & float \\
+            $2^{-24}$ &
+                4 & \DborBinaryRationalValue & 3\D & float \\[1ex]
+            $0.1$ &
+                2\D & \DborDecimalRationalValue & 4 & decimal fraction \\[1ex]
+            - &
+                1\D & \DborNoneValue & 3 & null (major type 7) \\
+            $\infty$ &
+                1\D & \DborInfinityValue & 3 & float \\[1ex]
+            \ByteSequence{b_1, ..., b_{256}} &
+                258\D & \DborByteStringValue & 259 & byte string \\
+            \bottomrule
+        \end{tabular}
+    \end{quote}
+\end{BeginParPenalty}

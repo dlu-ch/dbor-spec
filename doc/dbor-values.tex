@@ -543,10 +543,6 @@ well-formed UTF-8 encoded Unicode code points.%
     (the most significant bit in the first, the least significant bit in the last byte) is
     $\in \IntegerInterval{0}{\HexNumber{D7FF}} \cup \IntegerInterval{\HexNumber{E000}}{\HexNumber{10\,FFFF}}$.
 }
-Preferred: Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
-\footnote{
-    Python 3: \texttt{unicodedata.normalize('NFC', \dots)}
-}
 
 \paragraph{Representation}
 
@@ -775,14 +771,6 @@ The canonical value of a well-formed \DborDictionaryValue($k_1 \mapsto v_1, \ldo
 the well-formed \DborDictionaryValue{} whose pairs of keys and associated values are the members of
 $\{(k_i', v_i') \colon i \in I\}$ where $\Box'$ means the canonical value of $\Box$ and
 $I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\colon k_j' = k_i'\}\}$.
-
-\medskip
-Note:
-The keys are formed by the bytes sequences, \emph{not} the represented objects.
-It is therefore recommended to use only canonical values as keys.
-\DborIntegerValue{}, \DborByteStringValue{}, and \DborUtfEightStringValue{} with code points $< \HexNumber{300}$
-are especially well suited; they are all canonical and can easily be ordered according to
-section~\ref{sec:stricttotalorder} \emph{before} encoding.
 
 
 \subsubsection{\DborAllocatorValue(\texorpdfstring{$m$, $v$}{m, v})}
