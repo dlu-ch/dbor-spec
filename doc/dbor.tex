@@ -77,7 +77,7 @@
     \newcommand{\DborNextByte}[2]{\ensuremath{#2{#1}}}
     \newcommand{\DborFirstByteHex}[2]{\DborFirstByte{#1}{#2}\HexNumber}
     \newcommand{\DborFirstByteBin}[2]{\DborFirstByte{#1}{#2}\BinNumber}
-    \newcommand{\DborNextByteHex}[1]{\DborNextByte{1}\HexNumber}
+    \newcommand{\DborNextByteHex}[1]{\DborNextByte{#1}\HexNumber}
     \newcommand{\DborNextByteFillHex}[1]{\textcolor{gray-std}{\ensuremath{\HexNumber{#1}}}}
 
     \newenvironment{Note}{\medskip\bgroup\small\ignorespaces}{\par\egroup\smallskip}
