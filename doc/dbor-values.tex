@@ -253,7 +253,7 @@ The maximum representable number is $18\,519\,084\,246\,547\,628\,311$.
 \paragraph{Representation}
 
 A number $v \in \IntegerInterval{0}{N + 23}$ is represented as \DborIntegerToken*(0, $v$).
-A number $v \in \IntegerInterval{-(N + 24)}{0}$ is represented as \DborIntegerToken*(1, $-v - 1$).
+A number $v \in \IntegerInterval{-(N + 24)}{-1}$ is represented as \DborIntegerToken*(1, $-v - 1$).
 
 \smallskip
 \noindent
@@ -307,7 +307,7 @@ It is canonical.
 
 A \DborBinaryRationalValue{} can represent any number
 \begin{equation}
-    v = (-1)^s \cdot \sum_{i = -52}^0 m_i s^i \cdot 2^e
+    v = (-1)^s \cdot \sum_{i = -52}^0 m_i 2^i \cdot 2^e
 \end{equation}
 with $s, m_i \in \{0, 1\}$, $e \in \IntegerInterval{2 - 2^{10}}{2^{10}}$ and $v \ne 0$.
 
@@ -830,7 +830,7 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correc
 \DborNaturalToken*($6$, $0$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{1}{N}$.
 It is a \emph{well-formed} \DborAllocatorValue{} if and only if it is a size-correct \DborAllocatorValue{} and
-\ByteSequence{b_{n - m + 1}, \ldots, b_n} is a well-formed value $v$ that is not an \DborAllocatorValue.
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} starts with a well-formed value $v$ that is not an \DborAllocatorValue.
 
 The sequence is an \emph{ill-formed} \DborAllocatorValue{} if and only if it is not a well-formed
 \DborAllocatorValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $0$, $m$).
