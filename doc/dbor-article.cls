@@ -5,7 +5,7 @@
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{dbor-article}[2020/06/25 dbor-article]
 
-\LoadClass[a4paper, 10pt, headings=small, headsepline]{scrartcl}
+\LoadClass[a4paper, 10pt, headings=small, headsepline, numbers=noenddot]{scrartcl}
 
 \usepackage[top=30mm, bottom=25mm, left=40mm, right=25mm]{geometry}
 \usepackage{scrtime}
@@ -14,10 +14,10 @@
 \usepackage[T1]{fontenc}
 \usepackage[osf]{mathpazo}  % use Palatino (similar: TeX Gyre Pagella)
 \linespread{1.05}\selectfont  % Palatino needs more interline-spacing (here: 5%)
-\usepackage[scaled=0.85]{beramono}  % use Bera Mono (similar: Bitstream Vera Mono) as typewriter font (has bold variant)
 \usepackage{dsfont}  % Type 1 font for \mathds{}
 \usepackage{bm}  % bold fonts in math mode
 \usepackage{pxfonts}
+\usepackage[scaled=0.9]{beramono}  % use Bera Mono (similar: Bitstream Vera Mono) as typewriter font (has bold variant)
 
 \usepackage{xcolor}
 \usepackage{array}
