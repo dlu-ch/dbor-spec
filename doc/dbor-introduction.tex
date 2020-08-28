@@ -19,7 +19,11 @@ See section \ref{sec:applicationexamples} for some examples if you wonder what t
 \subsection{Objectives}
 %%%%%%%%%%%%%%%%%%%%%%%
 
-The shared objective of DBOR \href{https://tools.ietf.org/html/rfc7049\#section-1.1}{and CBOR} is to be
+The shared objective of DBOR and CBOR%
+\footnote{%
+    \url{https://tools.ietf.org/html/rfc7049\#section-1.1}
+}
+is to be
 \emph{self-describing} (no separate schema description) and
 \emph{compact} (high information density of encoded data and small code size of encoders and decoders).
 The reasoning why CBOR meets these objectives better than earlier binary formats (like ASN.1) is outlined in~RFC~7049%
@@ -31,14 +35,10 @@ and applies to DBOR as well.
 \medskip
 There are important differences, however.
 
-In contrast to CBOR, DBOR is meant as a self-contained and simple building block for storage and transport
+In contrast to CBOR, DBOR is designed as a self-contained and simple building block for transport or storage
 of structured data in embedded real-time systems and not so much as a pragmatic replacement of JSON in the internet
-to be extended gradually over the years.%
-\footnote{%
-    The limitations of existing implementations of CBOR encoders and decoders suggests
-    that the complexity and ambiguity of CBOR is too high.
-}
-Therefore, DBOR is simpler, less ambiguous, has a higher information density, and gives more attention
+to be extended gradually over the years.
+Therefore, DBOR is simpler, less ambiguous, faster to decode, has a higher information density, and gives more attention
 to the presentation of numbers.
 
 \medskip

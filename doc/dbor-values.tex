@@ -109,8 +109,8 @@ DBOR defines a \emph{canonical value} for each object and class to enable a uniq
 }
 
 
-\subsection{\DborNoneValue}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Absence of object (\DborNoneValue)}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:def:NoneValue}
 \hypertarget{sec:def:NoneValue}{}
 
@@ -184,7 +184,8 @@ to any \DborNumberlikeValue{}.
 \paragraph{Representable objects}
 
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
-It is considered larger than any object represented by a \DborNumberValue*{} with a negative numeric value and $< 0$.%
+It is considered negative but larger than any object represented by a \DborNumberValue*{}
+with a negative numeric value.%
 \footnote{%
     This reflects the idea of negative infinitesimal (\href{https://en.wikipedia.org/wiki/Hyperreal_number}{hyperreal}
     or \href{https://en.wikipedia.org/wiki/Surreal_number}{surreal}) numbers as members of an extension field
@@ -309,14 +310,14 @@ A \DborBinaryRationalValue{} can represent any number
 \begin{equation}
     v = (-1)^s \cdot \sum_{i = -52}^0 m_i 2^i \cdot 2^e
 \end{equation}
-with $s, m_i \in \{0, 1\}$, $e \in \IntegerInterval{2 - 2^{10}}{2^{10}}$ and $v \ne 0$.
+with $s, m_i \in \{0, 1\}$, $e \in \IntegerInterval{-2^{10} + 2}{2^{10}}$ and $v \ne 0$.
 
 The set of representable numbers comprises all normal and subnormal values of the IEEE-754:2008 type
 \texttt{binary64} except $\pm 0$.
 
 \smallskip
 The maximum representable number is $(2 - 2^{-52}) \cdot 2^{2^{10}} \approx 3.595\,386 \cdot 10^{308}$.
-The smallest positive representable number is $2^{-52} \cdot 2^{2-2^{10}} = 2^{-1074}
+The smallest positive representable number is $2^{-52} \cdot 2^{-2^{10} + 2} = 2^{-1074}
 \approx 4.940\,656 \cdot 10^{-324}$.
 
 \paragraph{Representation}
@@ -397,7 +398,7 @@ The sequence is an \emph{ill-formed} \DborBinaryRationalValue{} if and only if i
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one representation of \DborBinaryRationalValue($p$, $v$) for any $v$.
+There may be more than one \DborBinaryRationalValue($p$, $v$) for a given~$v$.
 Of these, the one with the smallest $p$ is the canonical value.%
 \footnote{
     A \DborBinaryRationalValue($p$, $v$) is therefore canonical if and only if there is
@@ -585,7 +586,8 @@ The sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if i
 
 \paragraph{Ambiguity, canonical value}
 
-There may be more than one \DborUtfEightStringValue{} representing the same (canonically equivalent) Unicode string.
+There may be more than one \DborUtfEightStringValue{} representing the same (i.e. canonically equivalent)
+Unicode string.
 The canonical value of a well-formed \DborUtfEightStringValue{} is in Normalization Form C.%
 \footnote{
     The check whether an arbitrary well-formed \DborUtfEightStringValue{} is canonical
@@ -666,8 +668,7 @@ if and only if it is
 \DborIntegerToken*($4$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{0}{N + 23}$.
 It is a well-formed \DborSequenceValue{} if and only if it is a size-correct \DborSequenceValue{} and
-\ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of ($0$ or more)
-well-formed values with a total size $m$.
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of ($0$ or more) well-formed values.
 
 The sequence is an \emph{ill-formed} \DborSequenceValue{} if and only if it is not a well-formed
 \DborSequenceValue{} but $b_1$ is the first byte of an \DborIntegerToken*($4$, $m$).
@@ -751,7 +752,7 @@ It is a \emph{well-formed} \DborDictionaryValue{} if and only if it is a size-co
 \begin{itemize}
     \item
     \ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of an even number $2 r$ of
-    well-formed values $k_1, v_1, \ldots, k_r, v_r$ with total size $m$, and
+    well-formed values $k_1, v_1, \ldots, k_r, v_r$, and
 
     \item
     the $k_1, \ldots, k_r$ are instances of \DborElementaryValue, and
@@ -780,7 +781,7 @@ $I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\co
 \paragraph{Representable objects}
 
 An \DborAllocatorValue{} can represent the fixed-size allocation of a well-formed object~$v$
-that is not an \DborAllocatorValue with $\|v\| \le m$ for $m \in \IntegerInterval{1}{N}$.
+that is not an \DborAllocatorValue{} with $\|v\| \le m$ for $m \in \IntegerInterval{1}{N}$.
 
 For all such $v$, $\|\DborAllocatorValue($m$,{} $v$)\|$ is independent of $\|v\|$.
 
@@ -841,7 +842,7 @@ On the set of all byte sequences, ${\prec}$ induces a strict total order when de
 \paragraph{Definition}
 
 For each pair of non-empty byte sequences
-$a := \ByteSequence{a_1, \ldots, a_m}$,
+$a := \ByteSequence{a_1, \ldots, a_m}$ and
 $b := \ByteSequence{b_1, \ldots, b_n}$,
 $a \prec b$ if and only if
 \begin{itemize}

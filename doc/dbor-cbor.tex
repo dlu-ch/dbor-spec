@@ -6,7 +6,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \label{sec:comparisontocbor}
 
-In contrast to CBOR, DBOR prioritizes simplicity, precision and efficiency over extensibility.
+In contrast to CBOR, DBOR prioritizes simplicity, precision and efficiency over extensibility.%
+\footnote{%
+    The limitations of existing implementations of CBOR encoders and decoders suggest
+    that the complexity and ambiguity of CBOR is too high.
+}
+
 DBOR is focused on the representation of objects and does not try to provide a one-size-fits-all solution
 to express context-specific meaning (like "this string represents a date").
 
@@ -59,7 +64,7 @@ to express context-specific meaning (like "this string represents a date").
     \end{itemize}
 \end{BeginParPenalty}
 
-DBOR-encoded data is typically significantly smaller than the corresponding CBOR encoded data.
+DBOR-encoded data is typically significantly smaller than the corresponding CBOR-encoded data.
 For each subnormal, non-zero IEEE-754:2008 binary16 or binary32 the DBOR-encoded object consists of
 \emph{exactly one byte more} than the CBOR-encoded object.
 For each other object that both DBOR and CBOR can encode, the DBOR-encoded object consists of \emph{at most as many}

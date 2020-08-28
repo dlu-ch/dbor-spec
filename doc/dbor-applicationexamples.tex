@@ -25,8 +25,8 @@ For example: \texttt{startPump(parametersToSetBefore, controlMode)} with identif
 \begin{BeginParPenalty}
     A specific call of this command with actual arguments can be described by a sequence of objects like this:
     \begin{quote}
-        $42$, \{\}, $1$ or \\
-        $42$, \{$3$: $0.010$, $9$: $0$, $11$: $\infty$\}, $2$.
+        $12$, \{\}, $1$ or \\
+        $12$, \{$3$: $0.010$, $9$: $0$, $11$: $\infty$\}, $2$.
     \end{quote}
 \end{BeginParPenalty}
 
@@ -70,17 +70,17 @@ Instead of just discarding all dynamic information, one can proceed as follows t
     least \emph{one} object of size $\le n_{\text{max}}$ at any time, for example in a look-free queue.
 
     \item
-    Assign each run-time event type a unique integer identifier.
-    When DBOR-encoded, the identifier must be at most $n_{\text{max}} - 2$ bytes long.
+    Assign each run-time event type a unique integer identifier that is no longer than $n_{\text{max}} - 2$ bytes
+    when DBOR-encoded.
 
     Associate each such run-time event type with a sequence of context objects describing the cause or detection context
     (e.g. measured current), ordered by preciousness of the information (most precious first), such that the meaning
-    of no context objects does depend on other context objects later in the sequence.
+    of no context object does depend on other context objects later in the sequence.
 
     \item
     Whenever the event occurs:
-    Build a DBOR-encoded event object of size $\le n_{\text{max}}$, consisting the
-    identifier of the event type, followed by the sequence of all context objects, only so much of its last objects
+    Build a DBOR-encoded event object of size $\le n_{\text{max}}$, consisting of the identifier of the event type,
+    followed by the sequence of all context objects, only so much of its last objects
     omitted that the resulting size is $\le n_{\text{max}}$.%
     \footnote{%
         When $n_{\text{max}} \le 25$, the \DborIntegerToken{} of the contained \DborSequenceValue{}
@@ -178,10 +178,12 @@ an error message whose text message has to be short and easy to understand.
     \end{quote}
 \end{BeginParPenalty}
 
-The smallest corresponding \href{https://www.qrcode.com/en/about/version.html}{QR Code Model 2}
-(ISO/IEC~18004:2015, 8-bit byte mode) is version~3 which has the size of $29 \times 29$~modules (pixels).%
+The smallest corresponding QR Code Model 2 (ISO/IEC~18004:2015, 8-bit byte mode) is version~3 which has the size of
+$29 \times 29$~modules.%
 \footnote{%
-    Generated with
+    See \url{https://www.qrcode.com/en/about/version.html}.
+
+    QR Code generated with
     \href{https://github.com/fukuchi/libqrencode/blob/v4.0.2/qrenc.c}{%
         \texttt{qrencode --8bit --size 1 --margin 0 --level L}}.
 }

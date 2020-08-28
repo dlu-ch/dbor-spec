@@ -9,7 +9,7 @@
 \subsection{\DborUtfEightStringValue}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The recommended form for a string is
+The recommended form for a Unicode string is
 Normalization Form C (\href{https://www.unicode.org/versions/Unicode13.0.0/ch03.pdf\#G31703}{NFC}).%
 \footnote{
     Python 3: \texttt{unicodedata.normalize('NFC', \dots)}
@@ -47,7 +47,7 @@ The following sections give some recommendations to start with.
 The objects "false" and "true" can be seen as instances of 1-bit integers and should be encoded as
 \DborIntegerValue(0) and \DborIntegerValue(1), respectively.
 
-Note: Consider using enumerations or sets instead of booleans for the representation of options.
+Consider using enumerations or sets instead of booleans for the representation of options.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%

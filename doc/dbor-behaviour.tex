@@ -254,24 +254,27 @@ To allow easy description and comparision of capabilities of encoders and decode
 certain common capabilities (or constraints) are grouped by \emph{conformance levels}.
 
 \medskip
-If a conformance level specifies a value~$v$ as \emph{supported},
+If a conformance level specifies a value~$v$ as \emph{supported}
 a decoder of this conformance level supports $v$ and can decode $v$ into at least one native data type~$T$:
 \begin{enumerate}[a)]
-    \item successfully, representing $o$ exactly or approximately, or
-    \item unsuccessfully, if $T$ cannot represent $o$ at least approximately.
+    \item
+    successfully, representing $o$ exactly or approximately, or
+
+    \item
+    unsuccessfully, if $T$ cannot represent $o$ at least approximately or
+    the available memory is insufficient.
 \end{enumerate}
 
-\medskip
 If a conformance level specifies a value~$v$ representing an object~$o$ as \emph{supported and representable}
+and the available memory is sufficient,
 \begin{itemize}
     \item
     an encoder of this conformance level can produce a well-formed~$v$ from at least one native data type
-    representing $o$ exactly, provided the available memory is sufficient,
+    representing $o$ exactly,
 
     \item
     a decoder of this conformance level supports~$v$ and can
-    decode a (well-formed) $v$ into a at least one native data type representing $o$ exactly,
-    provided the available memory is sufficient.
+    decode a (well-formed) $v$ into at least one native data type representing $o$ exactly.
 \end{itemize}
 
 \begin{BeginParPenalty}
