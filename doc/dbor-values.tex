@@ -470,7 +470,8 @@ The sequence is an \emph{ill-formed} \DborDecimalRationalValue{} if and only if 
 There may be more than one \DborDecimalRationalValue($m$, $e$) representing the same number $m \cdot 10^e$.
 Of these, the one with the smallest $|m|$ is the canonical value.%
 \footnote{
-    A \DborDecimalRationalValue($m$, $e$) is therefore canonical if and only if $m \bmod 10 = 0$.
+    A \DborDecimalRationalValue($m$, $e$) is therefore canonical if and only if $m \bmod 10 \ne 0$ or
+    $e = N + 8$.
     See \ref{sec:implementation:IntegerValue:mod10} for an efficient way to check this.
 }
 
@@ -712,7 +713,7 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
     with the total size $\sum_{i = 1}^r \big(\|k_i\| + \|v_i\|\big) \in \IntegerInterval{0}{N + 23}$ and
 
     \item
-    $v_{i - 1} \prec v_{i}$ for all $i \in \IntegerInterval{2}{r}$.
+    $k_{i - 1} \prec k_{i}$ for all $i \in \IntegerInterval{2}{r}$.
 \end{itemize}
 
 ${\prec}$ is the strict total order on the set of byte sequences defined in section~\ref{sec:stricttotalorder}.
@@ -758,7 +759,7 @@ It is a \emph{well-formed} \DborDictionaryValue{} if and only if it is a size-co
     the $k_1, \ldots, k_r$ are instances of \DborElementaryValue, and
 
     \item
-    $v_{i - 1} \prec v_{i}$ for all $i \in \IntegerInterval{2}{r}$.
+    $k_{i - 1} \prec k_{i}$ for all $i \in \IntegerInterval{2}{r}$.
 \end{itemize}
 
 The sequence is an \emph{ill-formed} \DborDictionaryValue{} if and only if it is not a well-formed
