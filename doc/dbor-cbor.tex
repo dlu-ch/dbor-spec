@@ -33,8 +33,9 @@ to express context-specific meaning (like "this string represents a date").
         (CBOR: only float).
 
         \item
-        The size of containers is described by the total size of the contained encoded elements
-        (CBOR: number of elements). This allows fast forward-traversal.
+        The size of containers is described by the total size of the contained encoded objects
+        (CBOR: number of contained items).
+        This allows fast forward-traversal.
 
         Keys in a dictionary must be unique \emph{and ordered}, which makes validation and look-up fast
         (CBOR: keys have to be unique but not ordered, so a decoder has to sort first).
@@ -50,14 +51,14 @@ to express context-specific meaning (like "this string represents a date").
     Features provided by CBOR but not by DBOR:
     \begin{itemize}
         \item
-        null, undefined, false, true:
-        these ECMAScript values cannot be mapped 1:1 to DBOR values
-        (approximations: \DborNoneValue(), \DborNoneValue(), \DborIntegerValue(0), and \DborIntegerValue(1),
+        \texttt{null}, \texttt{undefined}, \texttt{false}, \texttt{true}:
+        these ECMAScript values can be mapped 1:1 to CBOR values
+        (DBOR approximations: \DborNoneValue(), \DborNoneValue(), \DborIntegerValue(0), and \DborIntegerValue(1),
         respectively).
 
         \item Tags:
         the mechanism to modify the meaning of the following object
-        (e.g. number represented by array).
+        (e.g.\ number represented by array).
 
         \item
         Arrays, maps, byte strings, and text strings of indefinite lengths (for stream encoding).
@@ -65,7 +66,7 @@ to express context-specific meaning (like "this string represents a date").
 \end{BeginParPenalty}
 
 DBOR-encoded data is typically significantly smaller than the corresponding CBOR-encoded data.
-For each subnormal, non-zero IEEE-754:2008 binary16 or binary32 the DBOR-encoded object consists of
+For each subnormal, non-zero IEEE-754:2008 \texttt{binary16} or \texttt{binary32}, the DBOR-encoded object consists of
 \emph{exactly one byte more} than the CBOR-encoded object.
 For each other object that both DBOR and CBOR can encode, the DBOR-encoded object consists of \emph{at most as many}
 bytes as the CBOR-encoded object.

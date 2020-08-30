@@ -147,7 +147,7 @@ An integer $v$ is an integer multiple of $10$ if and only if it is an integer mu
 of $2$ and of $5$.
 Since $2^{8i} \bmod 2 = 0$ for $i \in \{1, 2, \ldots\}$
 and $2^{8i} \bmod 5 = 1$ for $i \in \{0, 1, \ldots\}$,
-a division of $v$ can be replaced by divisions of fewer bytes.
+a division of a large $v$ can be replaced by a division of a small number.
 
 Example:
 Let $\ByteSequence{ b, d_0, \ldots, d_k}$ be \DborIntegerValue($v$) for $v \ge 24$.
@@ -158,5 +158,5 @@ Then
         = d_0 \bmod 2 \\
     v \bmod 5
         & = \big(23 + \sum_{i = 0}^k (d_i + 1) 2^{8 i}\big) \bmod 5
-        = \big(\sum_{i = 0}^k (d_i \bmod 5) + k + 4\big) \bmod 5
+        = \big(\underbrace{4 + k + \sum_{i = 0}^k d_i}_{\in \IntegerInterval{4}{2051}}\big) \bmod 5.
 \end{align*}

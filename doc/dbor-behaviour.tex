@@ -9,7 +9,7 @@
 Representing objects as byte sequences (encoding) is only meaningful if there is also a decoding part involved:
 a \emph{sender} sends the objects to a \emph{receiver}.
 
-For senders (DBOR encoders) and receivers (DBOR decoders) to be iteroperable, the sender must be able to anticipate the
+For senders (DBOR encoders) and receivers (DBOR decoders) to be interoperable, the sender must be able to anticipate the
 behaviour of the receiver to some extend.
 That's why DBOR specifies certain behavioural aspects of encoders and decoders and how the are exposed by the API
 of an implementation.
@@ -20,12 +20,14 @@ of an implementation.
 \label{sec:reservedbytes}
 
 There are 12~numbers that are cannot form the first byte of an (ill-formed or well-formed) DBOR value:
-$\IntegerInterval{\HexNumber{F0}}{\HexNumber{FB}}$. These are called \emph{reserved bytes}.
+$\IntegerInterval{\HexNumber{F0}}{\HexNumber{FB}}$.
+These are called \emph{reserved bytes}.
 
 \medskip
 A DBOR encoder must never produce a token or value that starts with a reserved byte.
 
-A DBOR decoder must treat each reserved bytes as an invalid or unsupported value of size 1~byte.
+A DBOR decoder must treat each reserved byte at the place of the first byte of a value
+as an invalid or unsupported value of size 1~byte.
 
 \medskip
 Applications may prepend or append reserved bytes to DBOR-encoded objects:
@@ -55,11 +57,11 @@ Decoding%
 \footnote{
     Decoding a value does not have to take place in one single operation.
 
-    When decoding a \DborUtfEightStringValue, \DborSequenceValue, or \DborDictionaryValue{} it is in fact recommended to
-    check only the size-correctness of the value and return a validating iterator
-    (over Unicode code points or container elements).
+    When decoding a \DborUtfEightStringValue, \DborSequenceValue, or \DborDictionaryValue{},
+    it is in fact recommended to check only the size-correctness of the value and return a validating iterator
+    (over Unicode code points or values in a container).
 }
-a \DborValue{} in a statically typed environment (e.g. C++ without dynamic polymorphy) is a
+a \DborValue{} in a statically typed environment (e.g.\ C++ without dynamic polymorphy) is a
 type-cast operation from the represented object to a given \emph{target type}.
 Such an operation can succeed (the represented value can represented exactly in the target type) or
 can fail (the represented value cannot be represented at all in the target type or not exactly).
@@ -90,7 +92,7 @@ and \DborUtfEightStringValue, the decoder must assign an associated set of nativ
 
 \medskip
 With the only exception of numerical conversions, there must be no implicit conversion between
-these sets of native types (e.g. between an integer and a character string)
+these sets of native types (e.g.\ between an integer and a character string).
 
 \medskip
 \begin{BeginParPenalty}
@@ -139,14 +141,7 @@ On the other hand, only \DborIntegerValue{} can represent~$0$.
 Decoding a \DborNumberValue{} or \DborNumberlikeValue{} into a (numerical) native data type is called
 a \emph{numerical conversion}.
 A \DborNumberValue{} or \DborNumberlikeValue{}~$v$ of type~$V$ is said to be \emph{numerically convertible} into~$T$
-if and only if%
-\footnote{
-    Note that~\DborDecimalRationalValue{} is \emph{not} numerically convertible into any member of an
-    associated set of native data types of any other subclass of \DborNumberValue{}.
-
-    This is mainly for performance reasons related to conversions between non-canonical representations
-    and to limit the complexity.
-}
+if and only if
 \begin{itemize}
     \item
     $V$ is a subclass of \DborNumberValue{} and $T$ is a member of the associated set of native data types of~$V$, or
@@ -156,31 +151,31 @@ if and only if%
     $T$ is a member of the associated set of native data types of \DborDecimalRationalValue{}, or
 
     \item
-    $V$ is a subclass of \DborNumberlikeValue{} and
-    $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
+    $v$ is \DborIntegerValue{}($0$) and
+    $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}, or
 
     \item
-    $v$ is \DborIntegerValue{}($0$) and
+    $V$ is a subclass of \DborNumberlikeValue{} and
     $T$ is a member of the associated set of native data types of any subclass of \DborNumberValue{}.
 \end{itemize}
 
 Let $V$ be a subclass of \DborNumberValue{} or \DborNumberlikeValue{} and
-$T$ a native data type that can represent any number
+$T$ a native data type that can represent any extended number
 $\in T_{\text{repr}} \subset \SetOfReals \cup \{-\infty, -0, \infty\}$
-with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation).
+with $0 \in T$ (e.g.\ a signed 32~bit integer in two's complement representation).
 
 \begin{enumerate}[a)]
     \item
     If $V$ is numerically convertible into~$T$,
     decoding a well-formed $V$ that is supported by the decoder and
-    represents~$v \in T_{\text{repr}}$ into a~$T$ must result in PRECISE with
-    the exact representation of $v$ as the returned object.
+    represents~$x \in T_{\text{repr}}$ into a~$T$ must result in PRECISE with
+    the exact representation of $x$ as the returned object.
 
     \item
     \begin{BeginParPenalty}
         If $V$ is numerically convertible into~$T$,
         decoding a well-formed $V$ that is supported by the decoder and
-        represents~$v \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
+        represents~$x \notin T_{\text{repr}}$ into a~$T$ must lead to the following results:
         \begin{quote}
             \newcommand{\addextrarowsep}{\addlinespace[0.7ex]}%
             \noindent
@@ -189,14 +184,14 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
                 Constraints & Result & Returned object as $T$ \\
                 \midrule
                 %
-                $\min{T_{\text{repr}}} \le v \le \max{T_{\text{repr}}}$ &
+                $\min{T_{\text{repr}}} \le x \le \max{T_{\text{repr}}}$ &
                     APPROX-IMPRECISE &
-                    of all $t \in T_{\text{repr}}$ with minimal $|t - v|$ the one with minimal~$|t|$ \\ \addextrarowsep
+                    of all $t \in T_{\text{repr}}$ with minimal $|t - x|$ the one with minimal~$|t|$ \\ \addextrarowsep
                 %
-                $v < \min{T_{\text{repr}}}$ &
+                $x < \min{T_{\text{repr}}}$ &
                     APPROX-EXTREME & $\min{T_{\text{repr}}}$ \\ \addextrarowsep
                 %
-                $v > \max{T_{\text{repr}}}$ &
+                $x > \max{T_{\text{repr}}}$ &
                     APPROX-EXTREME & $\max{T_{\text{repr}}}$ \\ \addextrarowsep
                 \bottomrule
             \end{tabular}
@@ -205,36 +200,36 @@ with $0 \in T$ (e.g. a signed 32~bit integer in two's complement representation)
 
     \item
     If $V$ is \emph{not} numerically convertible into $T$, decoding a well-formed~$V$ that is supported by the decoder
-    must result in INCOMPATIBLE-TYPE.
+    must result in INCOMPATIBLE-TYPE\@.
 
     \item
-    Decoding an ill-formed $V$ that is supported by the decoder must result in ILL-FORMED.
+    Decoding an ill-formed $V$ that is supported by the decoder must result in ILL-FORMED\@.
 \end{enumerate}
 
 
 \subsubsection{Decoding other \DborValue}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Decoding a \DborNoneValue{} into any type must result in NO-OBJECT.
+Decoding a \DborNoneValue{} into any type must result in NO-OBJECT\@.
 
 \medskip
 Decoding a (well-formed or ill-formed) \DborValue{} \emph{not} supported by the decoder
 must result in UNSUPPORTED or ILL-FORMED.%
 \footnote{%
-    The decoder may be unable to check if an unsupported \DborValue{} is well-formed.
+    The decoder may be unable to check whether an unsupported \DborValue{} is well-formed.
 }
 
 \medskip
 Decoding a well-formed \DborValue{} supported by the decoder that is not a subclass of \DborNumberValue{}
-into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE.
+into any type not in its associated set of native data types must result in INCOMPATIBLE-TYPE\@.
 
 \medskip
 Decoding an \DborContainerValue{} or \DborUtfEightStringValue{} that is supported by the decoder and
-is not size-correct must result in ILL-FORMED.
+is not size-correct must result in ILL-FORMED\@.
 If it is size-correct but ill-formed it must result in ILL-FORMED or RANGE
 (if another decoding restriction is violated).%
 \footnote{%
-    Although an \DborUtfEightStringValue{} requires proper UTF-8 encoding for being well-formed,
+    Although a \DborUtfEightStringValue{} requires proper UTF-8 encoding for being well-formed,
     a decoder is not required to support multi-byte UTF-8 sequences (i.e. code points $> \HexNumber{7F}$).
 
     A decoder that \emph{does} supports multi-byte UTF-8 sequences
@@ -250,11 +245,11 @@ If it is size-correct but ill-formed it must result in ILL-FORMED or RANGE
 DBOR encoders and decoders do not have to support \emph{all} types of values and \emph{all} their instances
 (but as far as they do they must adhere to this specification, naturally).
 
-To allow easy description and comparision of capabilities of encoders and decoders,
-certain common capabilities (or constraints) are grouped by \emph{conformance levels}.
+To allow easy description and comparison of capabilities of encoders and decoders,
+certain common capabilities or constraints are grouped by \emph{conformance levels}.
 
 \medskip
-If a conformance level specifies a value~$v$ as \emph{supported}
+If a conformance level specifies a value~$v$ as \emph{supported},
 a decoder of this conformance level supports $v$ and can decode $v$ into at least one native data type~$T$:
 \begin{enumerate}[a)]
     \item

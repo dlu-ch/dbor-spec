@@ -6,7 +6,7 @@
 %%%%%%%%%%%%%%%%
 \label{sec:values}
 
-This section defines the representation of objects as bytes sequences - the core of DBOR.
+This section defines the representation of objects as bytes sequences - the core of DBOR\@.
 
 
 \subsection{Overview (\DborValue)}
@@ -39,12 +39,12 @@ The representation is byte oriented and does not depend on word alignment or end
 The byte sequence of each encoded object describes its own size.
 
 \medskip
-The transformation of $O^*$ into $B^*$ is called \emph{encoding} (done by an DBOR encoder),
+The transformation of $O^*$ into $B^*$ is called \emph{encoding} (done by a DBOR encoder),
 and the transformation of $B^*$ into $O^*$ is called \emph{decoding} (done by a DBOR decoder).
 
 \medskip
-DBOR \emph{focuses on the represented "value" of an object} to be encoded, not its type --
-an unsigned $8$~bit number $42$ is no different from signed $64$~bit number $42$ in this view.%
+DBOR \emph{focuses on the represented "value" of an object} to be encoded, not its native type --
+an unsigned $8$~bit number $42$ is no different from a signed $64$~bit number $42$ in this view.%
 \footnote{%
     This approach enables the definition and simple implementation of compatible interfaces between independent systems.
 
@@ -80,13 +80,12 @@ class \DborIntegerValue{}:
     \end{array}
     \quad\text{is an instance of}\quad \DborIntegerValue
 \end{equation*}
-Each value identifies in its first byte the (concrete) class that it is an instance of.
 
 \medskip
-An abstract class like \DborNumberValue{} represents common traits of objects and can be used as placeholder for any
-of its concrete subclasses (like \DborIntegerValue{} or \DborInfinityValue{} in this case).
+An \emph{abstract class} like \DborNumberValue{} represents common traits of objects and can be used as a placeholder for any
+of its concrete subclasses.
 The byte sequence \ByteSequence{\DborFirstByteHex{Number}{38}, \DborNextByteHex{4B}} "is a" \DborNumberValue{},
-an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
+an \DborElementaryValue{}, and a \DborValue{} (all abstract classes) and an \DborIntegerValue{} (the concrete class).
 
 \begin{figure}[H]
     \begin{quote}
@@ -97,11 +96,14 @@ an \DborElementaryValue{}, and a \DborValue{} (all abstract classes).
     \end{quote}
 \end{figure}
 
-See sections~\ref{sec:elementaryvalues} and \ref{sec:containervalues} for a complete list of (concrete) values.
+Each value identifies in its first byte the (concrete) class that it is an instance of.
+
+The following sections~\ref{sec:def:NoneValue}, \ref{sec:elementaryvalues}, and \ref{sec:containervalues} describe all
+possible values as instances of (concrete) classes.
 
 \medskip
 For some objects and classes, there is more than one representation of the object as an instance of the class;
-The number $0.1$ can be represented as \DborDecimalRationalValue(1, -1) or \DborDecimalRationalValue(10, -2),
+the number $0.1$ can be represented as \DborDecimalRationalValue(1, -1) or as \DborDecimalRationalValue(10, -2),
 for example.
 DBOR defines a \emph{canonical value} for each object and class to enable a unique representation.%
 \footnote{
@@ -118,7 +120,6 @@ DBOR defines a \emph{canonical value} for each object and class to enable a uniq
 
 A \DborNoneValue{} represents the absence of an actual object (like \texttt{null} or \texttt{None} in some
 programming languages or NaN in IEEE-754:2008).
-It is considered different from any object represented by a \DborValue*{} other than a \DborNoneValue.
 
 \paragraph{Representation}
 
@@ -155,7 +156,7 @@ Every \DborNoneValue{} is well-formed.
 \hypertarget{sec:def:NumberlikeValue}{}
 \hypertarget{sec:def:StringValue}{}
 
-Elementary values are values that represent a single object with a meaning of its own (e.g. an integer).
+Elementary values are values that represent a single object with a meaning of its own (e.g.\ an integer).
 
 \begin{figure}[H]
     \begin{quote}
@@ -168,8 +169,12 @@ Elementary values are values that represent a single object with a meaning of it
 
 Each \DborNumberValue{} represents a real number.
 
-Each \DborNumberlikeValue{} represents an object that is no (real) number but can be compared to any real number and
-to any \DborNumberlikeValue{}.
+Each \DborNumberlikeValue{} represents an object that is no (real) number but is "ordered"
+with respect to any real number and to any \DborNumberlikeValue{}.%
+\footnote{%
+    More precisely, there exists a strict total order on the union of $\SetOfReals$ and the set of objects represented by
+    \DborNumberlikeValue{} instances that is identical to the usual "less than" relation on $\SetOfReals$.
+}
 
 
 \subsubsection{\DborMinusZeroValue, \DborInfinityValue, \DborMinusInfinityValue}
@@ -184,25 +189,24 @@ to any \DborNumberlikeValue{}.
 \paragraph{Representable objects}
 
 A \DborMinusZeroValue{} represents the "number" $-0$ in the sense of IEEE-754:2008 arithmetic.
-It is considered negative but larger than any object represented by a \DborNumberValue*{}
-with a negative numeric value.%
+It is considered negative but larger than any negative real number.%
 \footnote{%
     This reflects the idea of negative infinitesimal (\href{https://en.wikipedia.org/wiki/Hyperreal_number}{hyperreal}
     or \href{https://en.wikipedia.org/wiki/Surreal_number}{surreal}) numbers as members of an extension field
     of $\SetOfReals$.
 
-    In IEEE-754:2008 arithmetic however (which introduces "non-numbers" primarily as an elegant means to make fast
-    floating-point arithmetic more robust), $-0 = 0$ but $x / -0 \ne x / 0$ for finite $x \ne 0$;
+    In IEEE-754:2008 arithmetic, however, (which introduces "non-numbers" primarily as an elegant means to make fast
+    floating-point arithmetic more robust) $-0 = 0$ but $x / -0 \ne x / 0$ for finite $x \ne 0$;
     $-0$ and $0$ are treated as negative or positive infinitesimal numbers, respectively, in this operation.
 }
 
 \medskip
-A \DborInfinityValue{} represents the "number" $\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered larger than any object represented by a \DborNumberValue*{}.
+A \DborInfinityValue{} represents the "number" $\infty$.
+It is considered larger than any real number.
 
 \medskip
-A \DborMinusInfinityValue{} represents the "number" $-\infty$ in the sense of IEEE-754:2008 arithmetic.
-It is considered smaller than any object represented by a \DborNumberValue*{}.
+A \DborMinusInfinityValue{} represents the "number" $-\infty$.
+It is considered smaller than any real number.
 
 \paragraph{Representation}
 
@@ -290,7 +294,7 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed
 if and only if it is an \DborIntegerToken*(0, $w$) or an \DborIntegerToken*(1, $w$) for
 a suitable $w \in \IntegerInterval{0}{N + 23}$
 
-The sequence is an \emph{ill-formed} \DborIntegerValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborIntegerValue{} if and only if it is not a well-formed
 \DborIntegerValue{} but $b_1$ is the first byte of a \DborIntegerToken*(0, $w$) or
 an \DborIntegerToken*(1, $w$).
 
@@ -392,7 +396,7 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed
 \DborBinaryRationalValue{} if and only if
 it is a \DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$) for suitable $p$, $o$, $s$, $M$ and $E$.
 
-The sequence is an \emph{ill-formed} \DborBinaryRationalValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborBinaryRationalValue{} if and only if it is not a well-formed
 \DborBinaryRationalValue{} but $b_1$ is the first byte of a
 \DborBinaryRationalToken*($p$, $o$, $s$, $M$, $E$).
 
@@ -462,7 +466,7 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed
 \DborDecimalRationalValue{} if and only if
 it is \DborPowerOfTenToken*($e$) {\Concat} \DborIntegerToken*($m$) for suitable $m \ne 0$ and $e$.
 
-The sequence is an \emph{ill-formed} \DborDecimalRationalValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborDecimalRationalValue{} if and only if it is not a well-formed
 \DborDecimalRationalValue{} but $b_1$ is the first byte of a \DborPowerOfTenToken*($e$).
 
 \paragraph{Ambiguity, canonical value}
@@ -513,7 +517,7 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{well-formed
 \DborByteStringValue{} if and only if begins with \DborIntegerToken*($2$, $m$) for a suitable
 $m \in \IntegerInterval{0}{N + 23}$
 
-The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is not a well-formed
 \DborByteStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($2$, $m$).
 
 
@@ -523,7 +527,7 @@ The sequence is an \emph{ill-formed} \DborByteStringValue{} if and only if it is
 
 \paragraph{Representable objects}
 
-An \DborUtfEightStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
+A \DborUtfEightStringValue{} can represent any byte sequence \ByteSequence{b_1, \ldots, b_m}
 with $m \in \IntegerInterval{0}{N + 23}$ that is the concatenation of ($0$ or more)
 well-formed UTF-8 encoded Unicode code points.%
 \footnote{
@@ -532,7 +536,7 @@ well-formed UTF-8 encoded Unicode code points.%
     as a a mapping of Unicode scalar values to 1 to 4 bytes.
     It explicitly declares the representation of a value $\in \IntegerInterval{\HexNumber{D800}}{\HexNumber{DFFF}}$
     and byte sequences that are not in the shortest form as ill-formed.
-    A byte sequence \ByteSequence{b_1, \ldots, b_k} is a well-formed UTF-8 encoded Unicode scalar value if and
+    A byte sequence \ByteSequence{b_1, \ldots, b_k} is therefore a well-formed UTF-8 encoded Unicode scalar value if and
     only if it has the form
     \begin{gather*}
         \ByteSequence{\BinNumber{0xxxxxxx}} \quad\text{or} \\
@@ -582,7 +586,7 @@ It is a \emph{well-formed} \DborUtfEightStringValue{} if and only if it is a siz
 \ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of (0 or more) well-formed
 UTF-8 encoded Unicode code points.
 
-The sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborUtfEightStringValue{} if and only if it is not a well-formed
 \DborUtfEightStringValue{} but $b_1$ is the first byte of an \DborIntegerToken*($3$, $m$).
 
 \paragraph{Ambiguity, canonical value}
@@ -591,16 +595,15 @@ There may be more than one \DborUtfEightStringValue{} representing the same (i.e
 Unicode string.
 The canonical value of a well-formed \DborUtfEightStringValue{} is in Normalization Form C.%
 \footnote{
-    The check whether an arbitrary well-formed \DborUtfEightStringValue{} is canonical
-    is a complex operation and not available at all on many platforms.
+    The check whether an arbitrary well-formed \DborUtfEightStringValue{} is canonical is an expensive operation.
 
     However, a fast and simple check according to
     \href{https://unicode.org/reports/tr15/\#Detecting_Normalization_Forms}{Unicode Standard Annex \#15}
-    is possible for subranges.
+    is possible for certain subsets.
     For example, a well-formed \DborUtfEightStringValue{} that contains only code points $< \HexNumber{300}$ is
     in Normalization Form C and therefore canonical
-    since NFC\_Quick\_Check is YES for all code points < $\HexNumber{340}$ and Canonical\_Combining\_Class = 0
-    for all code points $< \HexNumber{300}$.
+    since \texttt{NFC\_Quick\_Check} is \texttt{YES} for all code points < $\HexNumber{340}$ and
+    \texttt{Canonical\_Combining\_Class} = 0 for all code points $< \HexNumber{300}$.
 }%
 \footnote{%
   Unicode \href{https://unicode.org/reports/tr15/\#Stability_of_Normalized_Forms}{guarantees}:
@@ -615,7 +618,6 @@ The canonical value of a well-formed \DborUtfEightStringValue{} is in Normalizat
 \hypertarget{sec:def:ContainerValue}{}
 
 Container values are mere collections of other values and derive their meaning from their elements.
-
 All container values can be nested.
 
 \begin{figure}[H]
@@ -671,7 +673,7 @@ $m \in \IntegerInterval{0}{N + 23}$.
 It is a well-formed \DborSequenceValue{} if and only if it is a size-correct \DborSequenceValue{} and
 \ByteSequence{b_{n - m + 1}, \ldots, b_n} is the concatenation of ($0$ or more) well-formed values.
 
-The sequence is an \emph{ill-formed} \DborSequenceValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborSequenceValue{} if and only if it is not a well-formed
 \DborSequenceValue{} but $b_1$ is the first byte of an \DborIntegerToken*($4$, $m$).
 
 \paragraph{Ambiguity, canonical value}
@@ -680,7 +682,7 @@ Whether there is more than one \DborSequenceValue{} representing the same object
 elements.
 The canonical value of \DborSequenceValue{}($v_1, \ldots, v_r$) is
 \DborSequenceValue($v_1', \ldots, v_r'$)
-where $v_i'$ is the canonical value of $v_i$ for all $i \in \IntegerInterval{1}{r}$.
+where $\Box'$ means the canonical value of $\Box$.
 
 
 \subsubsection{\DborDictionaryValue(\texorpdfstring{%
@@ -698,11 +700,9 @@ A \DborDictionaryValue{} can represent any dictionary $k_1 \mapsto v_1, \ldots, 
     \item
     pairwise distinct, well-formed $k_i$ (its keys) that are instances of \DborElementaryValue
     \footnote{
-        Comparision of keys is an important operation and must be fast.
-        When the keys must be compared efficiently and the fill bytes in \DborAllocatorValue*{} must be
-        ignored; a container value that can contain an \DborAllocatorValue*{} must be processed in depth
-        which makes such a comparison operation complex and slow.
-        Disallowing container values makes the comparison operation simple and fast.
+        Comparison of keys is an important operation.
+        It has to be efficient and unaffected by potential (undefined) fill bytes.
+        For -- possibly deeply nested -- containers, this is not possible.
     }
     and
 
@@ -762,17 +762,19 @@ It is a \emph{well-formed} \DborDictionaryValue{} if and only if it is a size-co
     $k_{i - 1} \prec k_{i}$ for all $i \in \IntegerInterval{2}{r}$.
 \end{itemize}
 
-The sequence is an \emph{ill-formed} \DborDictionaryValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborDictionaryValue{} if and only if it is not a well-formed
 \DborDictionaryValue{} but $b_1$ is the first byte of an \DborIntegerToken*($5$, $m$).
 
 
 \paragraph{Ambiguity, canonical value}
 
-Whether there is more than one \DborDictionaryValue{} representing the same object depends on its elements.
+Whether there is more than one \DborDictionaryValue{} representing the same object depends on
+its keys and associated values.
 The canonical value of a well-formed \DborDictionaryValue($k_1 \mapsto v_1, \ldots, k_r \mapsto v_r$) is
 the well-formed \DborDictionaryValue{} whose pairs of keys and associated values are the members of
 $\{(k_i', v_i') \colon i \in I\}$ where $\Box'$ means the canonical value of $\Box$ and
-$I := \{i \in \IntegerInterval{1}{r}\colon \min\{j \in \IntegerInterval{1}{r}\colon k_j' = k_i'\}\}$.
+$I := \{\min I_i\colon i \in \IntegerInterval{1}{r}\}$
+with $I_i := \{j \in \IntegerInterval{1}{r}\colon k_j' = k_i'\}$.
 
 
 \subsubsection{\DborAllocatorValue(\texorpdfstring{$m$, $v$}{m, v})}
@@ -820,15 +822,15 @@ A non-empty byte sequence \ByteSequence{b_1, \ldots, b_n} is a \emph{size-correc
 \DborNaturalToken*($6$, $0$, $m$) {\Concat} \ByteSequence{b_{n - m + 1}, \ldots, b_n} for a suitable
 $m \in \IntegerInterval{1}{N}$.
 It is a \emph{well-formed} \DborAllocatorValue{} if and only if it is a size-correct \DborAllocatorValue{} and
-\ByteSequence{b_{n - m + 1}, \ldots, b_n} starts with a well-formed value $v$ that is not an \DborAllocatorValue.
+\ByteSequence{b_{n - m + 1}, \ldots, b_n} begins with a well-formed value $v$ that is not an \DborAllocatorValue.
 
-The sequence is an \emph{ill-formed} \DborAllocatorValue{} if and only if it is not a well-formed
+The byte sequence is an \emph{ill-formed} \DborAllocatorValue{} if and only if it is not a well-formed
 \DborAllocatorValue{} but $b_1$ is the first byte of a \DborNaturalToken*($6$, $0$, $m$).
 
 \paragraph{Ambiguity, canonical value}
 
 Whether there is more than one \DborAllocatorValue{} representing the same object depends on its
-contained element.
+contained value.
 The canonical value of \DborAllocatorValue($m$, $v$) is
 \DborAllocatorValue($m$, $v'$) where $v'$ is the canonical value of $v$
 and all fill bytes $f_{\|v'\| + 1}, \ldots, f_m$ are $\HexNumber{FF}$.

@@ -9,10 +9,10 @@
 \subsection{Marshalling of a command (remote procedure call)}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Assume a distributed system of nodes, connected by slow serial point-to-point links (e.g. EIA-232 like).
+Assume a distributed system of nodes, connected by slow serial point-to-point links (e.g.\ EIA-232 like).
 
 The interface of a node is modelled as a hierarchical state machine, parametrized by typed parameters
-(e.g. "desired flow rate in $\text{m}^3/\text{s}$") with non-negative integers as unique (per node) identifiers
+(e.g.\ "desired flow rate in $\text{m}^3/\text{s}$") with non-negative integers as unique (per node) identifiers
 and controlled by commands.
 
 Each commands has a non-negative integer as a unique (per node) identifier and an associated sequence of
@@ -23,7 +23,7 @@ For example: \texttt{startPump(parametersToSetBefore, controlMode)} with identif
 
 \medskip
 \begin{BeginParPenalty}
-    A specific call of this command with actual arguments can be described by a sequence of objects like this:
+    A specific call of this command with actual arguments can be described as a sequence of objects like this:
     \begin{quote}
         $12$, \{\}, $1$ or \\
         $12$, \{$3$: $0.010$, $9$: $0$, $11$: $\infty$\}, $2$.
@@ -60,21 +60,21 @@ For example: \texttt{startPump(parametersToSetBefore, controlMode)} with identif
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Run-time errors and similar events may be detected in every conceivable context -
-e.g. in an interrupt handler where dynamic memory allocation may be unavailable.
+e.g.\ in an interrupt handler where dynamic memory allocation may be unavailable.
 Instead of just discarding all dynamic information, one can proceed as follows to make the most of the available
 (pre-allocated) memory:
 
 \begin{enumerate}
     \item
-    Choose an integer $n_{\text{max}} \le 3$, e.g. $n_{\text{max}} = 16$ and provide a means to successfully store at
-    least \emph{one} object of size $\le n_{\text{max}}$ at any time, for example in a look-free queue.
+    Choose an integer $n_{\text{max}} \le 3$, e.g. $n_{\text{max}} = 16$, and provide a means to store an object
+    of size $\le n_{\text{max}}$ in every context, for example in a wait-free queue.
 
     \item
     Assign each run-time event type a unique integer identifier that is no longer than $n_{\text{max}} - 2$ bytes
     when DBOR-encoded.
 
     Associate each such run-time event type with a sequence of context objects describing the cause or detection context
-    (e.g. measured current), ordered by preciousness of the information (most precious first), such that the meaning
+    (e.g.\ measured current), ordered by preciousness of the information (most precious first), such that the meaning
     of no context object does depend on other context objects later in the sequence.
 
     \item
@@ -83,7 +83,7 @@ Instead of just discarding all dynamic information, one can proceed as follows t
     followed by the sequence of all context objects, only so much of its last objects
     omitted that the resulting size is $\le n_{\text{max}}$.%
     \footnote{%
-        When $n_{\text{max}} \le 25$, the \DborIntegerToken{} of the contained \DborSequenceValue{}
+        When $n_{\text{max}} \le 25$, the opening \DborIntegerToken{} of the contained \DborSequenceValue{}
         is exactly 1~byte long which makes encoding especially fast and simple.
     }
     Then store it.

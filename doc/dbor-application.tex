@@ -23,8 +23,8 @@ A string should only contain code points from one of the Private Use Areas if th
 The keys of a \DborDictionaryValue{} are formed by the bytes sequences, \emph{not} the represented objects.
 It is therefore recommended to use only canonical values as keys.
 \DborIntegerValue{}, \DborByteStringValue{}, and \DborUtfEightStringValue{} with code points $< \HexNumber{300}$
-are especially well suited; they are all canonical and can easily be ordered according to
-section~\ref{sec:stricttotalorder} \emph{before} encoding.
+are especially well suited;
+they are all canonical and can easily be ordered according to section~\ref{sec:stricttotalorder} \emph{before} encoding.
 
 
 \subsection{Derived types}
@@ -35,7 +35,7 @@ from DBOR's perspective, a string is just a string, whether it denotes a date, a
 or the programmer's name.
 How DBOR values are used to represent objects that
 are more restricted than the underlying DBOR value or
-are built as combination of more than one DBOR value
+are constructed from more than one DBOR value
 is entirely up to the application.
 
 The following sections give some recommendations to start with.
@@ -44,7 +44,7 @@ The following sections give some recommendations to start with.
 %%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Booleans}
 
-The objects "false" and "true" can be seen as instances of 1-bit integers and should be encoded as
+The objects \texttt{False} and \texttt{True} can be seen as instances of 1-bit integers and should be encoded as
 \DborIntegerValue(0) and \DborIntegerValue(1), respectively.
 
 Consider using enumerations or sets instead of booleans for the representation of options.
@@ -60,7 +60,7 @@ The specific enumerals from a fixed set of enumerals should be encoded as
 
     \item
     distinct, non-empty \DborUtfEightStringValue{} instances with all code points $< \HexNumber{300}$,
-    preferably in the form of all-upper-case words separated by "\_".
+    preferably in the form of words from upper-case ASCII letters and digits only, separated by "\_".
 \end{enumerate}
 
 
@@ -77,9 +77,9 @@ duplicate-free and ordered ascendingly by ${\prec}$ as defined in section~\ref{s
 
 Absolute instants in time should be expressed as (proleptic) Gregorian dates and times of day in a
 24~hour timekeeping system with a stated relation to the Coordinated Universal Time (UTC).
-Such an instant should be represented as a \DborUtfEightStringValue{} in the ISO~8601:2019 %
+Such an instant should be represented as a \DborUtfEightStringValue{} in the ISO~8601:2019%
 \footnote{%
-    Approximated by but not identical to \href{RFC~2229}{https://tools.ietf.org/html/rfc3339}.
+    Approximated by but not identical to \href{https://tools.ietf.org/html/rfc3339}{RFC~2229}.
 } basic format.
 Example: "12910801T190000.3Z" for August 1st of the year 1291, 19:00:00.3 UTC
 (July 25th in the Julian calendar of the time).
